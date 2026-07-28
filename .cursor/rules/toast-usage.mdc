@@ -1,0 +1,34 @@
+---
+description: When to use sonner toasts (src/components/ui/sonner.tsx) and which variant to pick
+alwaysApply: true
+---
+
+# Toast Usage (sonner)
+
+Toasts come from `sonner` (rendered via `src/components/ui/sonner.tsx`). Import with `import { toast } from "sonner"`.
+
+## toast.success — use sparingly
+
+Only show a success toast when the UI does NOT update in an obvious way after the action. If the result is immediately visible (item appears/disappears from a list, dialog closes and the change is on screen, optimistic update renders instantly), do NOT add a success toast — it's redundant noise.
+
+```typescript
+// ❌ BAD — the new item appears in the list optimistically; the toast is redundant
+createTask(input, { onSuccess: () => toast.success(t("taskCreated")) });
+
+// ✅ GOOD — nothing visible changes on screen, so confirm it happened
+copyInviteCode(code, { onSuccess: () => toast.success(t("inviteCodeCopied")) });
+```
+
+Typical cases that DO warrant `toast.success`: background exports, copying join codes or other values to the clipboard, and actions whose effect lives on another page or another user's screen.
+
+## Other variants
+
+- **toast.error** — always show on failed mutations (this pairs with optimistic updates: the rollback in `onError` is invisible to the user, so the toast is the only feedback). Prefer the server's message when it's user-friendly: `error instanceof Error ? error.message : t("genericFailed")`.
+- **toast.warning** — the action completed but with a caveat the user should know (partial success, skipped items, approaching a limit).
+- **toast.info** — neutral, non-actionable notices not triggered by an explicit user action (e.g. "session restored", "new version available").
+- **toast.loading / toast.promise** — only for long-running actions (file uploads, exports) where there is no inline pending state. With optimistic updates there is usually no waiting, so these are rarely needed.
+
+## General
+
+- Keep messages short and translated (`t(...)`), matching existing usage in `src/components/orgs/`.
+- Never use a toast as the primary way to display data — it's for transient feedback only.
