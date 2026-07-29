@@ -1,4 +1,20 @@
-import { CN, DE, ES, FR, GB, IT, JP, KR, PT, RU, TW, UA, US } from "country-flag-icons/react/3x2";
+import {
+  CN,
+  DE,
+  ES,
+  FR,
+  GB,
+  IT,
+  JP,
+  KR,
+  NL,
+  PT,
+  RU,
+  TH,
+  TW,
+  UA,
+  US,
+} from "country-flag-icons/react/3x2";
 
 const FLAG_COMPONENTS = {
   CN,
@@ -9,8 +25,10 @@ const FLAG_COMPONENTS = {
   IT,
   JP,
   KR,
+  NL,
   PT,
   RU,
+  TH,
   TW,
   UA,
   US,

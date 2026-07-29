@@ -25,7 +25,10 @@ export function useAuthedQuery<ConvexQueryReference extends FunctionReference<"q
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
 
   const result = useQuery({
-    ...convexQuery(funcRef, isAuthenticated ? args : "skip"),
+    ...convexQuery(
+      funcRef,
+      (isAuthenticated ? args : "skip") as FunctionArgs<ConvexQueryReference> | "skip",
+    ),
     gcTime: options.gcTime,
     retry: false,
   });

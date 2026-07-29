@@ -10,6 +10,15 @@ const schema = defineSchema({
     language: languageValidator,
     homeSectionOrder: v.optional(v.array(v.union(v.literal("schools"), v.literal("classes")))),
   }).index("by_userId", ["userId"]),
+  classes: defineTable({
+    ownerId: v.id("users"),
+    name: v.string(),
+    year: v.number(),
+    description: v.optional(v.string()),
+    icon: v.optional(v.string()),
+    updatedAt: v.number(),
+    archivedAt: v.optional(v.number()),
+  }).index("by_owner", ["ownerId"]),
 });
 
 export default schema;

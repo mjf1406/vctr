@@ -11,6 +11,7 @@
 import type * as appConfig from "../appConfig.js";
 import type * as auth from "../auth.js";
 import type * as authz from "../authz.js";
+import type * as classes from "../classes.js";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
@@ -24,6 +25,7 @@ declare const fullApi: ApiFromModules<{
   appConfig: typeof appConfig;
   auth: typeof auth;
   authz: typeof authz;
+  classes: typeof classes;
   files: typeof files;
   http: typeof http;
   "lib/auth": typeof lib_auth;

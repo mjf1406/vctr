@@ -9,8 +9,10 @@ import fr from "./resources/fr";
 import it from "./resources/it";
 import ja from "./resources/ja";
 import ko from "./resources/ko";
+import nl from "./resources/nl";
 import pt from "./resources/pt";
 import ru from "./resources/ru";
+import th from "./resources/th";
 import uk from "./resources/uk";
 import zhs from "./resources/zhs";
 import zht from "./resources/zht";
@@ -27,12 +29,14 @@ const LOCALE_RESOURCES: Record<Exclude<AppLanguage, "engb">, LocaleResources> = 
   en,
   ja,
   ko,
+  th,
   zhs,
   zht,
   es,
   fr,
   it,
   de,
+  nl,
   pt,
   ru,
   uk,
