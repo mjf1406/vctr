@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { ThemeToggle } from "../theme/theme-toggle";
+import { NavUser } from "@/components/navigation/NavUser";
+import { Logo } from "@/components/brand/Logo";
 
 export function Navbar() {
   return (
@@ -10,10 +12,10 @@ export function Navbar() {
           to="/"
           className="flex shrink-0 items-center outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
-          {/* <Logo /> */} LOGO
+          <Logo />
         </Link>
         <div className="flex items-center gap-2">
-          {/* <NavUser variant="avatar" /> */}
+          <NavUser variant="avatar" />
           <ThemeToggle />
           <LanguageSwitcher />
         </div>

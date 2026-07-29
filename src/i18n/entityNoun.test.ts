@@ -14,25 +14,11 @@ import ru from "./resources/ru";
 import uk from "./resources/uk";
 import zhs from "./resources/zhs";
 import zht from "./resources/zht";
+import type { TranslationCatalog } from "./resources/en";
 
 type LocaleResources = {
-  common?: {
-    chooseLanguage?: unknown;
-    loading?: unknown;
-  };
-  home?: {
-    title?: unknown;
-    description?: unknown;
-    language?: unknown;
-    badges?: unknown;
-    roleBadges?: unknown;
-  };
-  classes?: {
-    roleOwner?: unknown;
-    roleTeacher?: unknown;
-    roleAssistantTeacher?: unknown;
-    roleStudent?: unknown;
-    roleGuardian?: unknown;
+  [Namespace in keyof TranslationCatalog]?: {
+    [Key in keyof TranslationCatalog[Namespace]]?: unknown;
   };
 };
 
@@ -52,20 +38,9 @@ const LOCALE_RESOURCES: Record<Exclude<AppLanguage, "engb">, LocaleResources> = 
   uk,
 };
 
-const REQUIRED_KEYS = [
-  ["common", "chooseLanguage"],
-  ["common", "loading"],
-  ["home", "title"],
-  ["home", "description"],
-  ["home", "language"],
-  ["home", "badges"],
-  ["home", "roleBadges"],
-  ["classes", "roleOwner"],
-  ["classes", "roleTeacher"],
-  ["classes", "roleAssistantTeacher"],
-  ["classes", "roleStudent"],
-  ["classes", "roleGuardian"],
-] as const;
+const REQUIRED_KEYS = (
+  Object.entries(en) as Array<[keyof TranslationCatalog, Record<string, string>]>
+).flatMap(([namespace, keys]) => Object.keys(keys).map((key) => [namespace, key] as const));
 
 function assertNonEmptyString(value: unknown, label: string): void {
   expect(typeof value, label).toBe("string");

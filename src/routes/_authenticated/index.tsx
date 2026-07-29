@@ -46,7 +46,7 @@ const CLASS_ROLES = [
   "unknown_role",
 ] as const;
 
-export const Route = createFileRoute("/_public/")({
+export const Route = createFileRoute("/_authenticated/")({
   component: function Index() {
     const { theme } = useTheme();
     const { language, setLanguage, isSaving } = useAppLanguage();

@@ -8,77 +8,245 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as PublicRouteRouteImport } from './routes/_public/route'
-import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AuthenticatedRouteRouteImport } from "./routes/_authenticated/route";
+import { Route as PublicRouteRouteImport } from "./routes/_public/route";
+import { Route as AuthenticatedIndexRouteImport } from "./routes/_authenticated/index";
+import { Route as AuthenticatedAccountRouteImport } from "./routes/_authenticated/account";
+import { Route as AuthenticatedBillingRouteImport } from "./routes/_authenticated/billing";
+import { Route as AuthenticatedJoinRouteImport } from "./routes/_authenticated/join";
+import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticated/settings";
+import { Route as PublicSplatRouteImport } from "./routes/_public/$";
+import { Route as PublicLoginRouteImport } from "./routes/_public/login";
+import { Route as PublicUnauthorizedRouteImport } from "./routes/_public/unauthorized";
 
-const PublicRouteRoute = PublicRouteRouteImport.update({
-  id: '/_public',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
-} as any)
-const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: '/',
-  path: '/',
+} as any);
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: "/_public",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: "/account",
+  path: "/account",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+const AuthenticatedBillingRoute = AuthenticatedBillingRouteImport.update({
+  id: "/billing",
+  path: "/billing",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+const AuthenticatedJoinRoute = AuthenticatedJoinRouteImport.update({
+  id: "/join",
+  path: "/join",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+const PublicSplatRoute = PublicSplatRouteImport.update({
+  id: "/$",
+  path: "/$",
   getParentRoute: () => PublicRouteRoute,
-} as any)
+} as any);
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: "/login",
+  path: "/login",
+  getParentRoute: () => PublicRouteRoute,
+} as any);
+const PublicUnauthorizedRoute = PublicUnauthorizedRouteImport.update({
+  id: "/unauthorized",
+  path: "/unauthorized",
+  getParentRoute: () => PublicRouteRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof PublicIndexRoute
+  "/": typeof AuthenticatedIndexRoute;
+  "/account": typeof AuthenticatedAccountRoute;
+  "/billing": typeof AuthenticatedBillingRoute;
+  "/join": typeof AuthenticatedJoinRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/$": typeof PublicSplatRoute;
+  "/login": typeof PublicLoginRoute;
+  "/unauthorized": typeof PublicUnauthorizedRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof PublicIndexRoute
+  "/": typeof AuthenticatedIndexRoute;
+  "/account": typeof AuthenticatedAccountRoute;
+  "/billing": typeof AuthenticatedBillingRoute;
+  "/join": typeof AuthenticatedJoinRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/$": typeof PublicSplatRoute;
+  "/login": typeof PublicLoginRoute;
+  "/unauthorized": typeof PublicUnauthorizedRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/_public': typeof PublicRouteRouteWithChildren
-  '/_public/': typeof PublicIndexRoute
+  __root__: typeof rootRouteImport;
+  "/_authenticated": typeof AuthenticatedRouteRouteWithChildren;
+  "/_public": typeof PublicRouteRouteWithChildren;
+  "/_authenticated/account": typeof AuthenticatedAccountRoute;
+  "/_authenticated/billing": typeof AuthenticatedBillingRoute;
+  "/_authenticated/join": typeof AuthenticatedJoinRoute;
+  "/_authenticated/settings": typeof AuthenticatedSettingsRoute;
+  "/_public/$": typeof PublicSplatRoute;
+  "/_public/login": typeof PublicLoginRoute;
+  "/_public/unauthorized": typeof PublicUnauthorizedRoute;
+  "/_authenticated/": typeof AuthenticatedIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_public' | '/_public/'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths:
+    | "/"
+    | "/account"
+    | "/billing"
+    | "/join"
+    | "/settings"
+    | "/$"
+    | "/login"
+    | "/unauthorized";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/account" | "/billing" | "/join" | "/settings" | "/$" | "/login" | "/unauthorized";
+  id:
+    | "__root__"
+    | "/_authenticated"
+    | "/_public"
+    | "/_authenticated/account"
+    | "/_authenticated/billing"
+    | "/_authenticated/join"
+    | "/_authenticated/settings"
+    | "/_public/$"
+    | "/_public/login"
+    | "/_public/unauthorized"
+    | "/_authenticated/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  PublicRouteRoute: typeof PublicRouteRouteWithChildren
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren;
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PublicRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public/': {
-      id: '/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRouteRoute
-    }
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_public": {
+      id: "/_public";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof PublicRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated/": {
+      id: "/_authenticated/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
+    "/_authenticated/account": {
+      id: "/_authenticated/account";
+      path: "/account";
+      fullPath: "/account";
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
+    "/_authenticated/billing": {
+      id: "/_authenticated/billing";
+      path: "/billing";
+      fullPath: "/billing";
+      preLoaderRoute: typeof AuthenticatedBillingRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
+    "/_authenticated/join": {
+      id: "/_authenticated/join";
+      path: "/join";
+      fullPath: "/join";
+      preLoaderRoute: typeof AuthenticatedJoinRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
+    "/_authenticated/settings": {
+      id: "/_authenticated/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
+    "/_public/$": {
+      id: "/_public/$";
+      path: "/$";
+      fullPath: "/$";
+      preLoaderRoute: typeof PublicSplatRouteImport;
+      parentRoute: typeof PublicRouteRoute;
+    };
+    "/_public/login": {
+      id: "/_public/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof PublicLoginRouteImport;
+      parentRoute: typeof PublicRouteRoute;
+    };
+    "/_public/unauthorized": {
+      id: "/_public/unauthorized";
+      path: "/unauthorized";
+      fullPath: "/unauthorized";
+      preLoaderRoute: typeof PublicUnauthorizedRouteImport;
+      parentRoute: typeof PublicRouteRoute;
+    };
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute;
+  AuthenticatedBillingRoute: typeof AuthenticatedBillingRoute;
+  AuthenticatedJoinRoute: typeof AuthenticatedJoinRoute;
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedBillingRoute: AuthenticatedBillingRoute,
+  AuthenticatedJoinRoute: AuthenticatedJoinRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+};
+
+const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(
+  AuthenticatedRouteRouteChildren,
+);
+
 interface PublicRouteRouteChildren {
-  PublicIndexRoute: typeof PublicIndexRoute
+  PublicSplatRoute: typeof PublicSplatRoute;
+  PublicLoginRoute: typeof PublicLoginRoute;
+  PublicUnauthorizedRoute: typeof PublicUnauthorizedRoute;
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
-  PublicIndexRoute: PublicIndexRoute,
-}
+  PublicSplatRoute: PublicSplatRoute,
+  PublicLoginRoute: PublicLoginRoute,
+  PublicUnauthorizedRoute: PublicUnauthorizedRoute,
+};
 
-const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
-  PublicRouteRouteChildren,
-)
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(PublicRouteRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
