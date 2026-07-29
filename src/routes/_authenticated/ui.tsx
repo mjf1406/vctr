@@ -38,6 +38,7 @@ import { ProgressButton } from "@/components/ui/progress-button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast-manager";
 import { undoToast } from "@/components/ui/undo-toast";
+import { FileDropzone } from "@/components/upload/FileDropzone";
 import { useAppLanguage } from "@/i18n/language-context";
 
 const CLASS_ROLES = [
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/_authenticated/ui")({
     const { theme } = useTheme();
     const { language, setLanguage, isSaving } = useAppLanguage();
     const { t } = useTranslation("home");
+    const { t: uploadT } = useTranslation("upload");
     const [icon, setIcon] = useState<IconDefinition | null>(null);
     const [pdfPending, setPdfPending] = useState(false);
     const [pdfProgress, setPdfProgress] = useState(0);
@@ -389,6 +391,41 @@ export const Route = createFileRoute("/_authenticated/ui")({
                 <Button>Add data</Button>
               </EmptyContent>
             </Empty>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">{uploadT("uploadDemoTitle")}</h2>
+
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              {uploadT("uploadDemoDefaultTitle")}
+            </h3>
+            <FileDropzone presetKey="images" variant="default" />
+            <FileDropzone presetKey="audio" variant="default" />
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              {uploadT("uploadDemoCompactTitle")}
+            </h3>
+            <Credenza>
+              <CredenzaTrigger render={<Button variant="outline" />}>
+                {uploadT("openUploadDialog")}
+              </CredenzaTrigger>
+              <CredenzaContent>
+                <CredenzaHeader>
+                  <CredenzaTitle>{uploadT("uploadDemoCompactTitle")}</CredenzaTitle>
+                  <CredenzaDescription>{uploadT("uploadDemoCompactTitle")}</CredenzaDescription>
+                </CredenzaHeader>
+                <CredenzaBody>
+                  <FileDropzone presetKey="images" variant="compact" />
+                </CredenzaBody>
+                <CredenzaFooter>
+                  <CredenzaClose render={<Button />}>{uploadT("closeUploadDialog")}</CredenzaClose>
+                </CredenzaFooter>
+              </CredenzaContent>
+            </Credenza>
           </div>
         </section>
 

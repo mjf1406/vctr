@@ -10,6 +10,8 @@
 
 import type * as appConfig from "../appConfig.js";
 import type * as auth from "../auth.js";
+import type * as authz from "../authz.js";
+import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_customFunctions from "../lib/customFunctions.js";
@@ -21,6 +23,8 @@ import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server
 declare const fullApi: ApiFromModules<{
   appConfig: typeof appConfig;
   auth: typeof auth;
+  authz: typeof authz;
+  files: typeof files;
   http: typeof http;
   "lib/auth": typeof lib_auth;
   "lib/customFunctions": typeof lib_customFunctions;
@@ -48,4 +52,7 @@ export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "publ
  */
 export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, "internal">>;
 
-export declare const components: {};
+export declare const components: {
+  authz: import("@djpanda/convex-authz/_generated/component.js").ComponentApi<"authz">;
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+};

@@ -22,6 +22,9 @@ const zhs = {
     errorDescription: "发生了意外错误。你可以重试或返回首页。",
     undo: "撤销",
     undoFailed: "无法撤销",
+    connectionLost: "连接丢失",
+    connectionReconnecting: "正在重新连接...",
+    connectionRestored: "连接已恢复",
   },
   auth: {
     welcomeTitle: "欢迎",
@@ -72,6 +75,35 @@ const zhs = {
     undoToastDescriptionBody: "你可以在几秒内恢复它。",
     undoToastRestored: "已恢复",
     undoToastTrigger: "显示撤销提示",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "设置",

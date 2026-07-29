@@ -22,6 +22,9 @@ const zht = {
     errorDescription: "發生未預期的錯誤。你可以再試一次或回到首頁。",
     undo: "復原",
     undoFailed: "無法復原",
+    connectionLost: "連線已中斷",
+    connectionReconnecting: "正在重新連線...",
+    connectionRestored: "連線已恢復",
   },
   auth: {
     welcomeTitle: "歡迎",
@@ -72,6 +75,35 @@ const zht = {
     undoToastDescriptionBody: "你可以在幾秒內還原它。",
     undoToastRestored: "已還原",
     undoToastTrigger: "顯示復原提示",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "設定",

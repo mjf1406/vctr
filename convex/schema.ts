@@ -5,7 +5,6 @@ import { v } from "convex/values";
 
 const schema = defineSchema({
   ...authTables,
-  // Your other tables...
   userSettings: defineTable({
     userId: v.id("users"),
     language: languageValidator,

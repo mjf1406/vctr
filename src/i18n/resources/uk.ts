@@ -23,6 +23,9 @@ const uk = {
       "Сталася неочікувана помилка. Ви можете спробувати знову або повернутися на головну.",
     undo: "Скасувати",
     undoFailed: "Не вдалося скасувати",
+    connectionLost: "З’єднання втрачено",
+    connectionReconnecting: "Повторне підключення...",
+    connectionRestored: "З’єднання відновлено",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",
@@ -75,6 +78,35 @@ const uk = {
     undoToastDescriptionBody: "Ви можете відновити його протягом кількох секунд.",
     undoToastRestored: "Відновлено",
     undoToastTrigger: "Показати toast скасування",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "Налаштування",

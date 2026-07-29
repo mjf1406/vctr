@@ -1,34 +1,56 @@
 ---
-description: When to use sonner toasts (src/components/ui/sonner.tsx) and which variant to pick
+description: When to use Base UI toasts and which variant to pick
 alwaysApply: true
 ---
 
-# Toast Usage (sonner)
+# Toast Usage (Base UI)
 
-Toasts come from `sonner` (rendered via `src/components/ui/sonner.tsx`). Import with `import { toast } from "sonner"`.
+Toasts come from `@/components/ui/toast-manager.ts` (rendered via `<Toaster />` in `src/main.tsx`).
 
-## toast.success — use sparingly
+Import with:
 
-Only show a success toast when the UI does NOT update in an obvious way after the action. If the result is immediately visible (item appears/disappears from a list, dialog closes and the change is on screen, optimistic update renders instantly), do NOT add a success toast — it's redundant noise.
-
-```typescript
-// ❌ BAD — the new item appears in the list optimistically; the toast is redundant
-createTask(input, { onSuccess: () => toast.success(t("taskCreated")) });
-
-// ✅ GOOD — nothing visible changes on screen, so confirm it happened
-copyInviteCode(code, { onSuccess: () => toast.success(t("inviteCodeCopied")) });
+```ts
+import { toast } from "@/components/ui/toast-manager";
 ```
 
-Typical cases that DO warrant `toast.success`: background exports, copying join codes or other values to the clipboard, and actions whose effect lives on another page or another user's screen.
+## Variants
 
-## Other variants
+Use these `type` values (they match the styled variants in `src/components/ui/toast.tsx`):
 
-- **toast.error** — always show on failed mutations (this pairs with optimistic updates: the rollback in `onError` is invisible to the user, so the toast is the only feedback). Prefer the server's message when it's user-friendly: `error instanceof Error ? error.message : t("genericFailed")`.
-- **toast.warning** — the action completed but with a caveat the user should know (partial success, skipped items, approaching a limit).
-- **toast.info** — neutral, non-actionable notices not triggered by an explicit user action (e.g. "session restored", "new version available").
-- **toast.loading / toast.promise** — only for long-running actions (file uploads, exports) where there is no inline pending state. With optimistic updates there is usually no waiting, so these are rarely needed.
+- `success`
+- `warning`
+- `info`
+- `error`
+- `loading`
+
+## Success toasts — use sparingly
+
+Only show a success toast when the UI does NOT update in an obvious way after the action. If the result is immediately visible (optimistic update renders instantly, dialog closes and changes are on screen), do NOT add a success toast — it's redundant noise.
+
+## Errors — toast on failure (pairs with optimistic updates)
+
+For failed mutations, always show an `error` toast. With optimistic updates, rollbacks in `onError` are invisible to the user, so the toast is the only feedback.
+
+Prefer the server's message when it's user-friendly:
+
+`error instanceof Error ? error.message : t("genericFailed")`
+
+## Loading toasts
+
+Use `loading` only when there's no inline pending UI (e.g. long-running uploads/exports).
+
+Use either:
+
+1. `toast.promise(promise, { loading, success, error })`
+2. `const id = toast.add({ type: "loading", timeout: 0, ... })` then `toast.update(id, { type: "success" | "error", ... })`
+
+Dismiss with `toast.close(id)` (there is no `remove()`).
+
+## Undo pattern
+
+For reversible destructive actions, use `undoToast` from `src/components/ui/undo-toast.ts`.
 
 ## General
 
-- Keep messages short and translated (`t(...)`), matching existing usage in `src/components/orgs/`.
+- Keep titles/messages short and translated (`t(...)`).
 - Never use a toast as the primary way to display data — it's for transient feedback only.

@@ -22,6 +22,9 @@ const ko = {
     errorDescription: "예기치 않은 오류가 발생했습니다. 다시 시도하거나 홈으로 이동하세요.",
     undo: "실행 취소",
     undoFailed: "실행 취소에 실패했습니다",
+    connectionLost: "연결이 끊어졌습니다",
+    connectionReconnecting: "다시 연결 중...",
+    connectionRestored: "연결이 복구되었습니다",
   },
   auth: {
     welcomeTitle: "환영합니다",
@@ -72,6 +75,35 @@ const ko = {
     undoToastDescriptionBody: "몇 초 동안 복원할 수 있습니다.",
     undoToastRestored: "복원됨",
     undoToastTrigger: "실행 취소 토스트 표시",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "설정",

@@ -22,6 +22,9 @@ const ja = {
     errorDescription: "予期しないエラーが発生しました。再試行するかホームに戻ってください。",
     undo: "元に戻す",
     undoFailed: "元に戻せませんでした",
+    connectionLost: "接続が切断されました",
+    connectionReconnecting: "再接続しています...",
+    connectionRestored: "接続を復元しました",
   },
   auth: {
     welcomeTitle: "ようこそ",
@@ -73,6 +76,35 @@ const ja = {
     undoToastDescriptionBody: "数秒間なら元に戻せます。",
     undoToastRestored: "復元しました",
     undoToastTrigger: "取り消しトーストを表示",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "設定",

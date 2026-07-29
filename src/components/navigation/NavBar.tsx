@@ -4,6 +4,7 @@ import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { ThemeToggle } from "../theme/theme-toggle";
 import { NavUser } from "@/components/navigation/NavUser";
 import { Logo } from "@/components/brand/Logo";
+import { ConnectionStatus } from "@/components/navigation/ConnectionStatus";
 
 export function Navbar() {
   const { t } = useTranslation("common");
@@ -26,6 +27,7 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-2">
+          <ConnectionStatus />
           <NavUser variant="avatar" />
           <ThemeToggle />
           <LanguageSwitcher />

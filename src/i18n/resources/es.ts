@@ -22,6 +22,9 @@ const es = {
     errorDescription: "Ocurrió un error inesperado. Puedes intentarlo de nuevo o volver al inicio.",
     undo: "Deshacer",
     undoFailed: "No se pudo deshacer",
+    connectionLost: "Conexión perdida",
+    connectionReconnecting: "Reconectando...",
+    connectionRestored: "Conexión restablecida",
   },
   auth: {
     welcomeTitle: "Bienvenido",
@@ -74,6 +77,35 @@ const es = {
     undoToastDescriptionBody: "Puedes restaurarlo durante unos segundos.",
     undoToastRestored: "Restaurado",
     undoToastTrigger: "Mostrar toast de deshacer",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "Configuración",

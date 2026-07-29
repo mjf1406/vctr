@@ -24,6 +24,9 @@ const de = {
       "Ein unerwarteter Fehler ist aufgetreten. Du kannst es erneut versuchen oder zur Startseite gehen.",
     undo: "Rückgängig",
     undoFailed: "Rückgängig machen fehlgeschlagen",
+    connectionLost: "Verbindung verloren",
+    connectionReconnecting: "Wiederverbinden...",
+    connectionRestored: "Verbindung wiederhergestellt",
   },
   auth: {
     welcomeTitle: "Willkommen",
@@ -76,6 +79,35 @@ const de = {
     undoToastDescriptionBody: "Du kannst es für einige Sekunden wiederherstellen.",
     undoToastRestored: "Wiederhergestellt",
     undoToastTrigger: "Undo-Toast zeigen",
+  },
+  upload: {
+    dragDropTitle: "Drag and drop files here, or click to browse",
+    dragDropAria: "Upload files",
+    selectFilesAria: "Select files",
+
+    supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
+    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
+    supportsAny: "Supports all file types",
+
+    selectImages: "Select Images",
+    selectDocuments: "Select Documents",
+    selectAudio: "Select Audio",
+    selectFiles: "Select Files",
+
+    queued: "Queued",
+    uploading: "Uploading",
+    uploaded: "Uploaded",
+    cancelled: "Cancelled",
+    uploadFailed: "Upload failed",
+    abort: "Abort",
+    retry: "Retry",
+
+    uploadDemoTitle: "File upload",
+    uploadDemoDefaultTitle: "Default dropzone",
+    uploadDemoCompactTitle: "Compact dropzone (in Credenza)",
+    openUploadDialog: "Open upload dialog",
+    closeUploadDialog: "Close",
   },
   settings: {
     title: "Einstellungen",

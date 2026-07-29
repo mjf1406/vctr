@@ -1,26 +1,23 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import type { AppLanguage } from "@/lib/languages";
+import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 
 type CurrentUser = Doc<"users"> & {
   settings: Doc<"userSettings"> | null;
 };
 
 export function useUpdateLanguage() {
-  const queryClient = useQueryClient();
   const mutationFn = useConvexMutation(api.users.updateLanguage);
   const currentUserQuery = convexQuery(api.users.currentUser, {});
+  const queryKey = currentUserQuery.queryKey;
 
-  return useMutation({
+  return useOptimisticMutation({
     mutationFn: (args: { language: AppLanguage }) => mutationFn(args),
-    onMutate: async ({ language }) => {
-      const queryKey = currentUserQuery.queryKey;
-      await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<CurrentUser | null>(queryKey);
-
+    queryKeys: [queryKey],
+    applyOptimisticUpdate: (queryClient, { language }, _previousByKey) => {
       queryClient.setQueryData<CurrentUser | null>(queryKey, (old) => {
         if (!old) {
           return old;
@@ -44,18 +41,6 @@ export function useUpdateLanguage() {
           },
         };
       });
-
-      return { previous, queryKey };
-    },
-    onError: (_error, _variables, context) => {
-      if (context?.previous !== undefined) {
-        queryClient.setQueryData(context.queryKey, context.previous);
-      }
-    },
-    onSettled: (_data, _error, _variables, context) => {
-      if (context?.queryKey) {
-        void queryClient.invalidateQueries({ queryKey: context.queryKey });
-      }
     },
   });
 }

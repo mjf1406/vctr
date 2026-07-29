@@ -1,8 +1,8 @@
 import { getAuthSessionId, getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
-import { internalMutation, query } from "./_generated/server.js";
-import { authedMutation } from "./lib/customFunctions.js";
+import { query } from "./_generated/server.js";
+import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import { languageValidator } from "./lib/languages.js";
 
 export { languageValidator };
@@ -79,7 +79,7 @@ export const currentUser = query({
   },
 });
 
-export const currentSession = query({
+export const currentSession = authedQuery({
   args: {},
   returns: v.union(currentSessionValidator, v.null()),
   handler: async (ctx) => {
@@ -158,34 +158,5 @@ export const updateHomeSectionOrder = authedMutation({
       throw new Error("Failed to create home section order settings");
     }
     return created;
-  },
-});
-
-/**
- * Strip obsolete `homeOrder` from userSettings and ensure homeSectionOrder exists.
- * Run via: `bunx convex run users:repairHomeSectionOrder`
- */
-export const repairHomeSectionOrder = internalMutation({
-  args: {},
-  returns: v.object({ repaired: v.number() }),
-  handler: async (ctx) => {
-    // eslint-disable-next-line @convex-dev/no-query-collect -- one-shot settings migration
-    const allSettings = await ctx.db.query("userSettings").collect();
-    let repaired = 0;
-    for (const settings of allSettings) {
-      const withLegacy = settings as typeof settings & { homeOrder?: unknown };
-      const needsStrip = withLegacy.homeOrder !== undefined;
-      const needsOrder = settings.homeSectionOrder === undefined;
-      if (!needsStrip && !needsOrder) {
-        continue;
-      }
-      const { _id, _creationTime, homeOrder: _homeOrder, ...rest } = withLegacy;
-      await ctx.db.replace("userSettings", _id, {
-        ...rest,
-        homeSectionOrder: normalizeHomeSectionOrder(settings.homeSectionOrder),
-      });
-      repaired += 1;
-    }
-    return { repaired };
   },
 });

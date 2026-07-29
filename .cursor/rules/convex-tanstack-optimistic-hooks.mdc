@@ -18,7 +18,7 @@ alwaysApply: true
 
 ## Reference examples
 
-- Query hook: `src/hooks/user/useCurrentUser.ts`
-- Optimistic mutation hook: `src/hooks/user/useUpdateLanguage.ts`
+- Auth-gated query hook: `src/hooks/useAuthedQuery.ts`
+- Optimistic mutation hook: `src/hooks/useOptimisticMutation.ts`
 
 Follow those files' patterns when adding new Convex data hooks.

@@ -9,7 +9,8 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 ## Review Checklist
 
 - [ ] Run `vp install` after pulling remote changes and before getting started.
-- [ ] Run `vp check` and `vp test` to format, lint, type check and test changes.
+- [ ] Run `vp fmt --write` (or `vp check --no-lint`) for formatting, `bun run lint` for ESLint (Convex + TanStack plugins), `bun run typecheck`, and `vp test`.
+- [ ] Pre-commit runs `vp staged` with separate tasks (`vp fmt --write`, then `bunx eslint --fix`); do not combine them with `&&` in `vite.config.ts` staged config.
 - [ ] Check if there are `vite.config.ts` tasks or `package.json` scripts necessary for validation, run via `vp run <script>`.
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
 
