@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
+import { rateLimiter } from "./lib/rateLimiter.js";
 import type { Doc, Id } from "./_generated/dataModel.js";
 import type { MutationCtx } from "./_generated/server.js";
 
@@ -115,6 +116,7 @@ export const create = authedMutation({
   },
   returns: classValidator,
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classCreate", { key: ctx.userId, throws: true });
     const now = Date.now();
     const classId = await ctx.db.insert("classes", {
       ownerId: ctx.userId,
@@ -142,6 +144,7 @@ export const update = authedMutation({
   },
   returns: classValidator,
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classUpdate", { key: ctx.userId, throws: true });
     await requireOwnedClass(ctx, args.classId, ctx.userId);
     await ctx.db.patch("classes", args.classId, {
       name: normalizeName(args.name),
@@ -165,6 +168,7 @@ export const setArchived = authedMutation({
   },
   returns: classValidator,
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classArchive", { key: ctx.userId, throws: true });
     await requireOwnedClass(ctx, args.classId, ctx.userId);
     await ctx.db.patch("classes", args.classId, {
       archivedAt: args.archived ? Date.now() : undefined,
@@ -185,6 +189,7 @@ export const remove = authedMutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classDelete", { key: ctx.userId, throws: true });
     const classDoc = await requireOwnedClass(ctx, args.classId, ctx.userId);
     const expected = deleteConfirmationPhrase(classDoc.name);
     if (args.confirmation !== expected) {

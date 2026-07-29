@@ -27,6 +27,7 @@ const ru = {
     connectionReconnecting: "Повторное подключение...",
     connectionRestored: "Соединение восстановлено",
     optional: "необязательно",
+    rateLimited: "Слишком много запросов. Попробуйте позже.",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",

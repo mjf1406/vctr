@@ -28,6 +28,7 @@ const fr = {
     connectionReconnecting: "Reconnexion...",
     connectionRestored: "Connexion rétablie",
     optional: "facultatif",
+    rateLimited: "Trop de requêtes. Veuillez réessayer plus tard.",
   },
   auth: {
     welcomeTitle: "Bienvenue",

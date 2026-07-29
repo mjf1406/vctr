@@ -26,6 +26,7 @@ const pt = {
     connectionReconnecting: "Reconectando...",
     connectionRestored: "Conexão restabelecida",
     optional: "opcional",
+    rateLimited: "Demasiados pedidos. Tente novamente mais tarde.",
   },
   auth: {
     welcomeTitle: "Bem-vindo",

@@ -26,6 +26,7 @@ const zht = {
     connectionReconnecting: "正在重新連線...",
     connectionRestored: "連線已恢復",
     optional: "選填",
+    rateLimited: "請求過多，請稍後再試。",
   },
   auth: {
     welcomeTitle: "歡迎",

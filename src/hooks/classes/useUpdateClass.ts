@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
+import { mutationErrorMessage } from "@/lib/classes/mutationErrorMessage";
 
 type ClassDoc = Doc<"classes">;
 
@@ -19,11 +21,8 @@ function listQueryKey() {
   return convexQuery(api.classes.listMine, {}).queryKey;
 }
 
-function mutationErrorMessage(error: unknown, fallback: string): string {
-  return error instanceof Error && error.message ? error.message : fallback;
-}
-
 export function useUpdateClass() {
+  const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const mutationFn = useConvexMutation(api.classes.update);
   const queryKey = listQueryKey();
@@ -55,7 +54,7 @@ export function useUpdateClass() {
         queryClient.setQueryData(context.queryKey, context.previous);
       }
       toast.add({
-        title: mutationErrorMessage(error, "Could not update class"),
+        title: mutationErrorMessage(error, "Could not update class", t("rateLimited")),
         type: "error",
       });
     },

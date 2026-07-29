@@ -26,6 +26,7 @@ const zhs = {
     connectionReconnecting: "正在重新连接...",
     connectionRestored: "连接已恢复",
     optional: "可选",
+    rateLimited: "请求过多，请稍后再试。",
   },
   auth: {
     welcomeTitle: "欢迎",

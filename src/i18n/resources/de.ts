@@ -28,6 +28,7 @@ const de = {
     connectionReconnecting: "Wiederverbinden...",
     connectionRestored: "Verbindung wiederhergestellt",
     optional: "optional",
+    rateLimited: "Zu viele Anfragen. Bitte versuche es später erneut.",
   },
   auth: {
     welcomeTitle: "Willkommen",

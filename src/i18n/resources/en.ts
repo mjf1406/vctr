@@ -26,6 +26,7 @@ const en = {
     connectionReconnecting: "Reconnecting...",
     connectionRestored: "Connection restored",
     optional: "optional",
+    rateLimited: "Too many requests. Please try again later.",
   },
   auth: {
     welcomeTitle: "Welcome",

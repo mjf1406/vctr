@@ -26,6 +26,7 @@ const th = {
     connectionReconnecting: "กำลังเชื่อมต่อใหม่...",
     connectionRestored: "เชื่อมต่อแล้ว",
     optional: "ไม่บังคับ",
+    rateLimited: "คำขอมากเกินไป โปรดลองอีกครั้งในภายหลัง",
   },
   auth: {
     welcomeTitle: "ยินดีต้อนรับ",

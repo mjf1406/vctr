@@ -27,6 +27,7 @@ const uk = {
     connectionReconnecting: "Повторне підключення...",
     connectionRestored: "З’єднання відновлено",
     optional: "необов'язково",
+    rateLimited: "Забагато запитів. Спробуйте пізніше.",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",

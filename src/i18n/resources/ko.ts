@@ -26,6 +26,7 @@ const ko = {
     connectionReconnecting: "다시 연결 중...",
     connectionRestored: "연결이 복구되었습니다",
     optional: "선택 사항",
+    rateLimited: "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
   },
   auth: {
     welcomeTitle: "환영합니다",

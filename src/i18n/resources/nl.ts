@@ -27,6 +27,7 @@ const nl = {
     connectionReconnecting: "Opnieuw verbinden...",
     connectionRestored: "Verbinding hersteld",
     optional: "optioneel",
+    rateLimited: "Te veel verzoeken. Probeer het later opnieuw.",
   },
   auth: {
     welcomeTitle: "Welkom",

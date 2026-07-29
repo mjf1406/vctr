@@ -26,6 +26,7 @@ const ja = {
     connectionReconnecting: "再接続しています...",
     connectionRestored: "接続を復元しました",
     optional: "任意",
+    rateLimited: "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
   },
   auth: {
     welcomeTitle: "ようこそ",
