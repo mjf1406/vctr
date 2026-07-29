@@ -1,35 +1,11 @@
-// convex/authz.ts
-import { Authz, definePermissions, defineRoles } from "@djpanda/convex-authz";
-import { components } from "./_generated/api";
+import { Authz } from "@djpanda/convex-authz";
 
-// Step 1: Define permissions
-const permissions = definePermissions({
-  documents: {
-    create: true,
-    read: true,
-    update: true,
-    delete: true,
-  },
-  settings: {
-    view: true,
-    manage: true,
-  },
+import { APP_CONFIG } from "./appConfig.js";
+import { components } from "./_generated/api.js";
+import { permissions, roles } from "./lib/authzModel.js";
+
+export const authz = new Authz(components.authz, {
+  permissions,
+  roles,
+  tenantId: APP_CONFIG.authzTenantId,
 });
-
-// Step 2: Define roles
-const roles = defineRoles(permissions, {
-  admin: {
-    documents: ["create", "read", "update", "delete"],
-    settings: ["view", "manage"],
-  },
-  editor: {
-    documents: ["create", "read", "update"],
-    settings: ["view"],
-  },
-  viewer: {
-    documents: ["read"],
-  },
-});
-
-// Step 3: Create the authz client
-export const authz = new Authz(components.authz, { permissions, roles, tenantId: "my-app" });

@@ -9,6 +9,7 @@ import {
 } from "@/components/classes/ClassFormCredenza";
 import { ClassesToolbar } from "@/components/classes/ClassesToolbar";
 import { DeleteClassCredenza } from "@/components/classes/DeleteClassCredenza";
+import { ClassPermissionsProvider } from "@/components/permissions/ClassPermissionsProvider";
 import { ErrorState } from "@/components/ui/error-state";
 import {
   Empty,
@@ -26,6 +27,7 @@ import { useCreateClass } from "@/hooks/classes/useCreateClass";
 import { useDeleteClass } from "@/hooks/classes/useDeleteClass";
 import { useSetClassArchived } from "@/hooks/classes/useSetClassArchived";
 import { useUpdateClass } from "@/hooks/classes/useUpdateClass";
+import type { ClassPublic } from "@/lib/classes/classes";
 import type { ClassFormValues } from "@/lib/classes/classFormSchema";
 import {
   nextSortState,
@@ -35,12 +37,9 @@ import {
   type ClassSortKey,
   type ClassViewMode,
 } from "@/lib/classes/classSort";
-import type { Doc } from "../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 
-type ClassDoc = Doc<"classes">;
-
-type FormTarget = { mode: "create" } | { mode: "edit"; classDoc: ClassDoc };
+type FormTarget = { mode: "create" } | { mode: "edit"; classDoc: ClassPublic };
 
 function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
   const items = Array.from({ length: 3 }, (_, index) => index);
@@ -97,7 +96,7 @@ export function ClassesHomePage() {
   const [formOpen, setFormOpen] = useState(false);
   const [formTarget, setFormTarget] = useState<FormTarget>({ mode: "create" });
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<ClassDoc | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ClassPublic | null>(null);
 
   const { filtered } = useClassSearch({ classes: data, query: searchQuery });
   const hasActiveSearch = searchQuery.trim().length > 0;
@@ -130,12 +129,12 @@ export function ClassesHomePage() {
     setFormOpen(true);
   };
 
-  const openEdit = (classDoc: ClassDoc) => {
+  const openEdit = (classDoc: ClassPublic) => {
     setFormTarget({ mode: "edit", classDoc });
     setFormOpen(true);
   };
 
-  const openDelete = (classDoc: ClassDoc) => {
+  const openDelete = (classDoc: ClassPublic) => {
     setDeleteTarget(classDoc);
     setDeleteOpen(true);
   };
@@ -233,19 +232,20 @@ export function ClassesHomePage() {
       {!isPending && !isError && !hasNoClasses && !hasNoSearchMatches && active.length > 0 ? (
         <div className={listClassName}>
           {active.map((classDoc) => (
-            <ClassCard
-              key={classDoc._id}
-              classDoc={classDoc}
-              viewMode={viewMode}
-              onEdit={openEdit}
-              onArchiveToggle={(doc) => {
-                void setArchived.mutateAsync({
-                  classId: doc._id,
-                  archived: doc.archivedAt === undefined,
-                });
-              }}
-              onDelete={openDelete}
-            />
+            <ClassPermissionsProvider key={classDoc._id} role={classDoc.role}>
+              <ClassCard
+                classDoc={classDoc}
+                viewMode={viewMode}
+                onEdit={openEdit}
+                onArchiveToggle={(doc) => {
+                  void setArchived.mutateAsync({
+                    classId: doc._id,
+                    archived: doc.archivedAt === undefined,
+                  });
+                }}
+                onDelete={openDelete}
+              />
+            </ClassPermissionsProvider>
           ))}
         </div>
       ) : null}
@@ -260,19 +260,20 @@ export function ClassesHomePage() {
           {!isPending && archived.length > 0 ? (
             <div className={listClassName}>
               {archived.map((classDoc) => (
-                <ClassCard
-                  key={classDoc._id}
-                  classDoc={classDoc}
-                  viewMode={viewMode}
-                  onEdit={openEdit}
-                  onArchiveToggle={(doc) => {
-                    void setArchived.mutateAsync({
-                      classId: doc._id,
-                      archived: false,
-                    });
-                  }}
-                  onDelete={openDelete}
-                />
+                <ClassPermissionsProvider key={classDoc._id} role={classDoc.role}>
+                  <ClassCard
+                    classDoc={classDoc}
+                    viewMode={viewMode}
+                    onEdit={openEdit}
+                    onArchiveToggle={(doc) => {
+                      void setArchived.mutateAsync({
+                        classId: doc._id,
+                        archived: false,
+                      });
+                    }}
+                    onDelete={openDelete}
+                  />
+                </ClassPermissionsProvider>
               ))}
             </div>
           ) : null}

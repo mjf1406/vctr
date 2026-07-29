@@ -1,12 +1,10 @@
-import { isRateLimitError } from "@convex-dev/rate-limiter";
+import { messageFromError } from "@/lib/errors/convexError";
 
+/** @deprecated Prefer `messageFromError` — kept for any remaining call sites. */
 export function mutationErrorMessage(
   error: unknown,
   fallback: string,
   rateLimitedMessage: string,
 ): string {
-  if (isRateLimitError(error)) {
-    return rateLimitedMessage;
-  }
-  return error instanceof Error && error.message ? error.message : fallback;
+  return messageFromError(error, fallback, rateLimitedMessage);
 }

@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
-import { mutationErrorMessage } from "@/lib/classes/mutationErrorMessage";
+import type { ClassPublic } from "@/lib/classes/classes";
+import { messageFromError } from "@/lib/errors/convexError";
 
 type ClassDoc = Doc<"classes">;
 
@@ -34,9 +35,9 @@ export function useDeleteClass() {
       const detailKey = getQueryKey(args.classId);
       await queryClient.cancelQueries({ queryKey: listKey });
       await queryClient.cancelQueries({ queryKey: detailKey });
-      const previousList = queryClient.getQueryData<ClassDoc[]>(listKey);
+      const previousList = queryClient.getQueryData<ClassPublic[]>(listKey);
       const previousDetail = queryClient.getQueryData<ClassDoc | null>(detailKey);
-      queryClient.setQueryData<ClassDoc[]>(listKey, (old) => {
+      queryClient.setQueryData<ClassPublic[]>(listKey, (old) => {
         if (!old) return old;
         return old.filter((classDoc) => classDoc._id !== args.classId);
       });
@@ -51,7 +52,7 @@ export function useDeleteClass() {
         queryClient.setQueryData(context.detailKey, context.previousDetail);
       }
       toast.add({
-        title: mutationErrorMessage(error, "Could not delete class", t("rateLimited")),
+        title: messageFromError(error, "Could not delete class", t("rateLimited")),
         type: "error",
       });
     },

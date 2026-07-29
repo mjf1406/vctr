@@ -1,15 +1,34 @@
 import { v } from "convex/values";
 
-import { authedMutation, authedQuery } from "./lib/customFunctions.js";
-import { rateLimiter } from "./lib/rateLimiter.js";
+import { authz } from "./authz.js";
+import { APP_CONFIG } from "./appConfig.js";
+import { components } from "./_generated/api.js";
 import type { Doc, Id } from "./_generated/dataModel.js";
 import type { MutationCtx } from "./_generated/server.js";
+import {
+  CLASS_ROLES,
+  classScope,
+  isClassRole,
+  pickHighestClassRole,
+  type ClassRole,
+} from "./lib/authzModel.js";
+import { authedMutation, authedQuery, classMutation } from "./lib/customFunctions.js";
+import { rateLimiter } from "./lib/rateLimiter.js";
 
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
 const MAX_NAME_LENGTH = 100;
 const MAX_DESCRIPTION_LENGTH = 500;
 const MAX_ICON_LENGTH = 32;
+
+const classRoleValidator = v.union(
+  v.literal("owner"),
+  v.literal("teacher"),
+  v.literal("assistant_teacher"),
+  v.literal("student"),
+  v.literal("guardian"),
+  v.literal("class_member"),
+);
 
 const classValidator = v.object({
   _id: v.id("classes"),
@@ -21,6 +40,10 @@ const classValidator = v.object({
   icon: v.optional(v.string()),
   updatedAt: v.number(),
   archivedAt: v.optional(v.number()),
+});
+
+const classWithRoleValidator = classValidator.extend({
+  role: classRoleValidator,
 });
 
 function normalizeName(name: string): string {
@@ -79,31 +102,66 @@ function deleteConfirmationPhrase(name: string): string {
   return `delete ${name}`;
 }
 
-async function requireOwnedClass(
-  ctx: MutationCtx,
-  classId: Id<"classes">,
-  userId: Id<"users">,
-): Promise<Doc<"classes">> {
-  const classDoc = await ctx.db.get("classes", classId);
-  if (!classDoc) {
-    throw new Error("Class not found");
+async function revokeAllClassMembership(ctx: MutationCtx, classId: Id<"classes">): Promise<void> {
+  const scope = classScope(classId);
+  const userIds = new Set<string>();
+  for (const role of CLASS_ROLES) {
+    const users = await ctx.runQuery(components.authz.queries.getUsersWithRole, {
+      tenantId: APP_CONFIG.authzTenantId,
+      role,
+      scope,
+    });
+    for (const user of users) {
+      userIds.add(user.userId);
+    }
   }
-  if (classDoc.ownerId !== userId) {
-    throw new Error("Unauthorized");
+  for (const userId of userIds) {
+    await authz.offboardUser(ctx, userId, {
+      scope,
+      removeOverrides: true,
+      removeRelationships: true,
+      removeAttributes: false,
+    });
   }
-  return classDoc;
 }
 
 export const listMine = authedQuery({
   args: {},
-  returns: v.array(classValidator),
+  returns: v.array(classWithRoleValidator),
   handler: async (ctx) => {
-    // Owner-scoped list is bounded per user; collect is intentional.
-    // eslint-disable-next-line @convex-dev/no-collect-in-query -- per-owner class lists stay small
-    return await ctx.db
-      .query("classes")
-      .withIndex("by_owner", (q) => q.eq("ownerId", ctx.userId))
-      .collect();
+    const roleEntries = await authz.getUserRoles(ctx, ctx.userId);
+    const rolesByClassId = new Map<string, Array<string>>();
+
+    for (const entry of roleEntries) {
+      let classId: string | null = null;
+      if (entry.scope?.type === "class") {
+        classId = entry.scope.id;
+      } else if (typeof entry.scopeKey === "string" && entry.scopeKey.startsWith("class:")) {
+        classId = entry.scopeKey.slice("class:".length);
+      }
+      if (!classId) continue;
+      const existing = rolesByClassId.get(classId) ?? [];
+      existing.push(entry.role);
+      rolesByClassId.set(classId, existing);
+    }
+
+    const results: Array<Doc<"classes"> & { role: ClassRole }> = [];
+
+    for (const [classId, roleNames] of rolesByClassId) {
+      const scope = classScope(classId);
+      const canRead = await authz.can(ctx, ctx.userId, "class:read", scope);
+      if (!canRead) continue;
+
+      const role = pickHighestClassRole(roleNames.filter(isClassRole));
+      if (!role) continue;
+
+      const classDoc = await ctx.db.get("classes", classId as Id<"classes">);
+      if (!classDoc) continue;
+
+      results.push({ ...classDoc, role });
+    }
+
+    return results;
   },
 });
 
@@ -112,7 +170,11 @@ export const get = authedQuery({
   returns: v.union(classValidator, v.null()),
   handler: async (ctx, args) => {
     const classDoc = await ctx.db.get("classes", args.classId);
-    if (!classDoc || classDoc.ownerId !== ctx.userId) {
+    if (!classDoc) {
+      return null;
+    }
+    const canRead = await authz.can(ctx, ctx.userId, "class:read", classScope(args.classId));
+    if (!canRead) {
       return null;
     }
     return classDoc;
@@ -138,6 +200,7 @@ export const create = authedMutation({
       icon: normalizeIcon(args.icon),
       updatedAt: now,
     });
+    await authz.assignRole(ctx, ctx.userId, "owner", classScope(classId));
     const created = await ctx.db.get("classes", classId);
     if (!created) {
       throw new Error("Failed to create class");
@@ -146,9 +209,8 @@ export const create = authedMutation({
   },
 });
 
-export const update = authedMutation({
+export const update = classMutation({
   args: {
-    classId: v.id("classes"),
     name: v.string(),
     year: v.number(),
     description: v.optional(v.string()),
@@ -157,7 +219,7 @@ export const update = authedMutation({
   returns: classValidator,
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "classUpdate", { key: ctx.userId, throws: true });
-    await requireOwnedClass(ctx, args.classId, ctx.userId);
+    await ctx.require("class:update");
     await ctx.db.patch("classes", args.classId, {
       name: normalizeName(args.name),
       year: normalizeYear(args.year),
@@ -173,15 +235,14 @@ export const update = authedMutation({
   },
 });
 
-export const setArchived = authedMutation({
+export const setArchived = classMutation({
   args: {
-    classId: v.id("classes"),
     archived: v.boolean(),
   },
   returns: classValidator,
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "classArchive", { key: ctx.userId, throws: true });
-    await requireOwnedClass(ctx, args.classId, ctx.userId);
+    await ctx.require("class:archive");
     await ctx.db.patch("classes", args.classId, {
       archivedAt: args.archived ? Date.now() : undefined,
       updatedAt: Date.now(),
@@ -194,19 +255,19 @@ export const setArchived = authedMutation({
   },
 });
 
-export const remove = authedMutation({
+export const remove = classMutation({
   args: {
-    classId: v.id("classes"),
     confirmation: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "classDelete", { key: ctx.userId, throws: true });
-    const classDoc = await requireOwnedClass(ctx, args.classId, ctx.userId);
-    const expected = deleteConfirmationPhrase(classDoc.name);
+    await ctx.require("class:delete");
+    const expected = deleteConfirmationPhrase(ctx.classDoc.name);
     if (args.confirmation !== expected) {
       throw new Error(`Type "${expected}" to confirm deletion`);
     }
+    await revokeAllClassMembership(ctx, args.classId);
     await ctx.db.delete("classes", args.classId);
     return null;
   },

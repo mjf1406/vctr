@@ -1,36 +1,21 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArchiveIcon,
-  ArchiveRestoreIcon,
-  MoreVerticalIcon,
-  PencilIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { ArchiveIcon, ArchiveRestoreIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
-import { Button } from "@/components/ui/button";
+import { ActionMenu, type ActionMenuItem } from "@/components/ui/action-menu";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { Doc } from "../../../convex/_generated/dataModel";
+import type { ClassPublic } from "@/lib/classes/classes";
 import type { ClassViewMode } from "@/lib/classes/classSort";
 import { cn } from "@/lib/utils";
 
-type ClassDoc = Doc<"classes">;
-
 type ClassCardProps = {
-  classDoc: ClassDoc;
+  classDoc: ClassPublic;
   viewMode: ClassViewMode;
-  onEdit: (classDoc: ClassDoc) => void;
-  onArchiveToggle: (classDoc: ClassDoc) => void;
-  onDelete: (classDoc: ClassDoc) => void;
+  onEdit: (classDoc: ClassPublic) => void;
+  onArchiveToggle: (classDoc: ClassPublic) => void;
+  onDelete: (classDoc: ClassPublic) => void;
 };
 
 function formatTimestamp(value: number, language: string): string {
@@ -51,42 +36,38 @@ export function ClassCard({
   const isArchived = classDoc.archivedAt !== undefined;
   const description = classDoc.description?.trim() || t("noDescription");
 
-  const menu = (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="relative z-10"
-            aria-label={t("classActions")}
-          />
-        }
-      >
-        <MoreVerticalIcon />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => onEdit(classDoc)}>
-            <PencilIcon />
-            {t("editAction")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onArchiveToggle(classDoc)}>
-            {isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
-            {isArchived ? t("restoreAction") : t("archiveAction")}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive" onClick={() => onDelete(classDoc)}>
-            <Trash2Icon />
-            {t("deleteAction")}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+  const menuItems = useMemo<Array<ActionMenuItem>>(
+    () => [
+      {
+        id: "edit",
+        label: t("editAction"),
+        icon: <PencilIcon />,
+        permission: "class:update",
+        group: "manage",
+        onSelect: () => onEdit(classDoc),
+      },
+      {
+        id: "archive",
+        label: isArchived ? t("restoreAction") : t("archiveAction"),
+        icon: isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />,
+        permission: "class:archive",
+        group: "manage",
+        onSelect: () => onArchiveToggle(classDoc),
+      },
+      {
+        id: "delete",
+        label: t("deleteAction"),
+        icon: <Trash2Icon />,
+        permission: "class:delete",
+        variant: "destructive",
+        group: "danger",
+        onSelect: () => onDelete(classDoc),
+      },
+    ],
+    [classDoc, isArchived, onArchiveToggle, onDelete, onEdit, t],
   );
+
+  const menu = <ActionMenu items={menuItems} label={t("classActions")} />;
 
   const openLink = (
     <Link

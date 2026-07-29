@@ -3,11 +3,10 @@ import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
-import type { Doc, Id } from "../../../convex/_generated/dataModel";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
-import { mutationErrorMessage } from "@/lib/classes/mutationErrorMessage";
-
-type ClassDoc = Doc<"classes">;
+import type { ClassPublic } from "@/lib/classes/classes";
+import { messageFromError } from "@/lib/errors/convexError";
 
 type CreateClassArgs = {
   name: string;
@@ -30,10 +29,10 @@ export function useCreateClass() {
     mutationFn: (args: CreateClassArgs) => mutationFn(args),
     onMutate: async (args) => {
       await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ClassDoc[]>(queryKey);
+      const previous = queryClient.getQueryData<ClassPublic[]>(queryKey);
       const optimisticId = `optimistic:${crypto.randomUUID()}` as Id<"classes">;
       const now = Date.now();
-      const optimistic: ClassDoc = {
+      const optimistic: ClassPublic = {
         _id: optimisticId,
         _creationTime: now,
         ownerId: "optimistic" as Id<"users">,
@@ -42,8 +41,10 @@ export function useCreateClass() {
         description: args.description,
         icon: args.icon,
         updatedAt: now,
+        role: "owner",
+        _pending: true,
       };
-      queryClient.setQueryData<ClassDoc[]>(queryKey, (old) =>
+      queryClient.setQueryData<ClassPublic[]>(queryKey, (old) =>
         old ? [optimistic, ...old] : [optimistic],
       );
       return { previous, queryKey, optimisticId };
@@ -53,7 +54,7 @@ export function useCreateClass() {
         queryClient.setQueryData(context.queryKey, context.previous);
       }
       toast.add({
-        title: mutationErrorMessage(error, "Could not create class", t("rateLimited")),
+        title: messageFromError(error, "Could not create class", t("rateLimited")),
         type: "error",
       });
     },
