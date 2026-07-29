@@ -5,6 +5,7 @@ const fr = {
     settings: "Paramètres",
     account: "Compte",
     billing: "Facturation",
+    ui: "UI",
     signIn: "Se connecter",
     signOut: "Se déconnecter",
     openUserMenu: "Ouvrir le menu utilisateur",
@@ -21,6 +22,8 @@ const fr = {
     errorTitle: "Une erreur est survenue",
     errorDescription:
       "Une erreur inattendue s'est produite. Vous pouvez réessayer ou revenir à l'accueil.",
+    undo: "Annuler",
+    undoFailed: "Impossible d'annuler",
   },
   auth: {
     welcomeTitle: "Bienvenue",
@@ -55,10 +58,25 @@ const fr = {
   home: {
     title: "Playground UI",
     description:
-      "Vérifications rapides pour badges, bouton de copie, toast, sélecteur d'icônes, credenza et thème.",
+      "Vérifications rapides pour badges, bouton de copie, toast, état d'erreur, info-bulle de débordement, toast d'annulation, sélecteur d'icônes, credenza et thème.",
     language: "Langue",
     badges: "Badges",
     roleBadges: "Badges de rôle",
+    errorState: "État d'erreur",
+    errorStateDescription:
+      "Erreurs en ligne ou en carte avec nouvelle tentative asynchrone optionnelle.",
+    overflowTooltip: "Info-bulle de débordement",
+    overflowTooltipDescription: "L'info-bulle n'apparaît que lorsque le texte est tronqué.",
+    overflowTooltipShort: "Ça tient",
+    overflowTooltipLong:
+      "Cette étiquette est volontairement longue pour être tronquée dans un conteneur étroit et afficher une info-bulle.",
+    undoToast: "Toast d'annulation",
+    undoToastDescription:
+      "Toast de succès avec une action Annuler qui exécute un callback du appelant.",
+    undoToastTitle: "Élément supprimé",
+    undoToastDescriptionBody: "Vous pouvez le restaurer pendant quelques secondes.",
+    undoToastRestored: "Restauré",
+    undoToastTrigger: "Afficher le toast d'annulation",
   },
   settings: {
     title: "Paramètres",

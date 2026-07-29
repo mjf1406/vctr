@@ -5,6 +5,7 @@ const ja = {
     settings: "設定",
     account: "アカウント",
     billing: "請求",
+    ui: "UI",
     signIn: "サインイン",
     signOut: "サインアウト",
     openUserMenu: "ユーザーメニューを開く",
@@ -19,6 +20,8 @@ const ja = {
     notFoundDescription: "お探しのページは存在しません。",
     errorTitle: "問題が発生しました",
     errorDescription: "予期しないエラーが発生しました。再試行するかホームに戻ってください。",
+    undo: "元に戻す",
+    undoFailed: "元に戻せませんでした",
   },
   auth: {
     welcomeTitle: "ようこそ",
@@ -53,10 +56,23 @@ const ja = {
   home: {
     title: "UIプレイグラウンド",
     description:
-      "バッジ、コピーボタン、トースト、アイコンピッカー、クレデンザ、テーマの確認用です。",
+      "バッジ、コピーボタン、トースト、エラー状態、オーバーフローツールチップ、取り消しトースト、アイコンピッカー、クレデンザ、テーマの確認用です。",
     language: "言語",
     badges: "バッジ",
     roleBadges: "役割バッジ",
+    errorState: "エラー状態",
+    errorStateDescription: "任意の非同期再試行付きインライン／カードのエラー表示。",
+    overflowTooltip: "オーバーフローツールチップ",
+    overflowTooltipDescription: "テキストが切り詰められたときだけツールチップを表示します。",
+    overflowTooltipShort: "ここに収まる",
+    overflowTooltipLong:
+      "このラベルは意図的に長いので、狭いコンテナ内で切り詰められ、ツールチップが表示されます。",
+    undoToast: "取り消しトースト",
+    undoToastDescription: "呼び出し側のコールバックを実行する Undo アクション付き成功トースト。",
+    undoToastTitle: "項目を削除しました",
+    undoToastDescriptionBody: "数秒間なら元に戻せます。",
+    undoToastRestored: "復元しました",
+    undoToastTrigger: "取り消しトーストを表示",
   },
   settings: {
     title: "設定",

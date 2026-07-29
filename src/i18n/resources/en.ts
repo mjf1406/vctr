@@ -5,6 +5,7 @@ const en = {
     settings: "Settings",
     account: "Account",
     billing: "Billing",
+    ui: "UI",
     signIn: "Sign in",
     signOut: "Sign out",
     openUserMenu: "Open user menu",
@@ -19,6 +20,8 @@ const en = {
     notFoundDescription: "The page you're looking for doesn't exist.",
     errorTitle: "Something went wrong",
     errorDescription: "An unexpected error occurred. You can try again or go back home.",
+    undo: "Undo",
+    undoFailed: "Could not undo",
   },
   auth: {
     welcomeTitle: "Welcome",
@@ -52,10 +55,24 @@ const en = {
   },
   home: {
     title: "UI playground",
-    description: "Quick checks for badges, copy button, toast, icon picker, credenza, and theme.",
+    description:
+      "Quick checks for badges, copy button, toast, error state, overflow tooltip, undo toast, icon picker, credenza, and theme.",
     language: "Language",
     badges: "Badges",
     roleBadges: "Role badges",
+    errorState: "Error state",
+    errorStateDescription: "Inline and card error shells with optional async retry.",
+    overflowTooltip: "Overflow tooltip",
+    overflowTooltipDescription: "Tooltip appears only when the text is truncated.",
+    overflowTooltipShort: "Fits here",
+    overflowTooltipLong:
+      "This label is intentionally long so it truncates inside a narrow container and reveals a tooltip.",
+    undoToast: "Undo toast",
+    undoToastDescription: "Success toast with an Undo action that runs a caller-owned callback.",
+    undoToastTitle: "Item removed",
+    undoToastDescriptionBody: "You can restore it for a few seconds.",
+    undoToastRestored: "Restored",
+    undoToastTrigger: "Show undo toast",
   },
   settings: {
     title: "Settings",

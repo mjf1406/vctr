@@ -5,6 +5,7 @@ const de = {
     settings: "Einstellungen",
     account: "Konto",
     billing: "Abrechnung",
+    ui: "UI",
     signIn: "Anmelden",
     signOut: "Abmelden",
     openUserMenu: "Benutzermenü öffnen",
@@ -21,6 +22,8 @@ const de = {
     errorTitle: "Etwas ist schiefgelaufen",
     errorDescription:
       "Ein unerwarteter Fehler ist aufgetreten. Du kannst es erneut versuchen oder zur Startseite gehen.",
+    undo: "Rückgängig",
+    undoFailed: "Rückgängig machen fehlgeschlagen",
   },
   auth: {
     welcomeTitle: "Willkommen",
@@ -55,10 +58,24 @@ const de = {
   home: {
     title: "UI-Spielwiese",
     description:
-      "Schnelle Checks für Badges, Kopierbutton, Toast, Icon-Picker, Credenza und Theme.",
+      "Schnelle Checks für Badges, Kopierbutton, Toast, Fehlerzustand, Overflow-Tooltip, Undo-Toast, Icon-Picker, Credenza und Theme.",
     language: "Sprache",
     badges: "Badges",
     roleBadges: "Rollen-Badges",
+    errorState: "Fehlerzustand",
+    errorStateDescription: "Inline- und Kartenfehler mit optionalem asynchronem Retry.",
+    overflowTooltip: "Overflow-Tooltip",
+    overflowTooltipDescription: "Tooltip erscheint nur, wenn der Text abgeschnitten ist.",
+    overflowTooltipShort: "Passt hier",
+    overflowTooltipLong:
+      "Dieses Label ist absichtlich lang, damit es in einem schmalen Container abgeschnitten wird und einen Tooltip zeigt.",
+    undoToast: "Undo-Toast",
+    undoToastDescription:
+      "Erfolgs-Toast mit Undo-Aktion, die einen vom Aufrufer bereitgestellten Callback ausführt.",
+    undoToastTitle: "Element entfernt",
+    undoToastDescriptionBody: "Du kannst es für einige Sekunden wiederherstellen.",
+    undoToastRestored: "Wiederhergestellt",
+    undoToastTrigger: "Undo-Toast zeigen",
   },
   settings: {
     title: "Einstellungen",

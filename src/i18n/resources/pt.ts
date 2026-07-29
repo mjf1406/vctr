@@ -5,6 +5,7 @@ const pt = {
     settings: "Configurações",
     account: "Conta",
     billing: "Cobrança",
+    ui: "UI",
     signIn: "Entrar",
     signOut: "Sair",
     openUserMenu: "Abrir menu do usuário",
@@ -19,6 +20,8 @@ const pt = {
     notFoundDescription: "A página que você procura não existe.",
     errorTitle: "Algo deu errado",
     errorDescription: "Ocorreu um erro inesperado. Você pode tentar novamente ou voltar ao início.",
+    undo: "Desfazer",
+    undoFailed: "Não foi possível desfazer",
   },
   auth: {
     welcomeTitle: "Bem-vindo",
@@ -53,10 +56,23 @@ const pt = {
   home: {
     title: "Playground de UI",
     description:
-      "Verificações rápidas de badges, botão de copiar, toast, seletor de ícones, credenza e tema.",
+      "Verificações rápidas de badges, botão de copiar, toast, estado de erro, tooltip de overflow, toast de desfazer, seletor de ícones, credenza e tema.",
     language: "Idioma",
     badges: "Badges",
     roleBadges: "Badges de função",
+    errorState: "Estado de erro",
+    errorStateDescription: "Erros em linha ou em cartão com nova tentativa assíncrona opcional.",
+    overflowTooltip: "Tooltip de overflow",
+    overflowTooltipDescription: "O tooltip só aparece quando o texto está truncado.",
+    overflowTooltipShort: "Cabe aqui",
+    overflowTooltipLong:
+      "Este rótulo é intencionalmente longo para truncar em um contêiner estreito e mostrar um tooltip.",
+    undoToast: "Toast de desfazer",
+    undoToastDescription: "Toast de sucesso com ação Desfazer que executa um callback do chamador.",
+    undoToastTitle: "Item removido",
+    undoToastDescriptionBody: "Você pode restaurá-lo por alguns segundos.",
+    undoToastRestored: "Restaurado",
+    undoToastTrigger: "Mostrar toast de desfazer",
   },
   settings: {
     title: "Configurações",

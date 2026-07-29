@@ -16,6 +16,7 @@ import { Route as AuthenticatedAccountRouteImport } from "./routes/_authenticate
 import { Route as AuthenticatedBillingRouteImport } from "./routes/_authenticated/billing";
 import { Route as AuthenticatedJoinRouteImport } from "./routes/_authenticated/join";
 import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticated/settings";
+import { Route as AuthenticatedUiRouteImport } from "./routes/_authenticated/ui";
 import { Route as PublicSplatRouteImport } from "./routes/_public/$";
 import { Route as PublicLoginRouteImport } from "./routes/_public/login";
 import { Route as PublicUnauthorizedRouteImport } from "./routes/_public/unauthorized";
@@ -53,6 +54,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: "/settings",
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any);
+const AuthenticatedUiRoute = AuthenticatedUiRouteImport.update({
+  id: "/ui",
+  path: "/ui",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
 const PublicSplatRoute = PublicSplatRouteImport.update({
   id: "/$",
   path: "/$",
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   "/billing": typeof AuthenticatedBillingRoute;
   "/join": typeof AuthenticatedJoinRoute;
   "/settings": typeof AuthenticatedSettingsRoute;
+  "/ui": typeof AuthenticatedUiRoute;
   "/$": typeof PublicSplatRoute;
   "/login": typeof PublicLoginRoute;
   "/unauthorized": typeof PublicUnauthorizedRoute;
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   "/billing": typeof AuthenticatedBillingRoute;
   "/join": typeof AuthenticatedJoinRoute;
   "/settings": typeof AuthenticatedSettingsRoute;
+  "/ui": typeof AuthenticatedUiRoute;
   "/$": typeof PublicSplatRoute;
   "/login": typeof PublicLoginRoute;
   "/unauthorized": typeof PublicUnauthorizedRoute;
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   "/_authenticated/billing": typeof AuthenticatedBillingRoute;
   "/_authenticated/join": typeof AuthenticatedJoinRoute;
   "/_authenticated/settings": typeof AuthenticatedSettingsRoute;
+  "/_authenticated/ui": typeof AuthenticatedUiRoute;
   "/_public/$": typeof PublicSplatRoute;
   "/_public/login": typeof PublicLoginRoute;
   "/_public/unauthorized": typeof PublicUnauthorizedRoute;
@@ -110,11 +119,21 @@ export interface FileRouteTypes {
     | "/billing"
     | "/join"
     | "/settings"
+    | "/ui"
     | "/$"
     | "/login"
     | "/unauthorized";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/account" | "/billing" | "/join" | "/settings" | "/$" | "/login" | "/unauthorized";
+  to:
+    | "/"
+    | "/account"
+    | "/billing"
+    | "/join"
+    | "/settings"
+    | "/ui"
+    | "/$"
+    | "/login"
+    | "/unauthorized";
   id:
     | "__root__"
     | "/_authenticated"
@@ -123,6 +142,7 @@ export interface FileRouteTypes {
     | "/_authenticated/billing"
     | "/_authenticated/join"
     | "/_authenticated/settings"
+    | "/_authenticated/ui"
     | "/_public/$"
     | "/_public/login"
     | "/_public/unauthorized"
@@ -185,6 +205,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
       parentRoute: typeof AuthenticatedRouteRoute;
     };
+    "/_authenticated/ui": {
+      id: "/_authenticated/ui";
+      path: "/ui";
+      fullPath: "/ui";
+      preLoaderRoute: typeof AuthenticatedUiRouteImport;
+      parentRoute: typeof AuthenticatedRouteRoute;
+    };
     "/_public/$": {
       id: "/_public/$";
       path: "/$";
@@ -214,6 +241,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBillingRoute: typeof AuthenticatedBillingRoute;
   AuthenticatedJoinRoute: typeof AuthenticatedJoinRoute;
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
+  AuthenticatedUiRoute: typeof AuthenticatedUiRoute;
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
 }
 
@@ -222,6 +250,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBillingRoute: AuthenticatedBillingRoute,
   AuthenticatedJoinRoute: AuthenticatedJoinRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedUiRoute: AuthenticatedUiRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 };
 

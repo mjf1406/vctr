@@ -5,6 +5,7 @@ const uk = {
     settings: "Налаштування",
     account: "Обліковий запис",
     billing: "Оплата",
+    ui: "UI",
     signIn: "Увійти",
     signOut: "Вийти",
     openUserMenu: "Відкрити меню користувача",
@@ -20,6 +21,8 @@ const uk = {
     errorTitle: "Щось пішло не так",
     errorDescription:
       "Сталася неочікувана помилка. Ви можете спробувати знову або повернутися на головну.",
+    undo: "Скасувати",
+    undoFailed: "Не вдалося скасувати",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",
@@ -54,10 +57,24 @@ const uk = {
   home: {
     title: "UI-пісочниця",
     description:
-      "Швидкі перевірки бейджів, кнопки копіювання, тостів, вибору іконок, credenza та теми.",
+      "Швидкі перевірки бейджів, кнопки копіювання, тостів, стану помилки, tooltip переповнення, toast скасування, вибору іконок, credenza та теми.",
     language: "Мова",
     badges: "Бейджі",
     roleBadges: "Бейджі ролей",
+    errorState: "Стан помилки",
+    errorStateDescription: "Вбудовані й карткові помилки з опційним асинхронним повтором.",
+    overflowTooltip: "Tooltip переповнення",
+    overflowTooltipDescription: "Tooltip з’являється лише коли текст обрізано.",
+    overflowTooltipShort: "Вміщується",
+    overflowTooltipLong:
+      "Ця мітка навмисно довга, щоб обрізатися у вузькому контейнері та показати tooltip.",
+    undoToast: "Toast скасування",
+    undoToastDescription:
+      "Toast успіху з дією «Скасувати», яка виконує callback викликаючої сторони.",
+    undoToastTitle: "Елемент видалено",
+    undoToastDescriptionBody: "Ви можете відновити його протягом кількох секунд.",
+    undoToastRestored: "Відновлено",
+    undoToastTrigger: "Показати toast скасування",
   },
   settings: {
     title: "Налаштування",

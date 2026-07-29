@@ -17,18 +17,14 @@ export const Route = createFileRoute("/_authenticated")({
   component: function AuthenticatedLayout() {
     const { auth } = Route.useRouteContext();
 
-    if (auth.isLoading) {
-      return <PendingComponent />;
-    }
-
-    if (!auth.isAuthenticated) {
+    if (!auth.isLoading && !auth.isAuthenticated) {
       return null;
     }
 
     return (
       <>
         <Navbar />
-        <Outlet />
+        {auth.isLoading ? <PendingComponent inset /> : <Outlet />}
       </>
     );
   },

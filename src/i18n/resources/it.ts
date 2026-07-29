@@ -5,6 +5,7 @@ const it = {
     settings: "Impostazioni",
     account: "Account",
     billing: "Fatturazione",
+    ui: "UI",
     signIn: "Accedi",
     signOut: "Esci",
     openUserMenu: "Apri menu utente",
@@ -19,6 +20,8 @@ const it = {
     notFoundDescription: "La pagina che stai cercando non esiste.",
     errorTitle: "Qualcosa è andato storto",
     errorDescription: "Si è verificato un errore imprevisto. Puoi riprovare o tornare alla home.",
+    undo: "Annulla",
+    undoFailed: "Impossibile annullare",
   },
   auth: {
     welcomeTitle: "Benvenuto",
@@ -53,10 +56,24 @@ const it = {
   home: {
     title: "Playground UI",
     description:
-      "Controlli rapidi per badge, pulsante di copia, toast, selettore icone, credenza e tema.",
+      "Controlli rapidi per badge, pulsante di copia, toast, stato di errore, tooltip di overflow, toast di annullamento, selettore icone, credenza e tema.",
     language: "Lingua",
     badges: "Badge",
     roleBadges: "Badge di ruolo",
+    errorState: "Stato di errore",
+    errorStateDescription: "Errori in linea o a scheda con retry asincrono opzionale.",
+    overflowTooltip: "Tooltip di overflow",
+    overflowTooltipDescription: "Il tooltip appare solo quando il testo è troncato.",
+    overflowTooltipShort: "Ci sta",
+    overflowTooltipLong:
+      "Questa etichetta è intenzionalmente lunga per troncare in un contenitore stretto e mostrare un tooltip.",
+    undoToast: "Toast di annullamento",
+    undoToastDescription:
+      "Toast di successo con azione Annulla che esegue un callback del chiamante.",
+    undoToastTitle: "Elemento rimosso",
+    undoToastDescriptionBody: "Puoi ripristinarlo per alcuni secondi.",
+    undoToastRestored: "Ripristinato",
+    undoToastTrigger: "Mostra toast di annullamento",
   },
   settings: {
     title: "Impostazioni",

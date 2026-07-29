@@ -5,6 +5,7 @@ const ru = {
     settings: "Настройки",
     account: "Аккаунт",
     billing: "Оплата",
+    ui: "UI",
     signIn: "Войти",
     signOut: "Выйти",
     openUserMenu: "Открыть меню пользователя",
@@ -20,6 +21,8 @@ const ru = {
     errorTitle: "Что-то пошло не так",
     errorDescription:
       "Произошла непредвиденная ошибка. Вы можете повторить попытку или вернуться на главную.",
+    undo: "Отменить",
+    undoFailed: "Не удалось отменить",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",
@@ -54,10 +57,24 @@ const ru = {
   home: {
     title: "UI-песочница",
     description:
-      "Быстрые проверки бейджей, кнопки копирования, тостов, выбора иконок, credenza и темы.",
+      "Быстрые проверки бейджей, кнопки копирования, тостов, состояния ошибки, tooltip переполнения, toast отмены, выбора иконок, credenza и темы.",
     language: "Язык",
     badges: "Бейджи",
     roleBadges: "Бейджи ролей",
+    errorState: "Состояние ошибки",
+    errorStateDescription: "Встроенные и карточные ошибки с опциональным асинхронным повтором.",
+    overflowTooltip: "Tooltip переполнения",
+    overflowTooltipDescription: "Tooltip появляется только когда текст обрезан.",
+    overflowTooltipShort: "Помещается",
+    overflowTooltipLong:
+      "Эта подпись намеренно длинная, чтобы обрезаться в узком контейнере и показать tooltip.",
+    undoToast: "Toast отмены",
+    undoToastDescription:
+      "Toast успеха с действием «Отменить», которое вызывает callback вызывающей стороны.",
+    undoToastTitle: "Элемент удалён",
+    undoToastDescriptionBody: "Вы можете восстановить его в течение нескольких секунд.",
+    undoToastRestored: "Восстановлено",
+    undoToastTrigger: "Показать toast отмены",
   },
   settings: {
     title: "Настройки",
