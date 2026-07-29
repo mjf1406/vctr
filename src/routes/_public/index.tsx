@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInbox } from "@fortawesome/free-solid-svg-icons/faInbox";
 import { useTranslation } from "react-i18next";
 import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
 import { LanguageSelect } from "@/components/i18n/LanguageSelect";
+import { FontAwesomeIconPickerLazy } from "@/components/icons/FontAwesomeIconPickerLazy";
+import { iconDefinitionToId } from "@/components/icons/fontawesome-icon-catalog";
+import { useTheme } from "@/components/theme/theme-context";
+import { AsyncButton } from "@/components/ui/async-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
-import { toast } from "@/components/ui/toast-manager";
 import {
   Credenza,
   CredenzaBody,
@@ -20,10 +24,17 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/ui/credenza";
-import { FontAwesomeIconPickerLazy } from "@/components/icons/FontAwesomeIconPickerLazy";
-import { iconDefinitionToId } from "@/components/icons/fontawesome-icon-catalog";
-import { useTheme } from "@/components/theme/theme-context";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { ProgressButton } from "@/components/ui/progress-button";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast-manager";
 import { useAppLanguage } from "@/i18n/language-context";
 
 const CLASS_ROLES = [
@@ -41,6 +52,44 @@ export const Route = createFileRoute("/_public/")({
     const { language, setLanguage, isSaving } = useAppLanguage();
     const { t } = useTranslation("home");
     const [icon, setIcon] = useState<IconDefinition | null>(null);
+    const [pdfPending, setPdfPending] = useState(false);
+    const [pdfProgress, setPdfProgress] = useState(0);
+    const pdfIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    useEffect(() => {
+      return () => {
+        if (pdfIntervalRef.current !== null) {
+          clearInterval(pdfIntervalRef.current);
+        }
+      };
+    }, []);
+
+    const simulatePdfGeneration = () => {
+      if (pdfIntervalRef.current !== null) {
+        clearInterval(pdfIntervalRef.current);
+        pdfIntervalRef.current = null;
+      }
+
+      setPdfPending(true);
+      setPdfProgress(0);
+
+      pdfIntervalRef.current = setInterval(() => {
+        setPdfProgress((current) => {
+          const next = Math.min(100, current + 5);
+          if (next >= 100) {
+            if (pdfIntervalRef.current !== null) {
+              clearInterval(pdfIntervalRef.current);
+              pdfIntervalRef.current = null;
+            }
+            setTimeout(() => {
+              setPdfPending(false);
+              setPdfProgress(0);
+            }, 300);
+          }
+          return next;
+        });
+      }, 80);
+    };
 
     return (
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-8 sm:px-8">
@@ -92,6 +141,35 @@ export const Route = createFileRoute("/_public/")({
           <div className="flex flex-wrap items-center gap-2">
             <CopyButton type="text" value="Hello from VCTR" />
             <CopyButton type="link" value="https://example.com" />
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Async & progress buttons</h2>
+          <p className="text-sm text-muted-foreground">
+            AsyncButton for Convex-style pending; ProgressButton for client-side jobs like PDF
+            generation.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <AsyncButton
+              onClick={() =>
+                new Promise<void>((resolve) => {
+                  setTimeout(resolve, 1500);
+                })
+              }
+            >
+              Save (async)
+            </AsyncButton>
+            <AsyncButton variant="outline" pending>
+              Always pending
+            </AsyncButton>
+            <ProgressButton
+              pending={pdfPending}
+              progress={pdfProgress}
+              onClick={simulatePdfGeneration}
+            >
+              Download PDF
+            </ProgressButton>
           </div>
         </section>
 
@@ -214,6 +292,40 @@ export const Route = createFileRoute("/_public/")({
               </CredenzaFooter>
             </CredenzaContent>
           </Credenza>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <h2 className="text-lg font-medium">Empty</h2>
+          <div className="flex flex-col gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">Default (dashed)</h3>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FontAwesomeIcon icon={faInbox} />
+                </EmptyMedia>
+                <EmptyTitle>No data</EmptyTitle>
+                <EmptyDescription>No data found</EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button>Add data</Button>
+              </EmptyContent>
+            </Empty>
+          </div>
+          <div className="flex flex-col gap-3">
+            <h3 className="text-sm font-medium text-muted-foreground">Card</h3>
+            <Empty card>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FontAwesomeIcon icon={faInbox} />
+                </EmptyMedia>
+                <EmptyTitle>No data</EmptyTitle>
+                <EmptyDescription>No data found</EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button>Add data</Button>
+              </EmptyContent>
+            </Empty>
+          </div>
         </section>
 
         <section className="space-y-3">

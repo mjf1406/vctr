@@ -2,12 +2,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+function Empty({
+  className,
+  card = false,
+  ...props
+}: React.ComponentProps<"div"> & { card?: boolean }) {
   return (
     <div
       data-slot="empty"
+      data-card={card || undefined}
       className={cn(
-        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-lg border-dashed p-12 text-center text-balance",
+        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 p-12 text-center text-balance",
+        card
+          ? "rounded-2xl bg-card text-card-foreground ring-1 ring-foreground/10"
+          : "rounded-lg border-dashed",
         className,
       )}
       {...props}
@@ -31,11 +39,20 @@ const emptyMediaVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
-        icon: "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
+        icon: "flex shrink-0 items-center justify-center rounded-lg bg-muted text-foreground",
+      },
+      size: {
+        // `!` beats FontAwesome's inline 1em height/width
+        "10": "size-10 [&_svg:not([class*='size-'])]:size-6!",
+        "16": "size-16 [&_svg:not([class*='size-'])]:size-8!",
+        "20": "size-20 [&_svg:not([class*='size-'])]:size-10!",
+        "24": "size-24 [&_svg:not([class*='size-'])]:size-12!",
+        "32": "size-32 [&_svg:not([class*='size-'])]:size-16!",
       },
     },
     defaultVariants: {
       variant: "default",
+      size: "10",
     },
   },
 );
@@ -43,13 +60,21 @@ const emptyMediaVariants = cva(
 function EmptyMedia({
   className,
   variant = "default",
+  size = "10",
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants>) {
   return (
     <div
       data-slot="empty-icon"
       data-variant={variant}
-      className={cn(emptyMediaVariants({ variant, className }))}
+      data-size={size}
+      className={cn(
+        emptyMediaVariants({
+          variant,
+          size: variant === "icon" ? size : null,
+          className,
+        }),
+      )}
       {...props}
     />
   );
