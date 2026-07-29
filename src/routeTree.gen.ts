@@ -8,274 +8,548 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AuthenticatedRouteRouteImport } from "./routes/_authenticated/route";
-import { Route as PublicRouteRouteImport } from "./routes/_public/route";
-import { Route as AuthenticatedIndexRouteImport } from "./routes/_authenticated/index";
-import { Route as AuthenticatedAccountRouteImport } from "./routes/_authenticated/account";
-import { Route as AuthenticatedBillingRouteImport } from "./routes/_authenticated/billing";
-import { Route as AuthenticatedJoinRouteImport } from "./routes/_authenticated/join";
-import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticated/settings";
-import { Route as AuthenticatedUiRouteImport } from "./routes/_authenticated/ui";
-import { Route as PublicSplatRouteImport } from "./routes/_public/$";
-import { Route as PublicLoginRouteImport } from "./routes/_public/login";
-import { Route as PublicUnauthorizedRouteImport } from "./routes/_public/unauthorized";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/_app/route'
+import { Route as AuthenticatedClassRouteRouteImport } from './routes/_authenticated/_class/route'
+import { Route as PublicSplatRouteImport } from './routes/_public/$'
+import { Route as PublicLoginRouteImport } from './routes/_public/login'
+import { Route as PublicUnauthorizedRouteImport } from './routes/_public/unauthorized'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/_app/index'
+import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/_app/account'
+import { Route as AuthenticatedAppBillingRouteImport } from './routes/_authenticated/_app/billing'
+import { Route as AuthenticatedAppJoinRouteImport } from './routes/_authenticated/_app/join'
+import { Route as AuthenticatedAppSettingsRouteImport } from './routes/_authenticated/_app/settings'
+import { Route as AuthenticatedAppUiRouteImport } from './routes/_authenticated/_app/ui'
+import { Route as AuthenticatedClassClassClassIdRouteRouteImport } from './routes/_authenticated/_class/class/$classId/route'
+import { Route as AuthenticatedClassClassClassIdIndexRouteImport } from './routes/_authenticated/_class/class/$classId/index'
+import { Route as AuthenticatedClassClassClassIdActivityRouteImport } from './routes/_authenticated/_class/class/$classId/activity'
+import { Route as AuthenticatedClassClassClassIdAssistantTeachersRouteImport } from './routes/_authenticated/_class/class/$classId/assistant-teachers'
+import { Route as AuthenticatedClassClassClassIdGuardiansRouteImport } from './routes/_authenticated/_class/class/$classId/guardians'
+import { Route as AuthenticatedClassClassClassIdInvitationsRouteImport } from './routes/_authenticated/_class/class/$classId/invitations'
+import { Route as AuthenticatedClassClassClassIdSettingsRouteImport } from './routes/_authenticated/_class/class/$classId/settings'
+import { Route as AuthenticatedClassClassClassIdStudentsRouteImport } from './routes/_authenticated/_class/class/$classId/students'
+import { Route as AuthenticatedClassClassClassIdTeachersRouteImport } from './routes/_authenticated/_class/class/$classId/teachers'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: "/_authenticated",
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PublicRouteRoute = PublicRouteRouteImport.update({
-  id: "/_public",
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
-} as any);
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: "/",
-  path: "/",
+} as any)
+const AuthenticatedAppRouteRoute = AuthenticatedAppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
-  id: "/account",
-  path: "/account",
+} as any)
+const AuthenticatedClassRouteRoute = AuthenticatedClassRouteRouteImport.update({
+  id: '/_class',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-const AuthenticatedBillingRoute = AuthenticatedBillingRouteImport.update({
-  id: "/billing",
-  path: "/billing",
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-const AuthenticatedJoinRoute = AuthenticatedJoinRouteImport.update({
-  id: "/join",
-  path: "/join",
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: "/settings",
-  path: "/settings",
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-const AuthenticatedUiRoute = AuthenticatedUiRouteImport.update({
-  id: "/ui",
-  path: "/ui",
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+} as any)
 const PublicSplatRoute = PublicSplatRouteImport.update({
-  id: "/$",
-  path: "/$",
+  id: '/$',
+  path: '/$',
   getParentRoute: () => PublicRouteRoute,
-} as any);
+} as any)
 const PublicLoginRoute = PublicLoginRouteImport.update({
-  id: "/login",
-  path: "/login",
+  id: '/login',
+  path: '/login',
   getParentRoute: () => PublicRouteRoute,
-} as any);
+} as any)
 const PublicUnauthorizedRoute = PublicUnauthorizedRouteImport.update({
-  id: "/unauthorized",
-  path: "/unauthorized",
+  id: '/unauthorized',
+  path: '/unauthorized',
   getParentRoute: () => PublicRouteRoute,
-} as any);
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppAccountRoute = AuthenticatedAppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppBillingRoute = AuthenticatedAppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppJoinRoute = AuthenticatedAppJoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppSettingsRoute =
+  AuthenticatedAppSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppUiRoute = AuthenticatedAppUiRouteImport.update({
+  id: '/ui',
+  path: '/ui',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedClassClassClassIdRouteRoute =
+  AuthenticatedClassClassClassIdRouteRouteImport.update({
+    id: '/class/$classId',
+    path: '/class/$classId',
+    getParentRoute: () => AuthenticatedClassRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdIndexRoute =
+  AuthenticatedClassClassClassIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdActivityRoute =
+  AuthenticatedClassClassClassIdActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdAssistantTeachersRoute =
+  AuthenticatedClassClassClassIdAssistantTeachersRouteImport.update({
+    id: '/assistant-teachers',
+    path: '/assistant-teachers',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdGuardiansRoute =
+  AuthenticatedClassClassClassIdGuardiansRouteImport.update({
+    id: '/guardians',
+    path: '/guardians',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdInvitationsRoute =
+  AuthenticatedClassClassClassIdInvitationsRouteImport.update({
+    id: '/invitations',
+    path: '/invitations',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdSettingsRoute =
+  AuthenticatedClassClassClassIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdStudentsRoute =
+  AuthenticatedClassClassClassIdStudentsRouteImport.update({
+    id: '/students',
+    path: '/students',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
+const AuthenticatedClassClassClassIdTeachersRoute =
+  AuthenticatedClassClassClassIdTeachersRouteImport.update({
+    id: '/teachers',
+    path: '/teachers',
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof AuthenticatedIndexRoute;
-  "/account": typeof AuthenticatedAccountRoute;
-  "/billing": typeof AuthenticatedBillingRoute;
-  "/join": typeof AuthenticatedJoinRoute;
-  "/settings": typeof AuthenticatedSettingsRoute;
-  "/ui": typeof AuthenticatedUiRoute;
-  "/$": typeof PublicSplatRoute;
-  "/login": typeof PublicLoginRoute;
-  "/unauthorized": typeof PublicUnauthorizedRoute;
+  '/': typeof AuthenticatedAppIndexRoute
+  '/$': typeof PublicSplatRoute
+  '/login': typeof PublicLoginRoute
+  '/unauthorized': typeof PublicUnauthorizedRoute
+  '/account': typeof AuthenticatedAppAccountRoute
+  '/billing': typeof AuthenticatedAppBillingRoute
+  '/join': typeof AuthenticatedAppJoinRoute
+  '/settings': typeof AuthenticatedAppSettingsRoute
+  '/ui': typeof AuthenticatedAppUiRoute
+  '/class/$classId': typeof AuthenticatedClassClassClassIdRouteRouteWithChildren
+  '/class/$classId/activity': typeof AuthenticatedClassClassClassIdActivityRoute
+  '/class/$classId/assistant-teachers': typeof AuthenticatedClassClassClassIdAssistantTeachersRoute
+  '/class/$classId/guardians': typeof AuthenticatedClassClassClassIdGuardiansRoute
+  '/class/$classId/invitations': typeof AuthenticatedClassClassClassIdInvitationsRoute
+  '/class/$classId/settings': typeof AuthenticatedClassClassClassIdSettingsRoute
+  '/class/$classId/students': typeof AuthenticatedClassClassClassIdStudentsRoute
+  '/class/$classId/teachers': typeof AuthenticatedClassClassClassIdTeachersRoute
+  '/class/$classId/': typeof AuthenticatedClassClassClassIdIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof AuthenticatedIndexRoute;
-  "/account": typeof AuthenticatedAccountRoute;
-  "/billing": typeof AuthenticatedBillingRoute;
-  "/join": typeof AuthenticatedJoinRoute;
-  "/settings": typeof AuthenticatedSettingsRoute;
-  "/ui": typeof AuthenticatedUiRoute;
-  "/$": typeof PublicSplatRoute;
-  "/login": typeof PublicLoginRoute;
-  "/unauthorized": typeof PublicUnauthorizedRoute;
+  '/': typeof AuthenticatedAppIndexRoute
+  '/$': typeof PublicSplatRoute
+  '/login': typeof PublicLoginRoute
+  '/unauthorized': typeof PublicUnauthorizedRoute
+  '/account': typeof AuthenticatedAppAccountRoute
+  '/billing': typeof AuthenticatedAppBillingRoute
+  '/join': typeof AuthenticatedAppJoinRoute
+  '/settings': typeof AuthenticatedAppSettingsRoute
+  '/ui': typeof AuthenticatedAppUiRoute
+  '/class/$classId/activity': typeof AuthenticatedClassClassClassIdActivityRoute
+  '/class/$classId/assistant-teachers': typeof AuthenticatedClassClassClassIdAssistantTeachersRoute
+  '/class/$classId/guardians': typeof AuthenticatedClassClassClassIdGuardiansRoute
+  '/class/$classId/invitations': typeof AuthenticatedClassClassClassIdInvitationsRoute
+  '/class/$classId/settings': typeof AuthenticatedClassClassClassIdSettingsRoute
+  '/class/$classId/students': typeof AuthenticatedClassClassClassIdStudentsRoute
+  '/class/$classId/teachers': typeof AuthenticatedClassClassClassIdTeachersRoute
+  '/class/$classId': typeof AuthenticatedClassClassClassIdIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/_authenticated": typeof AuthenticatedRouteRouteWithChildren;
-  "/_public": typeof PublicRouteRouteWithChildren;
-  "/_authenticated/account": typeof AuthenticatedAccountRoute;
-  "/_authenticated/billing": typeof AuthenticatedBillingRoute;
-  "/_authenticated/join": typeof AuthenticatedJoinRoute;
-  "/_authenticated/settings": typeof AuthenticatedSettingsRoute;
-  "/_authenticated/ui": typeof AuthenticatedUiRoute;
-  "/_public/$": typeof PublicSplatRoute;
-  "/_public/login": typeof PublicLoginRoute;
-  "/_public/unauthorized": typeof PublicUnauthorizedRoute;
-  "/_authenticated/": typeof AuthenticatedIndexRoute;
+  __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_public': typeof PublicRouteRouteWithChildren
+  '/_authenticated/_app': typeof AuthenticatedAppRouteRouteWithChildren
+  '/_authenticated/_class': typeof AuthenticatedClassRouteRouteWithChildren
+  '/_public/$': typeof PublicSplatRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/unauthorized': typeof PublicUnauthorizedRoute
+  '/_authenticated/_app/account': typeof AuthenticatedAppAccountRoute
+  '/_authenticated/_app/billing': typeof AuthenticatedAppBillingRoute
+  '/_authenticated/_app/join': typeof AuthenticatedAppJoinRoute
+  '/_authenticated/_app/settings': typeof AuthenticatedAppSettingsRoute
+  '/_authenticated/_app/ui': typeof AuthenticatedAppUiRoute
+  '/_authenticated/_app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/_class/class/$classId': typeof AuthenticatedClassClassClassIdRouteRouteWithChildren
+  '/_authenticated/_class/class/$classId/activity': typeof AuthenticatedClassClassClassIdActivityRoute
+  '/_authenticated/_class/class/$classId/assistant-teachers': typeof AuthenticatedClassClassClassIdAssistantTeachersRoute
+  '/_authenticated/_class/class/$classId/guardians': typeof AuthenticatedClassClassClassIdGuardiansRoute
+  '/_authenticated/_class/class/$classId/invitations': typeof AuthenticatedClassClassClassIdInvitationsRoute
+  '/_authenticated/_class/class/$classId/settings': typeof AuthenticatedClassClassClassIdSettingsRoute
+  '/_authenticated/_class/class/$classId/students': typeof AuthenticatedClassClassClassIdStudentsRoute
+  '/_authenticated/_class/class/$classId/teachers': typeof AuthenticatedClassClassClassIdTeachersRoute
+  '/_authenticated/_class/class/$classId/': typeof AuthenticatedClassClassClassIdIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/account"
-    | "/billing"
-    | "/join"
-    | "/settings"
-    | "/ui"
-    | "/$"
-    | "/login"
-    | "/unauthorized";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/$'
+    | '/login'
+    | '/unauthorized'
+    | '/account'
+    | '/billing'
+    | '/join'
+    | '/settings'
+    | '/ui'
+    | '/class/$classId'
+    | '/class/$classId/activity'
+    | '/class/$classId/assistant-teachers'
+    | '/class/$classId/guardians'
+    | '/class/$classId/invitations'
+    | '/class/$classId/settings'
+    | '/class/$classId/students'
+    | '/class/$classId/teachers'
+    | '/class/$classId/'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/account"
-    | "/billing"
-    | "/join"
-    | "/settings"
-    | "/ui"
-    | "/$"
-    | "/login"
-    | "/unauthorized";
+    | '/'
+    | '/$'
+    | '/login'
+    | '/unauthorized'
+    | '/account'
+    | '/billing'
+    | '/join'
+    | '/settings'
+    | '/ui'
+    | '/class/$classId/activity'
+    | '/class/$classId/assistant-teachers'
+    | '/class/$classId/guardians'
+    | '/class/$classId/invitations'
+    | '/class/$classId/settings'
+    | '/class/$classId/students'
+    | '/class/$classId/teachers'
+    | '/class/$classId'
   id:
-    | "__root__"
-    | "/_authenticated"
-    | "/_public"
-    | "/_authenticated/account"
-    | "/_authenticated/billing"
-    | "/_authenticated/join"
-    | "/_authenticated/settings"
-    | "/_authenticated/ui"
-    | "/_public/$"
-    | "/_public/login"
-    | "/_public/unauthorized"
-    | "/_authenticated/";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/_authenticated'
+    | '/_public'
+    | '/_authenticated/_app'
+    | '/_authenticated/_class'
+    | '/_public/$'
+    | '/_public/login'
+    | '/_public/unauthorized'
+    | '/_authenticated/_app/account'
+    | '/_authenticated/_app/billing'
+    | '/_authenticated/_app/join'
+    | '/_authenticated/_app/settings'
+    | '/_authenticated/_app/ui'
+    | '/_authenticated/_app/'
+    | '/_authenticated/_class/class/$classId'
+    | '/_authenticated/_class/class/$classId/activity'
+    | '/_authenticated/_class/class/$classId/assistant-teachers'
+    | '/_authenticated/_class/class/$classId/guardians'
+    | '/_authenticated/_class/class/$classId/invitations'
+    | '/_authenticated/_class/class/$classId/settings'
+    | '/_authenticated/_class/class/$classId/students'
+    | '/_authenticated/_class/class/$classId/teachers'
+    | '/_authenticated/_class/class/$classId/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren;
-  PublicRouteRoute: typeof PublicRouteRouteWithChildren;
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/_authenticated": {
-      id: "/_authenticated";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_public": {
-      id: "/_public";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof PublicRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_authenticated/": {
-      id: "/_authenticated/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_authenticated/account": {
-      id: "/_authenticated/account";
-      path: "/account";
-      fullPath: "/account";
-      preLoaderRoute: typeof AuthenticatedAccountRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_authenticated/billing": {
-      id: "/_authenticated/billing";
-      path: "/billing";
-      fullPath: "/billing";
-      preLoaderRoute: typeof AuthenticatedBillingRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_authenticated/join": {
-      id: "/_authenticated/join";
-      path: "/join";
-      fullPath: "/join";
-      preLoaderRoute: typeof AuthenticatedJoinRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_authenticated/settings": {
-      id: "/_authenticated/settings";
-      path: "/settings";
-      fullPath: "/settings";
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_authenticated/ui": {
-      id: "/_authenticated/ui";
-      path: "/ui";
-      fullPath: "/ui";
-      preLoaderRoute: typeof AuthenticatedUiRouteImport;
-      parentRoute: typeof AuthenticatedRouteRoute;
-    };
-    "/_public/$": {
-      id: "/_public/$";
-      path: "/$";
-      fullPath: "/$";
-      preLoaderRoute: typeof PublicSplatRouteImport;
-      parentRoute: typeof PublicRouteRoute;
-    };
-    "/_public/login": {
-      id: "/_public/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof PublicLoginRouteImport;
-      parentRoute: typeof PublicRouteRoute;
-    };
-    "/_public/unauthorized": {
-      id: "/_public/unauthorized";
-      path: "/unauthorized";
-      fullPath: "/unauthorized";
-      preLoaderRoute: typeof PublicUnauthorizedRouteImport;
-      parentRoute: typeof PublicRouteRoute;
-    };
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/_app': {
+      id: '/_authenticated/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAppRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/_class': {
+      id: '/_authenticated/_class'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedClassRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_public/$': {
+      id: '/_public/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof PublicSplatRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/unauthorized': {
+      id: '/_public/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof PublicUnauthorizedRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_authenticated/_app/': {
+      id: '/_authenticated/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_app/account': {
+      id: '/_authenticated/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAppAccountRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_app/billing': {
+      id: '/_authenticated/_app/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof AuthenticatedAppBillingRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_app/join': {
+      id: '/_authenticated/_app/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof AuthenticatedAppJoinRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_app/settings': {
+      id: '/_authenticated/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedAppSettingsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_app/ui': {
+      id: '/_authenticated/_app/ui'
+      path: '/ui'
+      fullPath: '/ui'
+      preLoaderRoute: typeof AuthenticatedAppUiRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/_class/class/$classId': {
+      id: '/_authenticated/_class/class/$classId'
+      path: '/class/$classId'
+      fullPath: '/class/$classId'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdRouteRouteImport
+      parentRoute: typeof AuthenticatedClassRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/': {
+      id: '/_authenticated/_class/class/$classId/'
+      path: '/'
+      fullPath: '/class/$classId/'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdIndexRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/activity': {
+      id: '/_authenticated/_class/class/$classId/activity'
+      path: '/activity'
+      fullPath: '/class/$classId/activity'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdActivityRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/assistant-teachers': {
+      id: '/_authenticated/_class/class/$classId/assistant-teachers'
+      path: '/assistant-teachers'
+      fullPath: '/class/$classId/assistant-teachers'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdAssistantTeachersRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/guardians': {
+      id: '/_authenticated/_class/class/$classId/guardians'
+      path: '/guardians'
+      fullPath: '/class/$classId/guardians'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdGuardiansRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/invitations': {
+      id: '/_authenticated/_class/class/$classId/invitations'
+      path: '/invitations'
+      fullPath: '/class/$classId/invitations'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdInvitationsRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/settings': {
+      id: '/_authenticated/_class/class/$classId/settings'
+      path: '/settings'
+      fullPath: '/class/$classId/settings'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/students': {
+      id: '/_authenticated/_class/class/$classId/students'
+      path: '/students'
+      fullPath: '/class/$classId/students'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdStudentsRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
+    '/_authenticated/_class/class/$classId/teachers': {
+      id: '/_authenticated/_class/class/$classId/teachers'
+      path: '/teachers'
+      fullPath: '/class/$classId/teachers'
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdTeachersRouteImport
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteRouteChildren {
+  AuthenticatedAppAccountRoute: typeof AuthenticatedAppAccountRoute
+  AuthenticatedAppBillingRoute: typeof AuthenticatedAppBillingRoute
+  AuthenticatedAppJoinRoute: typeof AuthenticatedAppJoinRoute
+  AuthenticatedAppSettingsRoute: typeof AuthenticatedAppSettingsRoute
+  AuthenticatedAppUiRoute: typeof AuthenticatedAppUiRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
+  AuthenticatedAppAccountRoute: AuthenticatedAppAccountRoute,
+  AuthenticatedAppBillingRoute: AuthenticatedAppBillingRoute,
+  AuthenticatedAppJoinRoute: AuthenticatedAppJoinRoute,
+  AuthenticatedAppSettingsRoute: AuthenticatedAppSettingsRoute,
+  AuthenticatedAppUiRoute: AuthenticatedAppUiRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteRouteWithChildren =
+  AuthenticatedAppRouteRoute._addFileChildren(
+    AuthenticatedAppRouteRouteChildren,
+  )
+
+interface AuthenticatedClassClassClassIdRouteRouteChildren {
+  AuthenticatedClassClassClassIdActivityRoute: typeof AuthenticatedClassClassClassIdActivityRoute
+  AuthenticatedClassClassClassIdAssistantTeachersRoute: typeof AuthenticatedClassClassClassIdAssistantTeachersRoute
+  AuthenticatedClassClassClassIdGuardiansRoute: typeof AuthenticatedClassClassClassIdGuardiansRoute
+  AuthenticatedClassClassClassIdInvitationsRoute: typeof AuthenticatedClassClassClassIdInvitationsRoute
+  AuthenticatedClassClassClassIdSettingsRoute: typeof AuthenticatedClassClassClassIdSettingsRoute
+  AuthenticatedClassClassClassIdStudentsRoute: typeof AuthenticatedClassClassClassIdStudentsRoute
+  AuthenticatedClassClassClassIdTeachersRoute: typeof AuthenticatedClassClassClassIdTeachersRoute
+  AuthenticatedClassClassClassIdIndexRoute: typeof AuthenticatedClassClassClassIdIndexRoute
+}
+
+const AuthenticatedClassClassClassIdRouteRouteChildren: AuthenticatedClassClassClassIdRouteRouteChildren =
+  {
+    AuthenticatedClassClassClassIdActivityRoute:
+      AuthenticatedClassClassClassIdActivityRoute,
+    AuthenticatedClassClassClassIdAssistantTeachersRoute:
+      AuthenticatedClassClassClassIdAssistantTeachersRoute,
+    AuthenticatedClassClassClassIdGuardiansRoute:
+      AuthenticatedClassClassClassIdGuardiansRoute,
+    AuthenticatedClassClassClassIdInvitationsRoute:
+      AuthenticatedClassClassClassIdInvitationsRoute,
+    AuthenticatedClassClassClassIdSettingsRoute:
+      AuthenticatedClassClassClassIdSettingsRoute,
+    AuthenticatedClassClassClassIdStudentsRoute:
+      AuthenticatedClassClassClassIdStudentsRoute,
+    AuthenticatedClassClassClassIdTeachersRoute:
+      AuthenticatedClassClassClassIdTeachersRoute,
+    AuthenticatedClassClassClassIdIndexRoute:
+      AuthenticatedClassClassClassIdIndexRoute,
+  }
+
+const AuthenticatedClassClassClassIdRouteRouteWithChildren =
+  AuthenticatedClassClassClassIdRouteRoute._addFileChildren(
+    AuthenticatedClassClassClassIdRouteRouteChildren,
+  )
+
+interface AuthenticatedClassRouteRouteChildren {
+  AuthenticatedClassClassClassIdRouteRoute: typeof AuthenticatedClassClassClassIdRouteRouteWithChildren
+}
+
+const AuthenticatedClassRouteRouteChildren: AuthenticatedClassRouteRouteChildren =
+  {
+    AuthenticatedClassClassClassIdRouteRoute:
+      AuthenticatedClassClassClassIdRouteRouteWithChildren,
+  }
+
+const AuthenticatedClassRouteRouteWithChildren =
+  AuthenticatedClassRouteRoute._addFileChildren(
+    AuthenticatedClassRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute;
-  AuthenticatedBillingRoute: typeof AuthenticatedBillingRoute;
-  AuthenticatedJoinRoute: typeof AuthenticatedJoinRoute;
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
-  AuthenticatedUiRoute: typeof AuthenticatedUiRoute;
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
+  AuthenticatedAppRouteRoute: typeof AuthenticatedAppRouteRouteWithChildren
+  AuthenticatedClassRouteRoute: typeof AuthenticatedClassRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedBillingRoute: AuthenticatedBillingRoute,
-  AuthenticatedJoinRoute: AuthenticatedJoinRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedUiRoute: AuthenticatedUiRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-};
+  AuthenticatedAppRouteRoute: AuthenticatedAppRouteRouteWithChildren,
+  AuthenticatedClassRouteRoute: AuthenticatedClassRouteRouteWithChildren,
+}
 
-const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(
-  AuthenticatedRouteRouteChildren,
-);
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface PublicRouteRouteChildren {
-  PublicSplatRoute: typeof PublicSplatRoute;
-  PublicLoginRoute: typeof PublicLoginRoute;
-  PublicUnauthorizedRoute: typeof PublicUnauthorizedRoute;
+  PublicSplatRoute: typeof PublicSplatRoute
+  PublicLoginRoute: typeof PublicLoginRoute
+  PublicUnauthorizedRoute: typeof PublicUnauthorizedRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicSplatRoute: PublicSplatRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicUnauthorizedRoute: PublicUnauthorizedRoute,
-};
+}
 
-const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(PublicRouteRouteChildren);
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

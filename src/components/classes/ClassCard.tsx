@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   ArchiveIcon,
   ArchiveRestoreIcon,
@@ -54,7 +55,13 @@ export function ClassCard({
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button type="button" variant="ghost" size="icon-sm" aria-label={t("classActions")} />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="relative z-10"
+            aria-label={t("classActions")}
+          />
         }
       >
         <MoreVerticalIcon />
@@ -81,16 +88,26 @@ export function ClassCard({
     </DropdownMenu>
   );
 
+  const openLink = (
+    <Link
+      to="/class/$classId"
+      params={{ classId: classDoc._id }}
+      className="absolute inset-0 z-0 rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      aria-label={t("openClass", { name: classDoc.name })}
+    />
+  );
+
   if (viewMode === "list") {
     return (
       <div
         className={cn(
-          "flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10",
+          "relative flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10 transition-colors hover:bg-accent/40",
           isArchived && "opacity-80",
         )}
       >
+        {openLink}
         <ClassIconDisplay icon={classDoc.icon} />
-        <div className="min-w-0 flex-1">
+        <div className="relative z-10 min-w-0 flex-1 pointer-events-none">
           <div className="flex flex-wrap items-baseline gap-2">
             <p className="truncate font-medium text-foreground">{classDoc.name}</p>
             <span className="text-sm text-muted-foreground">{classDoc.year}</span>
@@ -103,16 +120,20 @@ export function ClassCard({
   }
 
   return (
-    <Card size="sm" className={cn(isArchived && "opacity-80")}>
-      <CardHeader className="flex flex-row items-start gap-3">
+    <Card
+      size="sm"
+      className={cn("relative transition-colors hover:bg-accent/40", isArchived && "opacity-80")}
+    >
+      {openLink}
+      <CardHeader className="relative z-10 flex flex-row items-start gap-3 pointer-events-none">
         <ClassIconDisplay icon={classDoc.icon} />
         <div className="min-w-0 flex-1">
           <CardTitle className="truncate text-base font-semibold">{classDoc.name}</CardTitle>
           <p className="text-sm text-muted-foreground">{classDoc.year}</p>
         </div>
-        <div className="shrink-0">{menu}</div>
+        <div className="shrink-0 pointer-events-auto">{menu}</div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+      <CardContent className="relative z-10 flex flex-col gap-3 pointer-events-none">
         <CardDescription className="line-clamp-3">{description}</CardDescription>
         <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
           <span>

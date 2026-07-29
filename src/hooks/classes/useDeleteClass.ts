@@ -18,26 +18,37 @@ function listQueryKey() {
   return convexQuery(api.classes.listMine, {}).queryKey;
 }
 
+function getQueryKey(classId: Id<"classes">) {
+  return convexQuery(api.classes.get, { classId }).queryKey;
+}
+
 export function useDeleteClass() {
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const mutationFn = useConvexMutation(api.classes.remove);
-  const queryKey = listQueryKey();
+  const listKey = listQueryKey();
 
   return useMutation({
     mutationFn: (args: DeleteClassArgs) => mutationFn(args),
     onMutate: async (args) => {
-      await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ClassDoc[]>(queryKey);
-      queryClient.setQueryData<ClassDoc[]>(queryKey, (old) => {
+      const detailKey = getQueryKey(args.classId);
+      await queryClient.cancelQueries({ queryKey: listKey });
+      await queryClient.cancelQueries({ queryKey: detailKey });
+      const previousList = queryClient.getQueryData<ClassDoc[]>(listKey);
+      const previousDetail = queryClient.getQueryData<ClassDoc | null>(detailKey);
+      queryClient.setQueryData<ClassDoc[]>(listKey, (old) => {
         if (!old) return old;
         return old.filter((classDoc) => classDoc._id !== args.classId);
       });
-      return { previous, queryKey };
+      queryClient.setQueryData<ClassDoc | null>(detailKey, null);
+      return { previousList, previousDetail, listKey, detailKey };
     },
     onError: (error, _variables, context) => {
-      if (context?.previous !== undefined) {
-        queryClient.setQueryData(context.queryKey, context.previous);
+      if (context?.previousList !== undefined) {
+        queryClient.setQueryData(context.listKey, context.previousList);
+      }
+      if (context?.previousDetail !== undefined) {
+        queryClient.setQueryData(context.detailKey, context.previousDetail);
       }
       toast.add({
         title: mutationErrorMessage(error, "Could not delete class", t("rateLimited")),
@@ -45,8 +56,11 @@ export function useDeleteClass() {
       });
     },
     onSettled: (_data, _error, _variables, context) => {
-      if (context?.queryKey) {
-        void queryClient.invalidateQueries({ queryKey: context.queryKey });
+      if (context?.listKey) {
+        void queryClient.invalidateQueries({ queryKey: context.listKey });
+      }
+      if (context?.detailKey) {
+        void queryClient.invalidateQueries({ queryKey: context.detailKey });
       }
     },
   });

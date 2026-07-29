@@ -18,35 +18,46 @@ function listQueryKey() {
   return convexQuery(api.classes.listMine, {}).queryKey;
 }
 
+function getQueryKey(classId: Id<"classes">) {
+  return convexQuery(api.classes.get, { classId }).queryKey;
+}
+
 export function useSetClassArchived() {
   const { t } = useTranslation("common");
   const queryClient = useQueryClient();
   const mutationFn = useConvexMutation(api.classes.setArchived);
-  const queryKey = listQueryKey();
+  const listKey = listQueryKey();
 
   return useMutation({
     mutationFn: (args: SetArchivedArgs) => mutationFn(args),
     onMutate: async (args) => {
-      await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ClassDoc[]>(queryKey);
+      const detailKey = getQueryKey(args.classId);
+      await queryClient.cancelQueries({ queryKey: listKey });
+      await queryClient.cancelQueries({ queryKey: detailKey });
+      const previousList = queryClient.getQueryData<ClassDoc[]>(listKey);
+      const previousDetail = queryClient.getQueryData<ClassDoc | null>(detailKey);
       const now = Date.now();
-      queryClient.setQueryData<ClassDoc[]>(queryKey, (old) => {
+      const patch = {
+        archivedAt: args.archived ? now : undefined,
+        updatedAt: now,
+      };
+      queryClient.setQueryData<ClassDoc[]>(listKey, (old) => {
         if (!old) return old;
         return old.map((classDoc) =>
-          classDoc._id === args.classId
-            ? {
-                ...classDoc,
-                archivedAt: args.archived ? now : undefined,
-                updatedAt: now,
-              }
-            : classDoc,
+          classDoc._id === args.classId ? { ...classDoc, ...patch } : classDoc,
         );
       });
-      return { previous, queryKey };
+      queryClient.setQueryData<ClassDoc | null>(detailKey, (old) =>
+        old ? { ...old, ...patch } : old,
+      );
+      return { previousList, previousDetail, listKey, detailKey };
     },
     onError: (error, _variables, context) => {
-      if (context?.previous !== undefined) {
-        queryClient.setQueryData(context.queryKey, context.previous);
+      if (context?.previousList !== undefined) {
+        queryClient.setQueryData(context.listKey, context.previousList);
+      }
+      if (context?.previousDetail !== undefined) {
+        queryClient.setQueryData(context.detailKey, context.previousDetail);
       }
       toast.add({
         title: mutationErrorMessage(error, "Could not update archive state", t("rateLimited")),
@@ -54,8 +65,11 @@ export function useSetClassArchived() {
       });
     },
     onSettled: (_data, _error, _variables, context) => {
-      if (context?.queryKey) {
-        void queryClient.invalidateQueries({ queryKey: context.queryKey });
+      if (context?.listKey) {
+        void queryClient.invalidateQueries({ queryKey: context.listKey });
+      }
+      if (context?.detailKey) {
+        void queryClient.invalidateQueries({ queryKey: context.detailKey });
       }
     },
   });

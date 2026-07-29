@@ -107,6 +107,18 @@ export const listMine = authedQuery({
   },
 });
 
+export const get = authedQuery({
+  args: { classId: v.id("classes") },
+  returns: v.union(classValidator, v.null()),
+  handler: async (ctx, args) => {
+    const classDoc = await ctx.db.get("classes", args.classId);
+    if (!classDoc || classDoc.ownerId !== ctx.userId) {
+      return null;
+    }
+    return classDoc;
+  },
+});
+
 export const create = authedMutation({
   args: {
     name: v.string(),

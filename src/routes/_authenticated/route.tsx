@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/navigation/NavBar";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
@@ -21,11 +20,6 @@ export const Route = createFileRoute("/_authenticated")({
       return null;
     }
 
-    return (
-      <>
-        <Navbar />
-        {auth.isLoading ? <PendingComponent inset /> : <Outlet />}
-      </>
-    );
+    return auth.isLoading ? <PendingComponent inset /> : <Outlet />;
   },
 });

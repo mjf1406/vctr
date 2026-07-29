@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
  * branch yet. Keep the authenticated route + localized shell so the auth gate
  * and i18n catalogs stay complete.
  */
-export const Route = createFileRoute("/_authenticated/join")({
+export const Route = createFileRoute("/_authenticated/_app/join")({
   component: function JoinPage() {
     const { t } = useTranslation("classes");
 

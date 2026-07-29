@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCurrentSession } from "@/hooks/user/useCurrentSession";
 
-export const Route = createFileRoute("/_authenticated/account")({
+export const Route = createFileRoute("/_authenticated/_app/account")({
   component: function AccountPage() {
     const { t } = useTranslation("account");
     const { t: tCommon } = useTranslation("common");

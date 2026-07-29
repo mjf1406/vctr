@@ -14,6 +14,7 @@ import { LanguageProvider } from "@/i18n/LanguageProvider";
 
 import { routeTree } from "./routeTree.gen";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { RootErrorComponent } from "./components/errors/RootErrorComponent";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
 const convexQueryClient = new ConvexQueryClient(convex);
@@ -29,13 +30,17 @@ convexQueryClient.connect(queryClient);
 
 const router = createRouter({
   routeTree,
-  defaultPendingComponent: PendingComponent,
   context: {
     auth: {
       isAuthenticated: false,
       isLoading: true,
     },
   },
+  defaultPendingComponent: PendingComponent,
+  defaultErrorComponent: RootErrorComponent,
+  defaultPendingMs: 150,
+  defaultPendingMinMs: 300,
+  defaultPreload: "intent",
 });
 
 declare module "@tanstack/react-router" {

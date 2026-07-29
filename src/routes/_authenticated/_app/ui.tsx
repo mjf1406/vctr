@@ -50,7 +50,7 @@ const CLASS_ROLES = [
   "unknown_role",
 ] as const;
 
-export const Route = createFileRoute("/_authenticated/ui")({
+export const Route = createFileRoute("/_authenticated/_app/ui")({
   component: function UiPlayground() {
     const { theme } = useTheme();
     const { language, setLanguage, isSaving } = useAppLanguage();

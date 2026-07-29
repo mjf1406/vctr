@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { ImageSkeleton } from "@/components/ui/image-skeleton";
 
-export const Route = createFileRoute("/_authenticated/billing")({
+export const Route = createFileRoute("/_authenticated/_app/billing")({
   component: function BillingPage() {
     const { t } = useTranslation("billing");
 
