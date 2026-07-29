@@ -1,6 +1,7 @@
 const zht = {
   common: {
     chooseLanguage: "選擇語言",
+    loading: "載入中...",
   },
   home: {
     title: "UI 試驗場",

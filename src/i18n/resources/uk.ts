@@ -1,6 +1,7 @@
 const uk = {
   common: {
     chooseLanguage: "Обрати мову",
+    loading: "Завантаження...",
   },
   home: {
     title: "UI-пісочниця",

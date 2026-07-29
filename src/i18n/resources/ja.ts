@@ -1,6 +1,7 @@
 const ja = {
   common: {
     chooseLanguage: "言語を選択",
+    loading: "読み込み中...",
   },
   home: {
     title: "UIプレイグラウンド",

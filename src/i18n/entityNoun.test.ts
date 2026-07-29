@@ -18,6 +18,7 @@ import zht from "./resources/zht";
 type LocaleResources = {
   common?: {
     chooseLanguage?: unknown;
+    loading?: unknown;
   };
   home?: {
     title?: unknown;
@@ -53,6 +54,7 @@ const LOCALE_RESOURCES: Record<Exclude<AppLanguage, "engb">, LocaleResources> = 
 
 const REQUIRED_KEYS = [
   ["common", "chooseLanguage"],
+  ["common", "loading"],
   ["home", "title"],
   ["home", "description"],
   ["home", "language"],

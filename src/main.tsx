@@ -6,6 +6,7 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toast";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import PendingComponent from "@/components/loading/PendingComponent";
 import i18n, { ensureLocaleLoaded, getInitialLanguage } from "@/i18n";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
 
@@ -25,7 +26,10 @@ const queryClient = new QueryClient({
 });
 convexQueryClient.connect(queryClient);
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  defaultPendingComponent: PendingComponent,
+});
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

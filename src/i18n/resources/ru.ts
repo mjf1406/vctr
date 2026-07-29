@@ -1,6 +1,7 @@
 const ru = {
   common: {
     chooseLanguage: "Выбрать язык",
+    loading: "Загрузка...",
   },
   home: {
     title: "UI-песочница",

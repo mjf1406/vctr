@@ -8,75 +8,77 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as PublicRouteRouteImport } from "./routes/_public/route";
-import { Route as PublicIndexRouteImport } from "./routes/_public/index";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
-  id: "/_public",
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => PublicRouteRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof PublicIndexRoute;
+  '/': typeof PublicIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof PublicIndexRoute;
+  '/': typeof PublicIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/_public": typeof PublicRouteRouteWithChildren;
-  "/_public/": typeof PublicIndexRoute;
+  __root__: typeof rootRouteImport
+  '/_public': typeof PublicRouteRouteWithChildren
+  '/_public/': typeof PublicIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/_public" | "/_public/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/'
+  id: '__root__' | '/_public' | '/_public/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  PublicRouteRoute: typeof PublicRouteRouteWithChildren;
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/_public": {
-      id: "/_public";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof PublicRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_public/": {
-      id: "/_public/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof PublicIndexRouteImport;
-      parentRoute: typeof PublicRouteRoute;
-    };
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
   }
 }
 
 interface PublicRouteRouteChildren {
-  PublicIndexRoute: typeof PublicIndexRoute;
+  PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
-};
+}
 
-const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(PublicRouteRouteChildren);
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   PublicRouteRoute: PublicRouteRouteWithChildren,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

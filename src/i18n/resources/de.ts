@@ -1,6 +1,7 @@
 const de = {
   common: {
     chooseLanguage: "Sprache wählen",
+    loading: "Wird geladen...",
   },
   home: {
     title: "UI-Spielwiese",

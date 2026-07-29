@@ -1,6 +1,7 @@
 const it = {
   common: {
     chooseLanguage: "Scegli lingua",
+    loading: "Caricamento...",
   },
   home: {
     title: "Playground UI",

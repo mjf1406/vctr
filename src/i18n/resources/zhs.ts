@@ -1,6 +1,7 @@
 const zhs = {
   common: {
     chooseLanguage: "选择语言",
+    loading: "加载中...",
   },
   home: {
     title: "UI 试验场",

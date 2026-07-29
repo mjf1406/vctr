@@ -1,6 +1,7 @@
 const fr = {
   common: {
     chooseLanguage: "Choisir la langue",
+    loading: "Chargement...",
   },
   home: {
     title: "Bac à sable UI",

@@ -1,6 +1,7 @@
 const ko = {
   common: {
     chooseLanguage: "언어 선택",
+    loading: "로딩 중...",
   },
   home: {
     title: "UI 플레이그라운드",
