@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
+import { AppFooter } from "@/components/navigation/AppFooter";
 import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
 import {
   ClassBreadcrumbSkeleton,
@@ -32,38 +33,46 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
 
     if (!isPending && (isError || !classDoc)) {
       return (
-        <main className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 py-8">
-          <Empty card>
-            <EmptyHeader>
-              <EmptyTitle>{t("classNotFound")}</EmptyTitle>
-              <EmptyDescription>{tCommon("notFoundDescription")}</EmptyDescription>
-            </EmptyHeader>
-            <EmptyContent className="flex flex-row gap-2">
-              <Button type="button" variant="outline" onClick={() => void refetch()}>
-                {tCommon("tryAgain")}
-              </Button>
-              <Button type="button" nativeButton={false} render={<Link to="/" />}>
-                {tCommon("goHome")}
-              </Button>
-            </EmptyContent>
-          </Empty>
-        </main>
+        <div>
+          <div className="flex min-h-svh flex-col">
+            <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-4 px-4 py-8">
+              <Empty card>
+                <EmptyHeader>
+                  <EmptyTitle>{t("classNotFound")}</EmptyTitle>
+                  <EmptyDescription>{tCommon("notFoundDescription")}</EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent className="flex flex-row gap-2">
+                  <Button type="button" variant="outline" onClick={() => void refetch()}>
+                    {tCommon("tryAgain")}
+                  </Button>
+                  <Button type="button" nativeButton={false} render={<Link to="/" />}>
+                    {tCommon("goHome")}
+                  </Button>
+                </EmptyContent>
+              </Empty>
+            </main>
+          </div>
+          <AppFooter />
+        </div>
       );
     }
 
     return (
       <ClassPermissionsProvider classId={classId}>
-        <SidebarProvider className="min-h-svh">
+        <SidebarProvider>
           {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
           <SidebarInset>
-            <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
-            </header>
-            <div className="flex flex-1 flex-col">
-              <ClassContent classPending={isPending || !classDoc} />
+            <div className="flex min-h-svh flex-col">
+              <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 border-b bg-background px-4">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
+              </header>
+              <div className="flex flex-1 flex-col">
+                <ClassContent classPending={isPending || !classDoc} />
+              </div>
             </div>
+            <AppFooter />
           </SidebarInset>
         </SidebarProvider>
       </ClassPermissionsProvider>

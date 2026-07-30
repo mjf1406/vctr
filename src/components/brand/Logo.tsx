@@ -1,6 +1,7 @@
 /** @format */
 
 import logo from "/brand/logo/icon-and-text-horizontal.webp";
+import logoAboveText from "/brand/logo/icon-above-text.webp";
 import icon from "/brand/logo/icon-688.webp";
 import textLogo from "/brand/logo/text.webp";
 import logoXS from "/brand/logo/icon-86.webp";
@@ -19,6 +20,20 @@ export function Logo() {
       width={169}
       height={53}
       objectFit="contain"
+    />
+  );
+}
+
+/** Stacked mark for narrow slots (e.g. footer brand column). */
+export function LogoAboveText({ className }: { className?: string } = {}) {
+  return (
+    <ImageSkeleton
+      src={logoAboveText}
+      alt={`${APP_CONFIG.name} Logo`}
+      width={140}
+      height={140}
+      objectFit="contain"
+      className={className}
     />
   );
 }

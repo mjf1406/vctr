@@ -16,7 +16,7 @@ export function RootErrorComponent({ error, reset }: ErrorComponentProps) {
     <RouteErrorCard
       title={t("errorTitle")}
       description={t("errorDescription")}
-      imageSrc="/brand/error/403.webp"
+      imageSrc="/brand/error/404.webp"
       imageAlt={t("errorTitle")}
       primaryAction={{
         label: t("tryAgain"),

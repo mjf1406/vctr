@@ -20,10 +20,10 @@ export function Navbar() {
         </Link>
         <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-4">
           <Link
-            to="/ui"
+            to="/join"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            {t("ui")}
+            {t("join")}
           </Link>
         </nav>
         <div className="flex items-center gap-2">

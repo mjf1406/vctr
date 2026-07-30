@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsUpDown, Plus, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { ClassFormCredenza } from "@/components/classes/ClassFormCredenza";
@@ -108,7 +108,19 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <Plus className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">{t("addClass")}</div>
+                <div className="font-medium text-muted-foreground">{t("createClass")}</div>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="gap-2 p-2"
+                onClick={() => {
+                  closeMobileSidebar();
+                  void navigate({ to: "/join" });
+                }}
+              >
+                <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                  <UserPlus className="size-4" />
+                </div>
+                <div className="font-medium text-muted-foreground">{t("join")}</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
