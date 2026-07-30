@@ -1,25 +1,227 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-import { ImageSkeleton } from "@/components/ui/image-skeleton";
+import { APP_CONFIG } from "@/config/app";
+import { OrderHistory } from "@/components/billing/OrderHistory";
+import { PlanActionButton } from "@/components/billing/PlanActionButton";
+import { SubscriptionManagement } from "@/components/billing/SubscriptionManagement";
+import { useBillingProducts } from "@/hooks/billing/useBillingProducts";
+import { useEntitlement } from "@/hooks/billing/useEntitlement";
+import { useTheme } from "@/components/theme/theme-context";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button-variants";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ErrorState } from "@/components/ui/error-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+
+function checkoutTheme(theme: "dark" | "light" | "system"): "dark" | "light" {
+  if (theme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return theme;
+}
 
 export const Route = createFileRoute("/_authenticated/_app/billing")({
   component: function BillingPage() {
     const { t } = useTranslation("billing");
+    const { theme } = useTheme();
+    const {
+      data: products,
+      isPending: productsPending,
+      isError: productsError,
+      refetch: refetchProducts,
+    } = useBillingProducts();
+    const {
+      data: raw,
+      entitlement,
+      isPending: entitlementPending,
+      isError: entitlementError,
+      refetch: refetchEntitlement,
+    } = useEntitlement();
+
+    const isSubscribed = entitlement?.status === "active";
+    const subscription = raw?.subscription ?? null;
+    const monthly = products?.proMonthly;
+    const yearly = products?.proYearly;
+    const polarTheme = checkoutTheme(theme);
+    const currentProductKey = raw?.productKey ?? null;
 
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-8 text-center">
-        <ImageSkeleton
-          src="/img/under-construction.webp"
-          alt={t("title")}
-          width={320}
-          height={320}
-          className="rounded-xl"
-        />
-        <div className="space-y-2">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8">
+        <div className="flex flex-col gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-          <p className="max-w-md text-sm text-muted-foreground">{t("comingSoon")}</p>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
+
+        {entitlementPending ? (
+          <Skeleton className="mx-auto h-12 w-full max-w-lg" />
+        ) : entitlementError ? (
+          <ErrorState
+            card
+            description={t("entitlementLoadFailed")}
+            onRetry={async () => {
+              await refetchEntitlement();
+            }}
+          />
+        ) : entitlement?.status === "expired" ? (
+          <div className="rounded-2xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-center text-sm">
+            <p className="font-medium text-destructive">{t("trialExpiredTitle")}</p>
+            <p className="mt-1 text-muted-foreground">
+              {t("trialExpiredBody", { appName: APP_CONFIG.name })}
+            </p>
+          </div>
+        ) : entitlement?.status === "trialing" && entitlement.daysRemaining !== null ? (
+          <p className="text-center text-sm text-muted-foreground">
+            {t("trialActive", { count: entitlement.daysRemaining })}
+          </p>
+        ) : null}
+
+        {isSubscribed && subscription ? (
+          <>
+            <SubscriptionManagement subscription={subscription} />
+            <OrderHistory />
+          </>
+        ) : null}
+
+        {productsPending ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Skeleton className="h-56 rounded-2xl" />
+            <Skeleton className="h-56 rounded-2xl" />
+            <Skeleton className="h-56 rounded-2xl" />
+          </div>
+        ) : productsError ? (
+          <ErrorState
+            card
+            description={t("productsLoadFailed")}
+            onRetry={async () => {
+              await refetchProducts();
+            }}
+          />
+        ) : !monthly && !yearly ? (
+          <p className="text-center text-sm text-muted-foreground">{t("productsUnavailable")}</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("freeTitle")}</CardTitle>
+                <CardDescription>
+                  <span className="text-3xl font-semibold text-foreground">{t("freePrice")}</span>
+                  <span className="text-muted-foreground">{t("freePeriod")}</span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent />
+              <CardFooter className="flex min-w-0 flex-row gap-2">
+                <a
+                  href={APP_CONFIG.downloadUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "min-w-0 flex-1 justify-center",
+                  )}
+                >
+                  {t("freeDownload")}
+                </a>
+                <a
+                  href={APP_CONFIG.selfHostUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    "min-w-0 flex-1 justify-center",
+                  )}
+                >
+                  {t("freeSelfHost")}
+                </a>
+              </CardFooter>
+            </Card>
+
+            {monthly ? (
+              <Card
+                className={cn(isSubscribed && currentProductKey === "proMonthly" && "ring-primary")}
+              >
+                <CardHeader>
+                  <CardTitle>{t("monthlyTitle")}</CardTitle>
+                  <CardDescription>
+                    <span className="text-3xl font-semibold text-foreground">
+                      {t("monthlyPrice")}
+                    </span>
+                    <span className="text-muted-foreground">{t("monthlyPeriod")}</span>
+                    <p className="mt-2 text-xs leading-snug text-muted-foreground">
+                      {t("taxNote")}
+                    </p>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent />
+                <CardFooter>
+                  {isSubscribed && currentProductKey === "proMonthly" ? (
+                    <Badge>{t("currentPlan")}</Badge>
+                  ) : (
+                    <PlanActionButton
+                      productId={monthly.id}
+                      theme={polarTheme}
+                      variant="secondary"
+                      className="w-full justify-center"
+                      changeExisting={isSubscribed}
+                    >
+                      {isSubscribed ? t("switchToMonthly") : t("startMonthly")}
+                    </PlanActionButton>
+                  )}
+                </CardFooter>
+              </Card>
+            ) : null}
+
+            {yearly ? (
+              <Card
+                className={cn(
+                  isSubscribed && currentProductKey === "proYearly"
+                    ? "ring-primary"
+                    : !isSubscribed && "ring-primary/30",
+                )}
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle>{t("yearlyTitle")}</CardTitle>
+                    <Badge>{t("yearlySave")}</Badge>
+                  </div>
+                  <CardDescription>
+                    <span className="text-3xl font-semibold text-foreground">
+                      {t("yearlyPrice")}
+                    </span>
+                    <span className="text-muted-foreground">{t("yearlyPeriod")}</span>
+                    <p className="mt-2 text-xs leading-snug text-muted-foreground">
+                      {t("taxNote")}
+                    </p>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent />
+                <CardFooter>
+                  {isSubscribed && currentProductKey === "proYearly" ? (
+                    <Badge>{t("currentPlan")}</Badge>
+                  ) : (
+                    <PlanActionButton
+                      productId={yearly.id}
+                      theme={polarTheme}
+                      variant="secondary"
+                      className="w-full justify-center"
+                      changeExisting={isSubscribed}
+                    >
+                      {isSubscribed ? t("switchToYearly") : t("startYearly")}
+                    </PlanActionButton>
+                  )}
+                </CardFooter>
+              </Card>
+            ) : null}
+          </div>
+        )}
       </div>
     );
   },

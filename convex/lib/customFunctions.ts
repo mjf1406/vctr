@@ -6,6 +6,7 @@ import { authz } from "../authz.js";
 import type { ClassPermission } from "./authzModel.js";
 import { classScope } from "./authzModel.js";
 import { requireAuthUserId } from "./auth.js";
+import { requireEntitlement } from "./entitlement.js";
 
 /**
  * Mutation wrapper that requires authentication.
@@ -16,6 +17,18 @@ export const authedMutation = customMutation(mutation, {
   input: async (ctx) => {
     const userId = await requireAuthUserId(ctx);
     return { ctx: { ...ctx, userId }, args: {} };
+  },
+});
+
+/**
+ * Mutation wrapper that requires authentication + an active trial or subscription.
+ * Use for write paths that should not work after the free trial expires.
+ */
+export const entitledMutation = customMutation(authedMutation, {
+  args: {},
+  input: async (ctx) => {
+    await requireEntitlement(ctx, ctx.userId);
+    return { ctx, args: {} };
   },
 });
 

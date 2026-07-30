@@ -2,6 +2,7 @@ import { getAuthSessionId, getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 import { query } from "./_generated/server.js";
+import { listLinkedProviders } from "./lib/accountDeletion.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import { languageValidator } from "./lib/languages.js";
 
@@ -28,6 +29,7 @@ const currentUserValidator = v.object({
   phoneVerificationTime: v.optional(v.number()),
   isAnonymous: v.optional(v.boolean()),
   settings: v.union(userSettingsValidator, v.null()),
+  providers: v.array(v.string()),
 });
 
 const currentSessionValidator = v.object({
@@ -72,9 +74,11 @@ export const currentUser = query({
       .query("userSettings")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
       .unique();
+    const providers = await listLinkedProviders(ctx, userId);
     return {
       ...user,
       settings: settings ?? null,
+      providers,
     };
   },
 });

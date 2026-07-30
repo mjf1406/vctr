@@ -11,6 +11,7 @@ import {
 } from "./lib/authzModel.js";
 import { deleteJoinCodeById } from "./lib/joinCodesCleanup.js";
 import { authedMutation, classMutation, classQuery } from "./lib/customFunctions.js";
+import { requireEntitlement } from "./lib/entitlement.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { authz } from "./authz.js";
 import { internal } from "./_generated/api.js";
@@ -133,6 +134,7 @@ export const create = classMutation({
   },
   returns: joinCodeValidator,
   handler: async (ctx, args) => {
+    await requireEntitlement(ctx, ctx.userId);
     await rateLimiter.limit(ctx, "joinCodeCreate", { key: ctx.userId, throws: true });
     await ctx.require("invitations:create");
 

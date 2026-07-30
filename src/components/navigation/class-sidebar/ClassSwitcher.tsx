@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { ChevronsUpDown, Plus, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,7 @@ import { useCreateClass } from "@/hooks/classes/useCreateClass";
 import { useActiveClasses } from "@/hooks/classes/useClasses";
 import type { ClassDoc } from "@/lib/classes/classes";
 import type { ClassFormValues } from "@/lib/classes/classFormSchema";
+import { classRouteFromPathname } from "@/lib/classes/classRoutes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +32,7 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
   const { isMobile, setOpenMobile } = useSidebar();
   const { role } = useClassPermissionsContext();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const { data: classes = [] } = useActiveClasses();
   const createClass = useCreateClass();
   const [createOpen, setCreateOpen] = useState(false);
@@ -97,7 +99,7 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
                     onClick={() => {
                       closeMobileSidebar();
                       void navigate({
-                        to: "/class/$classId",
+                        to: classRouteFromPathname(pathname, currentClass._id),
                         params: { classId: classDoc._id },
                       });
                     }}

@@ -12,7 +12,7 @@ import {
   pickHighestClassRole,
   type ClassRole,
 } from "./lib/authzModel.js";
-import { authedMutation, authedQuery, classMutation } from "./lib/customFunctions.js";
+import { authedQuery, classMutation, entitledMutation } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
 
@@ -182,7 +182,7 @@ export const get = authedQuery({
   },
 });
 
-export const create = authedMutation({
+export const create = entitledMutation({
   args: {
     name: v.string(),
     year: v.number(),

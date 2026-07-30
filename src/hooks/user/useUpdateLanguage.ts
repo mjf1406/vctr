@@ -7,6 +7,7 @@ import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 
 type CurrentUser = Doc<"users"> & {
   settings: Doc<"userSettings"> | null;
+  providers: Array<string>;
 };
 
 export function useUpdateLanguage() {

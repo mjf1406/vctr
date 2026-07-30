@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId/")({
 
     return (
       <RequirePermission permission="class:read">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-8 sm:px-8">
+        <div className="flex w-full flex-col gap-2 px-4 py-8 sm:px-8">
           <h1 className="text-2xl font-semibold tracking-tight">{t("navDashboard")}</h1>
           <p className="text-sm text-muted-foreground">{t("comingSoon")}</p>
         </div>

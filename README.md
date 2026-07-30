@@ -66,8 +66,8 @@ bunx convex dev
 Schema and components are already wired:
 
 - Schema: [`convex/schema.ts`](./convex/schema.ts) (includes `authTables`)
-- Components: [`convex/convex.config.ts`](./convex/convex.config.ts) (`@djpanda/convex-authz`, `@convex-dev/rate-limiter`)
-- HTTP auth routes: [`convex/http.ts`](./convex/http.ts) → `auth.addHttpRoutes`
+- Components: [`convex/convex.config.ts`](./convex/convex.config.ts) (`@djpanda/convex-authz`, `@convex-dev/rate-limiter`, `@convex-dev/polar`)
+- HTTP auth + Polar webhook routes: [`convex/http.ts`](./convex/http.ts) → `auth.addHttpRoutes` + `polar.registerRoutes` (`/polar/events`)
 - Client: [`src/main.tsx`](./src/main.tsx) (`VITE_CONVEX_URL`, `ConvexAuthProvider`)
 
 ### 4. Initialize Convex Auth on **this** deployment
@@ -135,7 +135,47 @@ UI entry points:
 - [ ] Set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env.local` (see [`src/lib/auth/authPassword.ts`](./src/lib/auth/authPassword.ts)).
 - [ ] Add a Password provider to [`convex/auth.ts`](./convex/auth.ts) — today only `Google` is configured; enabling the flag alone is not enough.
 
-### 6. Branding (`APP_CONFIG` + assets)
+### 6. Billing (Polar)
+
+Subscriptions use [`@convex-dev/polar`](https://www.npmjs.com/package/@convex-dev/polar). The billing UI is [`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx). Trial length is app-managed (card-less) via [`convex/appConfig.ts`](./convex/appConfig.ts) `trial` — Polar checkout has **no** Polar-native trial.
+
+1. Create a [Polar](https://polar.sh) organization (use **sandbox** while developing).
+2. Create two **subscription** products (no trial on the product):
+   - Monthly: **USD 3** / month
+   - Yearly: **USD 30** / year
+3. Create an organization access token with at least: `products:read/write`, `subscriptions:read/write`, `customers:read/write`, `checkouts:read/write`, `checkout_links:read/write`, `customer_portal:read/write`, `customer_sessions:write`.
+4. Create a webhook pointing at your **Convex HTTP Actions** host (not your SPA):
+
+   ```text
+   {CONVEX_SITE_URL}/polar/events
+   ```
+
+   Example: `https://happy-animal-123.convex.site/polar/events`
+
+   Enable events: `product.created`, `product.updated`, `subscription.created`, `subscription.updated`.
+
+5. Push secrets to the **Convex deployment** (selected by `POLAR_SERVER` in [`convex/lib/polarEnv.ts`](./convex/lib/polarEnv.ts)):
+
+```bash
+bunx convex env set POLAR_SERVER sandbox
+bunx convex env set POLAR_SANDBOX_ACCESS_TOKEN "<sandbox-org-token>"
+bunx convex env set POLAR_SANDBOX_WEBHOOK_SECRET "<sandbox-webhook-secret>"
+bunx convex env set POLAR_PRODUCT_MONTHLY_ID "<polar-monthly-product-id>"
+bunx convex env set POLAR_PRODUCT_YEARLY_ID "<polar-yearly-product-id>"
+```
+
+For production later, set `POLAR_SERVER=production` and `POLAR_ACCESS_TOKEN` / `POLAR_WEBHOOK_SECRET` (same product ID vars, or separate products).
+
+6. If products already existed in Polar before first deploy, sync them once (Dashboard → Functions, or `bunx convex run polar:syncProducts`).
+
+- [ ] Sandbox products created ($3/mo, $30/yr, no Polar trial)
+- [ ] Webhook → `{CONVEX_SITE_URL}/polar/events` with the four events above
+- [ ] Convex env vars set (`POLAR_SERVER`, sandbox token/secret, both product IDs)
+- [ ] Optional: adjust trial length in `APP_CONFIG.trial` (`days`, `warnWithinDays`, `forceWithinDays`)
+
+Checkout success URL is the current page (`window.location.href` from `CheckoutLink`) — **do not** set a separate `POLAR_SUCCESS_URL`.
+
+### 7. Branding (`APP_CONFIG` + assets)
 
 Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app.ts)):
 
@@ -168,7 +208,6 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 | [`public/brand/error/404.webp`](./public/brand/error/404.webp)                                         | [`src/routes/_public/$.tsx`](./src/routes/_public/$.tsx), [`src/components/errors/RootErrorComponent.tsx`](./src/components/errors/RootErrorComponent.tsx) |
 | [`public/brand/error/403.webp`](./public/brand/error/403.webp)                                         | [`src/routes/_public/unauthorized.tsx`](./src/routes/_public/unauthorized.tsx)                                                                             |
 | [`public/favicon.svg`](./public/favicon.svg)                                                           | [`index.html`](./index.html) `<link rel="icon">`                                                                                                           |
-| [`public/img/under-construction.webp`](./public/img/under-construction.webp)                           | Billing placeholder ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx))                                         |
 
 - [ ] All brand assets replaced (or intentionally kept)
 - [ ] Favicon updated
@@ -185,7 +224,7 @@ Minimum branding strings:
 - [ ] Theme key `"vite-ui-theme"` in [`src/main.tsx`](./src/main.tsx) **and** the matching bootstrap script in [`index.html`](./index.html) — prefer `${APP_CONFIG.slug}-ui-theme` or similar
 - [ ] Pending join-code key `"vctr:pendingJoinCode"` in [`src/lib/auth/pendingJoinCode.ts`](./src/lib/auth/pendingJoinCode.ts) — prefer `${APP_CONFIG.slug}:pendingJoinCode`
 
-### 7. Theme (shadcn)
+### 8. Theme (shadcn)
 
 This project already has shadcn configured:
 
@@ -212,7 +251,7 @@ bunx --bun shadcn@latest apply <preset-code> --only theme,font
 
 Adding components later: `bunx --bun shadcn@latest add <component>` (aliases already match [`components.json`](./components.json)).
 
-### 8. Reshape the example domain
+### 9. Reshape the example domain
 
 Do this **after** auth + branding so you can smoke-test login on the example UI first if useful.
 
@@ -246,7 +285,7 @@ Checklist:
 - [ ] Trimmed or rewrote feature i18n keys in **all** locales + `REQUIRED_KEYS` coverage via tests
 - [ ] Removed ClassClarus-specific footer/legal URLs if not applicable
 
-### 9. Run and verify
+### 10. Run and verify
 
 ```bash
 # Terminal A — Convex (if not already running)
@@ -268,12 +307,13 @@ vp check
 vp test
 ```
 
-### 10. Production (when ready)
+### 11. Production (when ready)
 
 - [ ] Deploy Convex prod (`bunx convex deploy` — **production only**, never for day-to-day template work)
 - [ ] `bunx @convex-dev/auth --prod`
 - [ ] Set `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` on **prod**
 - [ ] Google OAuth origins + redirect URI for prod SPA + prod `{CONVEX_SITE_URL}/api/auth/callback/google`
+- [ ] Set Polar prod env (`POLAR_SERVER=production`, `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, product IDs) and a prod webhook to prod `{CONVEX_SITE_URL}/polar/events`
 - [ ] `APP_CONFIG.appUrl` / marketing / legal URLs point at production
 - [ ] Build SPA with prod `VITE_CONVEX_URL` / `VITE_CONVEX_SITE_URL`
 
@@ -299,17 +339,24 @@ vp test
 
 See [`.env.example`](./.env.example). Summary:
 
-| Variable                                | Location                         | Required                               |
-| --------------------------------------- | -------------------------------- | -------------------------------------- |
-| `CONVEX_DEPLOYMENT`                     | `.env.local` (from `convex dev`) | Yes (dev)                              |
-| `VITE_CONVEX_URL`                       | `.env.local`                     | Yes                                    |
-| `VITE_CONVEX_SITE_URL`                  | `.env.local`                     | Yes (handy mirror of HTTP Actions URL) |
-| `SITE_URL`                              | Convex env                       | Yes (SPA origin)                       |
-| `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                    |
-| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                    |
-| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional                               |
+| Variable                                | Location                         | Required                                   |
+| --------------------------------------- | -------------------------------- | ------------------------------------------ |
+| `CONVEX_DEPLOYMENT`                     | `.env.local` (from `convex dev`) | Yes (dev)                                  |
+| `VITE_CONVEX_URL`                       | `.env.local`                     | Yes                                        |
+| `VITE_CONVEX_SITE_URL`                  | `.env.local`                     | Yes (handy mirror of HTTP Actions URL)     |
+| `SITE_URL`                              | Convex env                       | Yes (SPA origin)                           |
+| `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                        |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                        |
+| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional                                   |
+| `POLAR_SERVER`                          | Convex env                       | Yes for billing (`sandbox` / `production`) |
+| `POLAR_SANDBOX_ACCESS_TOKEN`            | Convex env                       | Yes when `POLAR_SERVER=sandbox`            |
+| `POLAR_ACCESS_TOKEN`                    | Convex env                       | Yes when `POLAR_SERVER=production`         |
+| `POLAR_SANDBOX_WEBHOOK_SECRET`          | Convex env                       | Yes when sandbox                           |
+| `POLAR_WEBHOOK_SECRET`                  | Convex env                       | Yes when production                        |
+| `POLAR_PRODUCT_MONTHLY_ID`              | Convex env                       | Yes for billing                            |
+| `POLAR_PRODUCT_YEARLY_ID`               | Convex env                       | Yes for billing                            |
 
-Polar / billing secrets are **not** wired in this template yet ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx) is a placeholder). Ignore any Polar keys from older personal `.env` files until you add billing.
+Polar secrets belong on the **Convex deployment** (`bunx convex env set`), not in Vite. See clone step **6. Billing (Polar)**.
 
 ---
 
@@ -317,6 +364,6 @@ Polar / billing secrets are **not** wired in this template yet ([`src/routes/_au
 
 - React 19 + Vite+ ([`vite.config.ts`](./vite.config.ts), React Compiler)
 - TanStack Router / Query / Form / Table
-- Convex + `@convex-dev/auth` + `@djpanda/convex-authz` + `@convex-dev/rate-limiter`
+- Convex + `@convex-dev/auth` + `@djpanda/convex-authz` + `@convex-dev/rate-limiter` + `@convex-dev/polar`
 - shadcn (Base UI) + Tailwind v4
 - i18n: `react-i18next` ([`src/i18n/`](./src/i18n/))

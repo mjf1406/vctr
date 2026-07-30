@@ -1,4 +1,5 @@
 import PendingComponent from "@/components/loading/PendingComponent";
+import { BillingGate } from "@/components/billing/BillingGate";
 import { relativeLocationHref, stashPendingJoinCode } from "@/lib/auth/pendingJoinCode";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
@@ -29,6 +30,14 @@ export const Route = createFileRoute("/_authenticated")({
       return null;
     }
 
-    return auth.isLoading ? <PendingComponent inset /> : <Outlet />;
+    if (auth.isLoading) {
+      return <PendingComponent inset />;
+    }
+
+    return (
+      <BillingGate>
+        <Outlet />
+      </BillingGate>
+    );
   },
 });

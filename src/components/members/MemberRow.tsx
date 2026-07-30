@@ -35,14 +35,14 @@ export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
   const showRemove = !isSelf && removePermission !== null;
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border px-4 py-3">
-      <div className="flex min-w-0 items-center gap-3">
-        <Avatar>
+    <div className="flex h-full flex-col gap-3 rounded-2xl border p-4">
+      <div className="flex min-w-0 flex-col items-center gap-2 text-center">
+        <Avatar className="size-12">
           {member.image ? <AvatarImage src={member.image} alt={displayName} /> : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-col items-center gap-1">
+          <div className="flex min-w-0 flex-wrap items-center justify-center gap-2">
             <span className="truncate text-sm font-medium">{displayName}</span>
             {member.role === "owner" ? (
               <Badge variant="secondary">{t(roleLabelKey(member.role))}</Badge>
@@ -55,7 +55,13 @@ export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
       </div>
       {showRemove && removePermission ? (
         <Can permission={removePermission}>
-          <Button type="button" variant="outline" size="sm" onClick={() => onRemove(member)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="mt-auto w-full"
+            onClick={() => onRemove(member)}
+          >
             <UserMinusIcon data-icon="inline-start" />
             {t("removeMember")}
           </Button>

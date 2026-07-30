@@ -18,6 +18,10 @@ export const APP_CONFIG = {
   changeLog: "https://change-log.pages.dev/classclarus",
   roadMap: "https://change-log.pages.dev/classclarus/board",
   github: "https://github.com/mjf1406/classclarus-app",
+  /** Electron / desktop download landing (billing Free card). */
+  downloadUrl: "https://github.com/mjf1406/classclarus-app",
+  /** Self-hosting docs (billing Free card). */
+  selfHostUrl: "https://github.com/mjf1406/classclarus-app",
   /** Product-level authz namespace — set before first real deploy; rematerialize if changed later. */
   authzTenantId: "classclarus",
   /** Browser chrome — hex (meta theme-color is unreliable with oklch). */
@@ -30,5 +34,14 @@ export const APP_CONFIG = {
   backgroundColors: {
     light: "#ffffff",
     dark: "#252525",
+  },
+  /**
+   * App-managed card-less trial (not Polar-native).
+   * `days` is the grant length; warn/force control the upgrade banner.
+   */
+  trial: {
+    days: 90,
+    warnWithinDays: 14,
+    forceWithinDays: 3,
   },
 } as const;

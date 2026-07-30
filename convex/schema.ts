@@ -1,6 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { authTables } from "@convex-dev/auth/server";
-import { languageValidator } from "./users";
+import { languageValidator } from "./lib/languages.js";
 import { v } from "convex/values";
 
 const schema = defineSchema({
@@ -35,7 +35,20 @@ const schema = defineSchema({
     expirationJobId: v.optional(v.id("_scheduled_functions")),
   })
     .index("by_code", ["code"])
-    .index("by_class", ["classId"]),
+    .index("by_class", ["classId"])
+    .index("by_creator", ["createdBy"]),
+  /**
+   * One card-less trial grant per normalized email.
+   * Survives account delete/recreate — never re-grant for the same emailKey.
+   */
+  trialGrants: defineTable({
+    emailKey: v.string(),
+    userId: v.id("users"),
+    startedAt: v.number(),
+    endsAt: v.number(),
+  })
+    .index("by_emailKey", ["emailKey"])
+    .index("by_userId", ["userId"]),
 });
 
 export default schema;

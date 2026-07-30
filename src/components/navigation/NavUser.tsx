@@ -1,9 +1,12 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuthActions, useConvexAuth } from "@convex-dev/auth/react";
 import { ChevronsUpDown, CreditCard, LogOut, Settings, Wallet } from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useEntitlement } from "@/hooks/billing/useEntitlement";
 import { useCurrentUser } from "@/hooks/user/useCurrentUser";
+import { buildPlanSummary } from "@/lib/billing/planSummary";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
 import { Button } from "@/components/ui/button";
 import {
@@ -134,8 +137,21 @@ function NavUserAvatar() {
 
 function NavUserSidebar() {
   const { t } = useTranslation("common");
+  const { t: tBilling, i18n } = useTranslation("billing");
   const { isMobile } = useSidebar();
   const { isLoading, isAuthenticated, user, signOut } = useAccountMenuState();
+  const { data: raw, entitlement } = useEntitlement();
+
+  const planLabel = useMemo(
+    () =>
+      buildPlanSummary({
+        entitlement,
+        subscription: raw?.subscription ?? null,
+        locale: i18n.language,
+        t: tBilling,
+      }).compactLabel,
+    [entitlement, raw?.subscription, i18n.language, tBilling],
+  );
 
   if (isLoading || (isAuthenticated && user === undefined)) {
     return (
@@ -187,7 +203,7 @@ function NavUserSidebar() {
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{displayName}</span>
-              <span className="truncate text-xs text-muted-foreground">Free</span>
+              <span className="truncate text-xs text-muted-foreground">{planLabel}</span>
             </div>
             <ChevronsUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
