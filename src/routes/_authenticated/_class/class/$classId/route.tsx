@@ -1,10 +1,14 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
+import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
+import {
+  ClassBreadcrumbSkeleton,
+  ClassSidebarSkeleton,
+} from "@/components/navigation/class-sidebar/ClassLayoutSkeleton";
 import { ClassAppSidebar } from "@/components/navigation/class-sidebar/ClassSidebar";
 import { ClassBreadcrumb } from "@/components/navigation/class-sidebar/ClassBreadcrumb";
 import { ClassPermissionsProvider } from "@/components/permissions/ClassPermissionsProvider";
-import PendingComponent from "@/components/loading/PendingComponent";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -26,11 +30,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
     const { t } = useTranslation("classes");
     const { t: tCommon } = useTranslation("common");
 
-    if (isPending) {
-      return <PendingComponent />;
-    }
-
-    if (isError || !classDoc) {
+    if (!isPending && (isError || !classDoc)) {
       return (
         <main className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 py-8">
           <Empty card>
@@ -54,15 +54,15 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
     return (
       <ClassPermissionsProvider classId={classId}>
         <SidebarProvider className="min-h-svh">
-          <ClassAppSidebar classDoc={classDoc} />
+          {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
           <SidebarInset>
             <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <ClassBreadcrumb classDoc={classDoc} />
+              {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
             </header>
             <div className="flex flex-1 flex-col">
-              <Outlet />
+              <ClassContent classPending={isPending || !classDoc} />
             </div>
           </SidebarInset>
         </SidebarProvider>

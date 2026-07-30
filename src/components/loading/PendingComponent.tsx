@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
+
+import { Icon } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
-import { Spinner } from "../ui/spinner";
 
 interface PendingComponentProps {
   message?: string;
@@ -20,7 +21,7 @@ export default function PendingComponent({ message, inset = false }: PendingComp
       )}
     >
       <div className="flex flex-col items-center gap-1">
-        <Spinner className="size-12" />
+        <Icon className="size-24 animate-spin" />
         <span className="text-muted-foreground text-lg">{label}</span>
       </div>
     </div>
