@@ -59,6 +59,7 @@ export function InvitationsPage({ classId, classArchived }: InvitationsPageProps
 
   const assignableRoles = useMemo(() => assignableJoinCodeRoles(can), [can]);
   const liveCodes = data ?? [];
+  const showSkeleton = (isPending || isAuthLoading) && data == null;
 
   const handleCreate = useCallback(
     async (values: CreateJoinCodeFormValues) => {
@@ -104,9 +105,9 @@ export function InvitationsPage({ classId, classArchived }: InvitationsPageProps
         </Can>
       </div>
 
-      {isPending || isAuthLoading ? <InvitationsSkeleton /> : null}
+      {showSkeleton ? <InvitationsSkeleton /> : null}
 
-      {!isPending && !isAuthLoading && isError ? (
+      {!showSkeleton && isError ? (
         <ErrorState
           title={t("invitationsLoadFailed")}
           onRetry={() => {
@@ -115,7 +116,7 @@ export function InvitationsPage({ classId, classArchived }: InvitationsPageProps
         />
       ) : null}
 
-      {!isPending && !isAuthLoading && !isError && liveCodes.length === 0 ? (
+      {!showSkeleton && !isError && liveCodes.length === 0 ? (
         <Empty card>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -139,7 +140,7 @@ export function InvitationsPage({ classId, classArchived }: InvitationsPageProps
         </Empty>
       ) : null}
 
-      {!isPending && !isAuthLoading && !isError && liveCodes.length > 0 ? (
+      {!showSkeleton && !isError && liveCodes.length > 0 ? (
         <div className="flex flex-col gap-3">
           {liveCodes.map((code) => (
             <JoinCodeCard

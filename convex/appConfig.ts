@@ -15,8 +15,8 @@ export const APP_CONFIG = {
   privacyUrl: "https://www.classclarus.com/privacy-policy",
   termsUrl: "https://www.classclarus.com/terms-and-conditions",
   cookieUrl: "https://www.classclarus.com/cookie-policy",
-  changeLog: "https://change-log.pages.dev/classclarus-v4",
-  roadMap: "https://change-log.pages.dev/classclarus-v4/board",
+  changeLog: "https://change-log.pages.dev/classclarus",
+  roadMap: "https://change-log.pages.dev/classclarus/board",
   github: "https://github.com/mjf1406/classclarus-app",
   /** Product-level authz namespace — set before first real deploy; rematerialize if changed later. */
   authzTenantId: "classclarus",
