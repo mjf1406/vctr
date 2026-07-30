@@ -11,6 +11,7 @@ import PendingComponent from "@/components/loading/PendingComponent";
 import { InnerRouterProvider } from "@/components/routing/InnerRouterProvider";
 import i18n, { ensureLocaleLoaded, getInitialLanguage } from "@/i18n";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { STORAGE_KEYS } from "@/lib/storageKeys";
 
 import { routeTree } from "./routeTree.gen";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -65,7 +66,7 @@ async function bootstrap() {
         <QueryClientProvider client={queryClient}>
           <StrictMode>
             <LanguageProvider>
-              <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+              <ThemeProvider defaultTheme="system" storageKey={STORAGE_KEYS.theme}>
                 <div vaul-drawer-wrapper="" className="bg-background">
                   <TooltipProvider>
                     <InnerRouterProvider router={router} />

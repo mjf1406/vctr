@@ -7,7 +7,7 @@
     <script>
       (function () {
         try {
-          var key = "vite-ui-theme";
+          var key = "%APP_THEME_STORAGE_KEY%";
           var theme = localStorage.getItem(key) || "system";
           var resolved =
             theme === "system"

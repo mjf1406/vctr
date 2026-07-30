@@ -1,7 +1,7 @@
-import { APP_CONFIG } from "@/config/app";
 import { isAppLanguage, type AppLanguage } from "@/lib/languages";
+import { STORAGE_KEYS } from "@/lib/storageKeys";
 
-const LANGUAGE_STORAGE_KEY = `${APP_CONFIG.slug}-language`;
+const LANGUAGE_STORAGE_KEY = STORAGE_KEYS.language;
 
 function readLanguage(key: string): AppLanguage | null {
   try {

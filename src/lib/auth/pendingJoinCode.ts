@@ -1,7 +1,8 @@
 import { JOIN_CODE_LENGTH, normalizeJoinCodeInput } from "@/lib/invitations/joinCodeFormSchema";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
+import { STORAGE_KEYS } from "@/lib/storageKeys";
 
-const JOIN_CODE_STORAGE_KEY = "vctr:pendingJoinCode";
+const JOIN_CODE_STORAGE_KEY = STORAGE_KEYS.pendingJoinCode;
 
 /** In-memory fallback when sessionStorage is unavailable (SSR / some test runners). */
 let memoryPendingJoinCode: string | null = null;

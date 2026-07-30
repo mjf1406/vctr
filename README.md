@@ -4,15 +4,15 @@ Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 **ClassClarus** (classroom CRUD, members, join codes, teacher/student roles) is a **worked example**, not the product. Keep the platform patterns; replace the nouns when cloning for another domain.
 
-| Keep (platform)                                 | Example domain (replace)                                     |
-| ----------------------------------------------- | ------------------------------------------------------------ |
-| Auth, theme, toasts, forms, empty/error/pending | `classes`, members, join codes, class sidebar                |
-| i18n plumbing + `common` / `auth` namespaces    | Classroom copy (`footerTagline`, invite/member strings)      |
-| Optimistic hooks, rate limiter, authz wiring    | `convex/lib/authzModel.ts` resources/roles                   |
-| `convex/appConfig.ts` + `public/brand/`         | Schema tables tied to classes; feature routes under `_class` |
-| UI kit under `src/components/ui/`               | Role badges / people pages for classroom roles               |
+| Keep (platform)                                      | Example domain (replace)                                     |
+| ---------------------------------------------------- | ------------------------------------------------------------ |
+| Auth, theme, toasts, forms, empty/error/pending      | `classes`, members, join codes, class sidebar                |
+| i18n plumbing + `common` / `auth` namespaces         | Classroom copy (`footerTagline`, invite/member strings)      |
+| Optimistic hooks, rate limiter, authz wiring         | `convex/lib/authzModel.ts` resources/roles                   |
+| `convex/appConfig.ts` + `public/brand/`              | Schema tables tied to classes; feature routes under `_class` |
+| UI kit under `src/components/ui/` + `/ui` playground | Role badges / people pages for classroom roles               |
 
-> **Convention for agents:** anything named `class` / `school` / classroom roles is sample product code. Keep the _patterns_ (scoped authz, optimistic hooks, invite codes); replace the _nouns_.
+> **Convention for agents:** anything named `class` / classroom roles is sample product code. Keep the _patterns_ (scoped authz, optimistic hooks, invite codes); replace the _nouns_.
 
 Toolchain notes also live in [`AGENTS.md`](./AGENTS.md) (`vp install`, `vp check`, `vp test`).
 
@@ -181,17 +181,17 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 
 **Edit every field in [`convex/appConfig.ts`](./convex/appConfig.ts):**
 
-| Field                                   | Used for                                                                                                                                                  |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                        |
-| `slug`                                  | Language storage key `${slug}-language` in [`src/i18n/storage.ts`](./src/i18n/storage.ts); comment says package-name check                                |
-| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                             |
-| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts)) |
-| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                          |
-| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                             |
-| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                             |
-| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                    |
-| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                   |
+| Field                                   | Used for                                                                                                                                                                           |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                 |
+| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check |
+| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                      |
+| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                          |
+| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                   |
+| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                      |
+| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                      |
+| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                             |
+| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                            |
 
 - [ ] All `APP_CONFIG` fields updated for the new product
 - [ ] `authzTenantId` is a stable new id (not `classclarus`)
@@ -219,10 +219,9 @@ Minimum branding strings:
 - [ ] `common.footerTagline` (ClassClarus classroom line today)
 - [ ] Any other product-specific keys you introduce (catalog is enforced by [`src/i18n/entityNoun.test.ts`](./src/i18n/entityNoun.test.ts))
 
-**Storage keys that still hardcode the template name** (update when cloning so products don’t clash in the same browser):
+**Browser storage keys** — derived automatically from `APP_CONFIG.slug` in [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (language, theme, pending join code, trial-banner dismiss). The FOUC theme bootstrap in [`index.html`](./index.html) is filled by Vite from the same slug (`%APP_THEME_STORAGE_KEY%` → `${slug}-ui-theme`). Changing `slug` is enough; old keys (`vite-ui-theme`, `vctr:…`) are not migrated.
 
-- [ ] Theme key `"vite-ui-theme"` in [`src/main.tsx`](./src/main.tsx) **and** the matching bootstrap script in [`index.html`](./index.html) — prefer `${APP_CONFIG.slug}-ui-theme` or similar
-- [ ] Pending join-code key `"vctr:pendingJoinCode"` in [`src/lib/auth/pendingJoinCode.ts`](./src/lib/auth/pendingJoinCode.ts) — prefer `${APP_CONFIG.slug}:pendingJoinCode`
+- [ ] `APP_CONFIG.slug` set for the new product (storage keys follow)
 
 ### 8. Theme (shadcn)
 
@@ -261,7 +260,7 @@ Authz client: [`convex/authz.ts`](./convex/authz.ts) (`tenantId: APP_CONFIG.auth
 
 **Backend example modules:**
 
-- [`convex/schema.ts`](./convex/schema.ts) — `classes`, `joinCodes`, `userSettings.homeSectionOrder`
+- [`convex/schema.ts`](./convex/schema.ts) — `classes`, `joinCodes`, `userSettings`
 - [`convex/classes.ts`](./convex/classes.ts)
 - [`convex/members.ts`](./convex/members.ts)
 - [`convex/joinCodes.ts`](./convex/joinCodes.ts)
@@ -300,6 +299,7 @@ vp dev
 - [ ] Google sign-in completes (consent → redirect → authenticated shell)
 - [ ] Brand name/logo/favicon/tagline look correct
 - [ ] Theme looks correct in light and dark
+- [ ] Spot-check UI primitives at `/ui` (auth required) — [`src/routes/_authenticated/_app/ui.tsx`](./src/routes/_authenticated/_app/ui.tsx)
 - [ ] `vp check` and `vp test` pass after your domain edits
 
 ```bash

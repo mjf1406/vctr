@@ -1,12 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
+import { classDetailQueryKey } from "@/hooks/classes/useClass";
+import { classesListQueryKey } from "@/hooks/classes/useClasses";
+import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import type { ClassPublic } from "@/lib/classes/classes";
 import { messageFromError } from "@/lib/errors/convexError";
+import { patchDoc } from "@/lib/optimistic";
 
 type ClassDoc = Doc<"classes">;
 
@@ -18,28 +21,17 @@ type UpdateClassArgs = {
   icon?: string;
 };
 
-function listQueryKey() {
-  return convexQuery(api.classes.listMine, {}).queryKey;
-}
-
-function getQueryKey(classId: Id<"classes">) {
-  return convexQuery(api.classes.get, { classId }).queryKey;
-}
-
 export function useUpdateClass() {
-  const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
+  const { t } = useTranslation("classes");
+  const { t: tCommon } = useTranslation("common");
   const mutationFn = useConvexMutation(api.classes.update);
-  const listKey = listQueryKey();
+  const listKey = classesListQueryKey();
 
-  return useMutation({
+  return useOptimisticMutation({
     mutationFn: (args: UpdateClassArgs) => mutationFn(args),
-    onMutate: async (args) => {
-      const detailKey = getQueryKey(args.classId);
-      await queryClient.cancelQueries({ queryKey: listKey });
-      await queryClient.cancelQueries({ queryKey: detailKey });
-      const previousList = queryClient.getQueryData<ClassPublic[]>(listKey);
-      const previousDetail = queryClient.getQueryData<ClassDoc | null>(detailKey);
+    queryKeys: (args) => [listKey, classDetailQueryKey(args.classId)],
+    applyOptimisticUpdate: (queryClient, args) => {
+      const detailKey = classDetailQueryKey(args.classId);
       const now = Date.now();
       const patch = {
         name: args.name,
@@ -55,29 +47,14 @@ export function useUpdateClass() {
         );
       });
       queryClient.setQueryData<ClassDoc | null>(detailKey, (old) =>
-        old ? { ...old, ...patch } : old,
+        patchDoc(old ?? null, (doc) => ({ ...doc, ...patch })),
       );
-      return { previousList, previousDetail, listKey, detailKey };
     },
-    onError: (error, _variables, context) => {
-      if (context?.previousList !== undefined) {
-        queryClient.setQueryData(context.listKey, context.previousList);
-      }
-      if (context?.previousDetail !== undefined) {
-        queryClient.setQueryData(context.detailKey, context.previousDetail);
-      }
+    onError: (error) => {
       toast.add({
-        title: messageFromError(error, "Could not update class", t("rateLimited")),
+        title: messageFromError(error, t("saveFailed"), tCommon("rateLimited")),
         type: "error",
       });
-    },
-    onSettled: (_data, _error, _variables, context) => {
-      if (context?.listKey) {
-        void queryClient.invalidateQueries({ queryKey: context.listKey });
-      }
-      if (context?.detailKey) {
-        void queryClient.invalidateQueries({ queryKey: context.detailKey });
-      }
     },
   });
 }

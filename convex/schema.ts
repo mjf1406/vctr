@@ -8,7 +8,6 @@ const schema = defineSchema({
   userSettings: defineTable({
     userId: v.id("users"),
     language: languageValidator,
-    homeSectionOrder: v.optional(v.array(v.union(v.literal("schools"), v.literal("classes")))),
   }).index("by_userId", ["userId"]),
   classes: defineTable({
     ownerId: v.id("users"),

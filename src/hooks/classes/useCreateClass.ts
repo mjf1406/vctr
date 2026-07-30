@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
+import { classesListQueryKey } from "@/hooks/classes/useClasses";
+import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import type { ClassPublic } from "@/lib/classes/classes";
 import { messageFromError } from "@/lib/errors/convexError";
 
@@ -15,21 +16,16 @@ type CreateClassArgs = {
   icon?: string;
 };
 
-function listQueryKey() {
-  return convexQuery(api.classes.listMine, {}).queryKey;
-}
-
 export function useCreateClass() {
-  const { t } = useTranslation("common");
-  const queryClient = useQueryClient();
+  const { t } = useTranslation("classes");
+  const { t: tCommon } = useTranslation("common");
   const mutationFn = useConvexMutation(api.classes.create);
-  const queryKey = listQueryKey();
+  const queryKey = classesListQueryKey();
 
-  return useMutation({
+  return useOptimisticMutation({
     mutationFn: (args: CreateClassArgs) => mutationFn(args),
-    onMutate: async (args) => {
-      await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ClassPublic[]>(queryKey);
+    queryKeys: [queryKey],
+    applyOptimisticUpdate: (queryClient, args) => {
       const optimisticId = `optimistic:${crypto.randomUUID()}` as Id<"classes">;
       const now = Date.now();
       const optimistic: ClassPublic = {
@@ -47,21 +43,12 @@ export function useCreateClass() {
       queryClient.setQueryData<ClassPublic[]>(queryKey, (old) =>
         old ? [optimistic, ...old] : [optimistic],
       );
-      return { previous, queryKey, optimisticId };
     },
-    onError: (error, _variables, context) => {
-      if (context?.previous !== undefined) {
-        queryClient.setQueryData(context.queryKey, context.previous);
-      }
+    onError: (error) => {
       toast.add({
-        title: messageFromError(error, "Could not create class", t("rateLimited")),
+        title: messageFromError(error, t("saveFailed"), tCommon("rateLimited")),
         type: "error",
       });
-    },
-    onSettled: (_data, _error, _variables, context) => {
-      if (context?.queryKey) {
-        void queryClient.invalidateQueries({ queryKey: context.queryKey });
-      }
     },
   });
 }

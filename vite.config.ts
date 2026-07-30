@@ -4,6 +4,20 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import type { Plugin } from "vite";
+
+import { APP_CONFIG } from "./convex/appConfig";
+
+/** Keep FOUC theme bootstrap in index.html aligned with STORAGE_KEYS.theme. */
+function injectAppThemeStorageKey(): Plugin {
+  const themeStorageKey = `${APP_CONFIG.slug}-ui-theme`;
+  return {
+    name: "inject-app-theme-storage-key",
+    transformIndexHtml(html) {
+      return html.replaceAll("%APP_THEME_STORAGE_KEY%", themeStorageKey);
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -41,6 +55,7 @@ export default defineConfig({
     lint: false,
   },
   plugins: lazyPlugins(() => [
+    injectAppThemeStorageKey(),
     tanstackRouter({
       target: "react",
       autoCodeSplitting: true,

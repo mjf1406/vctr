@@ -8,14 +8,11 @@ import { languageValidator } from "./lib/languages.js";
 
 export { languageValidator };
 
-const homeSectionIdValidator = v.union(v.literal("schools"), v.literal("classes"));
-
 const userSettingsValidator = v.object({
   _id: v.id("userSettings"),
   _creationTime: v.number(),
   userId: v.id("users"),
   language: languageValidator,
-  homeSectionOrder: v.optional(v.array(homeSectionIdValidator)),
 });
 
 const currentUserValidator = v.object({
@@ -38,25 +35,6 @@ const currentSessionValidator = v.object({
   userId: v.id("users"),
   expirationTime: v.number(),
 });
-
-function normalizeHomeSectionOrder(
-  order: Array<"schools" | "classes"> | undefined,
-): Array<"schools" | "classes"> {
-  const allowed = new Set(["schools", "classes"]);
-  const cleaned = (order ?? []).filter((id): id is "schools" | "classes" => allowed.has(id));
-  const unique: Array<"schools" | "classes"> = [];
-  for (const id of cleaned) {
-    if (!unique.includes(id)) {
-      unique.push(id);
-    }
-  }
-  for (const id of ["schools", "classes"] as const) {
-    if (!unique.includes(id)) {
-      unique.push(id);
-    }
-  }
-  return unique;
-}
 
 export const currentUser = query({
   args: {},
@@ -124,42 +102,6 @@ export const updateLanguage = authedMutation({
     const created = await ctx.db.get("userSettings", settingsId);
     if (!created) {
       throw new Error("Failed to create language settings");
-    }
-    return created;
-  },
-});
-
-export const updateHomeSectionOrder = authedMutation({
-  args: {
-    homeSectionOrder: v.array(homeSectionIdValidator),
-  },
-  returns: userSettingsValidator,
-  handler: async (ctx, args) => {
-    const userId = ctx.userId;
-    const homeSectionOrder = normalizeHomeSectionOrder(args.homeSectionOrder);
-
-    const existing = await ctx.db
-      .query("userSettings")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .unique();
-
-    if (existing) {
-      await ctx.db.patch("userSettings", existing._id, { homeSectionOrder });
-      const updated = await ctx.db.get("userSettings", existing._id);
-      if (!updated) {
-        throw new Error("Failed to update home section order");
-      }
-      return updated;
-    }
-
-    const settingsId = await ctx.db.insert("userSettings", {
-      userId,
-      language: "en",
-      homeSectionOrder,
-    });
-    const created = await ctx.db.get("userSettings", settingsId);
-    if (!created) {
-      throw new Error("Failed to create home section order settings");
     }
     return created;
   },

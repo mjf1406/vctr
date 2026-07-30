@@ -43,27 +43,3 @@ export function getClassUpdatedAt(
 }
 
 export const CLASS_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-/** Includes `"schools"` for stored settings / restore; UI currently shows classes only. */
-export type HomeSectionId = "schools" | "classes";
-
-// ORGS_DISABLED: was ["schools", "classes"] — restore schools when org UI returns.
-export const DEFAULT_HOME_SECTION_ORDER: Array<HomeSectionId> = ["classes"];
-
-export function normalizeHomeSectionOrder(
-  order: Array<HomeSectionId> | undefined,
-): Array<HomeSectionId> {
-  const unique: Array<HomeSectionId> = [];
-  for (const id of order ?? []) {
-    // ORGS_DISABLED: skip "schools" while org UI is quarantined.
-    if (id === "classes" && !unique.includes(id)) {
-      unique.push(id);
-    }
-  }
-  for (const id of DEFAULT_HOME_SECTION_ORDER) {
-    if (!unique.includes(id)) {
-      unique.push(id);
-    }
-  }
-  return unique;
-}

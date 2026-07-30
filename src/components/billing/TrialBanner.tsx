@@ -7,9 +7,10 @@ import { useEntitlement } from "@/hooks/billing/useEntitlement";
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { STORAGE_KEYS } from "@/lib/storageKeys";
 import { cn } from "@/lib/utils";
 
-const SESSION_DISMISS_KEY = "vctr:trial-banner-dismissed";
+const SESSION_DISMISS_KEY = STORAGE_KEYS.trialBannerDismissed;
 
 function wasDismissedThisSession(): boolean {
   try {
