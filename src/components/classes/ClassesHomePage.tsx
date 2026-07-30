@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { GraduationCapIcon, SearchIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { ClassCard } from "@/components/classes/ClassCard";
@@ -209,8 +210,11 @@ export function ClassesHomePage() {
             <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
             <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
           </EmptyHeader>
-          <EmptyContent>
-            <Button type="button" onClick={openCreate}>
+          <EmptyContent className="flex flex-row justify-center gap-2">
+            <Button type="button" nativeButton={false} render={<Link to="/join" />}>
+              {t("joinClass")}
+            </Button>
+            <Button type="button" variant="secondary" onClick={openCreate}>
               {t("createClass")}
             </Button>
           </EmptyContent>

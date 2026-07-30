@@ -3,6 +3,7 @@ import { ArchiveIcon, ArchiveRestoreIcon, PencilIcon, Trash2Icon } from "lucide-
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
 import { ActionMenu, type ActionMenuItem } from "@/components/ui/action-menu";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,9 +90,10 @@ export function ClassCard({
         {openLink}
         <ClassIconDisplay icon={classDoc.icon} />
         <div className="relative z-10 min-w-0 flex-1 pointer-events-none">
-          <div className="flex flex-wrap items-baseline gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <p className="truncate font-medium text-foreground">{classDoc.name}</p>
             <span className="text-sm text-muted-foreground">{classDoc.year}</span>
+            <ClassRoleBadge role={classDoc.role} />
           </div>
           <p className="truncate text-sm text-muted-foreground">{description}</p>
         </div>
@@ -110,7 +112,10 @@ export function ClassCard({
         <ClassIconDisplay icon={classDoc.icon} />
         <div className="min-w-0 flex-1">
           <CardTitle className="truncate text-base font-semibold">{classDoc.name}</CardTitle>
-          <p className="text-sm text-muted-foreground">{classDoc.year}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <p className="text-sm text-muted-foreground">{classDoc.year}</p>
+            <ClassRoleBadge role={classDoc.role} />
+          </div>
         </div>
         <div className="shrink-0 pointer-events-auto">{menu}</div>
       </CardHeader>

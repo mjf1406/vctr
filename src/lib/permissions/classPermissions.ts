@@ -1,11 +1,22 @@
 import { matchesPermissionPattern } from "@djpanda/convex-authz";
 
-export type { ClassPermission, ClassRole } from "../../../convex/lib/authzModel";
+export type {
+  ClassPermission,
+  ClassRole,
+  JoinCodeRole,
+  MemberListRole,
+} from "../../../convex/lib/authzModel";
 export {
   CLASS_ROLE_RANK,
   CLASS_ROLES,
+  JOIN_CODE_INVITE_PERMISSION_BY_ROLE,
+  JOIN_CODE_ROLES,
+  MEMBER_LIST_AUTHZ_ROLES,
+  MEMBER_LIST_READ_PERMISSION_BY_ROLE,
+  REMOVE_PERMISSION_BY_ROLE,
   classScope,
   isClassRole,
+  isJoinCodeRole,
   permissionsForRole,
   pickHighestClassRole,
   SUSPEND_PERMISSION_BY_ROLE,

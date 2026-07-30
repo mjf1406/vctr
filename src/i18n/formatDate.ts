@@ -1,4 +1,5 @@
 import i18n from "@/i18n";
+import { pickCountdownUnit } from "@/i18n/countdown";
 import { getLanguageOption, isAppLanguage } from "@/lib/languages";
 
 function getAppLocale(): string {
@@ -12,25 +13,12 @@ export function formatLocalizedDateTime(timestampMs: number): string {
   }).format(new Date(timestampMs));
 }
 
-/** Localized relative countdown until `expiresAtMs` (e.g. "in 5 minutes"). */
+/**
+ * Localized relative countdown until `expiresAtMs` (e.g. "in 3 days", "in 22 hours").
+ * Picks the largest useful unit: days → hours → minutes → seconds.
+ */
 export function formatCountdownUntil(expiresAtMs: number, nowMs: number): string {
   const rtf = new Intl.RelativeTimeFormat(getAppLocale(), { numeric: "always" });
-  const remainingMs = expiresAtMs - nowMs;
-
-  if (remainingMs <= 0) {
-    return rtf.format(0, "second");
-  }
-
-  const remainingSeconds = Math.floor(remainingMs / 1000);
-  if (remainingSeconds < 60) {
-    return rtf.format(remainingSeconds, "second");
-  }
-
-  const remainingMinutes = Math.floor(remainingSeconds / 60);
-  if (remainingMinutes < 60) {
-    return rtf.format(remainingMinutes, "minute");
-  }
-
-  const remainingHours = Math.floor(remainingMinutes / 60);
-  return rtf.format(remainingHours, "hour");
+  const { value, unit } = pickCountdownUnit(expiresAtMs - nowMs);
+  return rtf.format(value, unit);
 }

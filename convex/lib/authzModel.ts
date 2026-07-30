@@ -97,3 +97,54 @@ export const SUSPEND_PERMISSION_BY_ROLE = {
   guardian: "guardians:suspend",
   class_member: null,
 } as const satisfies Record<ClassRole, ClassPermission | null>;
+
+/** Which permission gates removing a member, based on the target's role. */
+export const REMOVE_PERMISSION_BY_ROLE = {
+  owner: null,
+  teacher: "teachers:remove",
+  assistant_teacher: "assistantTeachers:remove",
+  student: "students:remove",
+  guardian: "guardians:remove",
+  class_member: null,
+} as const satisfies Record<ClassRole, ClassPermission | null>;
+
+/** Roles that can be assigned via join codes (not owner / class_member). */
+export type JoinCodeRole = Exclude<ClassRole, "owner" | "class_member">;
+
+/** People-page lists (owners appear on the teachers page). */
+export type MemberListRole = JoinCodeRole;
+
+/** Authz roles included when listing a people page. */
+export const MEMBER_LIST_AUTHZ_ROLES = {
+  teacher: ["owner", "teacher"],
+  assistant_teacher: ["assistant_teacher"],
+  student: ["student"],
+  guardian: ["guardian"],
+} as const satisfies Record<MemberListRole, ReadonlyArray<ClassRole>>;
+
+/** Which permission gates reading a people list. */
+export const MEMBER_LIST_READ_PERMISSION_BY_ROLE = {
+  teacher: "teachers:read",
+  assistant_teacher: "assistantTeachers:read",
+  student: "students:read",
+  guardian: "guardians:read",
+} as const satisfies Record<MemberListRole, ClassPermission>;
+
+export const JOIN_CODE_ROLES = [
+  "teacher",
+  "assistant_teacher",
+  "student",
+  "guardian",
+] as const satisfies ReadonlyArray<JoinCodeRole>;
+
+/** Which permission gates creating a join code for a given role. */
+export const JOIN_CODE_INVITE_PERMISSION_BY_ROLE = {
+  teacher: "teachers:invite",
+  assistant_teacher: "assistantTeachers:invite",
+  student: "students:add",
+  guardian: "guardians:invite",
+} as const satisfies Record<JoinCodeRole, ClassPermission>;
+
+export function isJoinCodeRole(value: string): value is JoinCodeRole {
+  return (JOIN_CODE_ROLES as ReadonlyArray<string>).includes(value);
+}

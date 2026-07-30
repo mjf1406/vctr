@@ -1,4 +1,6 @@
 import PendingComponent from "@/components/loading/PendingComponent";
+import { relativeLocationHref, stashPendingJoinCode } from "@/lib/auth/pendingJoinCode";
+import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -7,9 +9,16 @@ export const Route = createFileRoute("/_authenticated")({
       return;
     }
     if (!context.auth.isAuthenticated) {
+      // Preserve join codes across login: OAuth/redirect may drop query params.
+      if (location.pathname === "/join") {
+        const code = new URLSearchParams(location.searchStr).get(JOIN_CODE_PARAM);
+        if (code) {
+          stashPendingJoinCode(code);
+        }
+      }
       throw redirect({
         to: "/login",
-        search: { redirect: location.href },
+        search: { redirect: relativeLocationHref(location) },
       });
     }
   },

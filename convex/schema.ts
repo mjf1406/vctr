@@ -19,6 +19,23 @@ const schema = defineSchema({
     updatedAt: v.number(),
     archivedAt: v.optional(v.number()),
   }).index("by_owner", ["ownerId"]),
+  joinCodes: defineTable({
+    code: v.string(),
+    classId: v.id("classes"),
+    createdBy: v.id("users"),
+    role: v.union(
+      v.literal("teacher"),
+      v.literal("assistant_teacher"),
+      v.literal("student"),
+      v.literal("guardian"),
+    ),
+    expiresAt: v.number(),
+    maxUses: v.number(),
+    useCount: v.number(),
+    expirationJobId: v.optional(v.id("_scheduled_functions")),
+  })
+    .index("by_code", ["code"])
+    .index("by_class", ["classId"]),
 });
 
 export default schema;

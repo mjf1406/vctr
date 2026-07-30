@@ -1,0 +1,66 @@
+import { UserMinusIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import { Can } from "@/components/permissions/Can";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  removePermissionForMember,
+  roleLabelKey,
+  type ClassMemberPublic,
+} from "@/lib/members/members";
+import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
+
+type MemberRowProps = {
+  member: ClassMemberPublic;
+  /** Hide remove for the current viewer (server also rejects self-remove). */
+  isSelf: boolean;
+  onRemove: (member: ClassMemberPublic) => void;
+};
+
+export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
+  const { t } = useTranslation("classes");
+  const displayName = getDisplayName({
+    _id: member.userId,
+    name: member.name,
+    email: member.email,
+  });
+  const initials = getInitials({
+    _id: member.userId,
+    name: member.name,
+    email: member.email,
+  });
+  const removePermission = removePermissionForMember(member.role);
+  const showRemove = !isSelf && removePermission !== null;
+
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-2xl border px-4 py-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <Avatar>
+          {member.image ? <AvatarImage src={member.image} alt={displayName} /> : null}
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="truncate text-sm font-medium">{displayName}</span>
+            {member.role === "owner" ? (
+              <Badge variant="secondary">{t(roleLabelKey(member.role))}</Badge>
+            ) : null}
+          </div>
+          {member.email?.trim() && member.name?.trim() ? (
+            <span className="truncate text-xs text-muted-foreground">{member.email}</span>
+          ) : null}
+        </div>
+      </div>
+      {showRemove && removePermission ? (
+        <Can permission={removePermission}>
+          <Button type="button" variant="outline" size="sm" onClick={() => onRemove(member)}>
+            <UserMinusIcon data-icon="inline-start" />
+            {t("removeMember")}
+          </Button>
+        </Can>
+      ) : null}
+    </div>
+  );
+}

@@ -10,15 +10,32 @@ import { SignInWithPasswordLazy } from "@/components/auth/SignInWithPasswordLazy
 import { APP_CONFIG } from "@/config/app";
 import { isPasswordAuthEnabled } from "@/lib/auth/authPassword";
 import { getSafeAuthRedirect } from "@/lib/auth/authRedirect";
+import { stashPendingJoinCode } from "@/lib/auth/pendingJoinCode";
+import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
 import PendingComponent from "@/components/loading/PendingComponent";
 
 const loginSearchSchema = z.object({
   redirect: z.string().optional(),
 });
 
+function stashJoinCodeFromRedirect(redirectTo: string | undefined): void {
+  if (!redirectTo) return;
+  try {
+    const url = new URL(redirectTo, "http://local.invalid");
+    if (url.pathname !== "/join") return;
+    const code = url.searchParams.get(JOIN_CODE_PARAM);
+    if (code) {
+      stashPendingJoinCode(code);
+    }
+  } catch {
+    // ignore malformed redirect
+  }
+}
+
 export const Route = createFileRoute("/_public/login")({
   validateSearch: loginSearchSchema,
   beforeLoad: ({ context, search }) => {
+    stashJoinCodeFromRedirect(search.redirect);
     if (context.auth.isLoading) {
       return;
     }

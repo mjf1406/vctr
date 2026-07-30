@@ -3,7 +3,9 @@ import { useNavigate } from "@tanstack/react-router";
 import { ChevronsUpDown, Plus, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { ClassRoleIconBadge } from "@/components/badges/ClassRoleBadges";
 import { ClassFormCredenza } from "@/components/classes/ClassFormCredenza";
+import { useClassPermissionsContext } from "@/components/permissions/classPermissionsContext";
 import { useCreateClass } from "@/hooks/classes/useCreateClass";
 import { useActiveClasses } from "@/hooks/classes/useClasses";
 import type { ClassDoc } from "@/lib/classes/classes";
@@ -27,6 +29,7 @@ type ClassSwitcherProps = {
 export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
   const { t } = useTranslation("classes");
   const { isMobile, setOpenMobile } = useSidebar();
+  const { role } = useClassPermissionsContext();
   const navigate = useNavigate();
   const { data: classes = [] } = useActiveClasses();
   const createClass = useCreateClass();
@@ -72,7 +75,10 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
                 <span className="truncate font-medium">{currentClass.name}</span>
                 <span className="truncate text-xs text-muted-foreground">{currentClass.year}</span>
               </div>
-              <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
+              <div className="ml-auto flex items-center gap-1.5 group-data-[collapsible=icon]:hidden">
+                {role ? <ClassRoleIconBadge role={role} /> : null}
+                <ChevronsUpDown />
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -99,7 +105,8 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
                     <div className="flex size-6 items-center justify-center rounded-md border text-xs font-medium">
                       {classDoc.name.slice(0, 1).toUpperCase()}
                     </div>
-                    <span className="truncate">{classDoc.name}</span>
+                    <span className="min-w-0 flex-1 truncate">{classDoc.name}</span>
+                    <ClassRoleIconBadge role={classDoc.role} />
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuGroup>

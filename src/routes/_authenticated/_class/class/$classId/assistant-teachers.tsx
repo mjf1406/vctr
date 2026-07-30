@@ -1,18 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
 
+import { MembersPage } from "@/components/members/MembersPage";
 import { RequirePermission } from "@/components/permissions/RequirePermission";
+import type { Id } from "../../../../../convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/_class/class/$classId/assistant-teachers")({
   component: function ClassAssistantTeachersPage() {
-    const { t } = useTranslation("classes");
+    const { classId } = Route.useParams();
+    const typedClassId = classId as Id<"classes">;
 
     return (
       <RequirePermission permission="assistantTeachers:read">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-8 sm:px-8">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("navAssistantTeachers")}</h1>
-          <p className="text-sm text-muted-foreground">{t("comingSoon")}</p>
-        </div>
+        <MembersPage
+          classId={typedClassId}
+          role="assistant_teacher"
+          titleKey="navAssistantTeachers"
+        />
       </RequirePermission>
     );
   },

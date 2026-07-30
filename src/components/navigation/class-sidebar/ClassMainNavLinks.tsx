@@ -34,8 +34,10 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebar-context";
+import { useClassMemberCounts } from "@/hooks/members/useClassMemberCounts";
 import { useCan } from "@/hooks/permissions/useCan";
 import type { ClassDoc } from "@/lib/classes/classes";
+import type { MemberListRole } from "@/lib/members/members";
 import type { ClassPermission } from "@/lib/permissions/classPermissions";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +56,8 @@ type NavItem = {
   icon: LucideIcon;
   to: ClassNavTo;
   permission: ClassPermission;
+  /** People-role links show a member count when available. */
+  countRole?: MemberListRole;
 };
 
 function pathFor(to: ClassNavTo, classId: string): string {
@@ -83,8 +87,14 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
   const { isMobile, state, setOpenMobile } = useSidebar();
   const { can, isPending } = useCan();
   const classId = classDoc._id;
+  const { data: memberCounts } = useClassMemberCounts(classId);
   const peopleCollapsed = state === "collapsed" && !isMobile;
   const [peopleOpen, setPeopleOpen] = useState(false);
+
+  const countFor = (role: MemberListRole | undefined): number | null => {
+    if (!role || !memberCounts) return null;
+    return memberCounts[role];
+  };
 
   const closeMobileSidebar = () => {
     if (isMobile) {
@@ -119,24 +129,28 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
       icon: GraduationCap,
       to: "/class/$classId/teachers",
       permission: "teachers:read",
+      countRole: "teacher",
     },
     {
       title: t("navAssistantTeachers"),
       icon: UserRound,
       to: "/class/$classId/assistant-teachers",
       permission: "assistantTeachers:read",
+      countRole: "assistant_teacher",
     },
     {
       title: t("navStudents"),
       icon: Users,
       to: "/class/$classId/students",
       permission: "students:read",
+      countRole: "student",
     },
     {
       title: t("navGuardians"),
       icon: Shield,
       to: "/class/$classId/guardians",
       permission: "guardians:read",
+      countRole: "guardian",
     },
     {
       title: t("navInvitations"),
@@ -210,6 +224,7 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                         {t("navGroupPeople")}
                       </DropdownMenuLabel>
                       {visiblePeopleItems.map((item) => {
+                        const count = countFor(item.countRole);
                         return (
                           <DropdownMenuItem
                             key={item.to}
@@ -223,7 +238,12 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                             }
                           >
                             <item.icon />
-                            <span>{item.title}</span>
+                            <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                            {count !== null ? (
+                              <span className="ml-auto tabular-nums text-muted-foreground">
+                                {count}
+                              </span>
+                            ) : null}
                           </DropdownMenuItem>
                         );
                       })}
@@ -253,10 +273,12 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                       {visiblePeopleItems.map((item) => {
                         const href = pathFor(item.to, classId);
                         const isActive = pathname === href;
+                        const count = countFor(item.countRole);
                         return (
                           <SidebarMenuSubItem key={item.to}>
                             <SidebarMenuSubButton
                               isActive={isActive}
+                              className="pr-2"
                               render={
                                 <Link
                                   to={item.to}
@@ -266,7 +288,12 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                               }
                             >
                               <item.icon />
-                              <span>{item.title}</span>
+                              <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                              {count !== null ? (
+                                <span className="ml-auto shrink-0 tabular-nums text-sidebar-foreground/70">
+                                  {count}
+                                </span>
+                              ) : null}
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         );

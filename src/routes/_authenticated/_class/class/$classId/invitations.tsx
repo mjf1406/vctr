@@ -1,18 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
 
+import { InvitationsPage } from "@/components/invitations/InvitationsPage";
 import { RequirePermission } from "@/components/permissions/RequirePermission";
+import { useClass } from "@/hooks/classes/useClass";
+import type { Id } from "../../../../../convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/_class/class/$classId/invitations")({
   component: function ClassInvitationsPage() {
-    const { t } = useTranslation("classes");
+    const { classId } = Route.useParams();
+    const typedClassId = classId as Id<"classes">;
+    const { data: classDoc } = useClass(typedClassId);
+    const classArchived = classDoc?.archivedAt !== undefined;
 
     return (
       <RequirePermission permission="invitations:read">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-8 sm:px-8">
-          <h1 className="text-2xl font-semibold tracking-tight">{t("navInvitations")}</h1>
-          <p className="text-sm text-muted-foreground">{t("comingSoon")}</p>
-        </div>
+        <InvitationsPage classId={typedClassId} classArchived={classArchived} />
       </RequirePermission>
     );
   },

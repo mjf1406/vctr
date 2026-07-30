@@ -41,7 +41,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
                   <EmptyTitle>{t("classNotFound")}</EmptyTitle>
                   <EmptyDescription>{tCommon("notFoundDescription")}</EmptyDescription>
                 </EmptyHeader>
-                <EmptyContent className="flex flex-row gap-2">
+                <EmptyContent className="flex flex-row justify-center gap-2">
                   <Button type="button" variant="outline" onClick={() => void refetch()}>
                     {tCommon("tryAgain")}
                   </Button>

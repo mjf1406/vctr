@@ -14,6 +14,7 @@ import {
 } from "./lib/authzModel.js";
 import { authedMutation, authedQuery, classMutation } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
+import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
 
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
@@ -268,6 +269,7 @@ export const remove = classMutation({
       throw new Error(`Type "${expected}" to confirm deletion`);
     }
     await revokeAllClassMembership(ctx, args.classId);
+    await deleteJoinCodesForClass(ctx, args.classId);
     await ctx.db.delete("classes", args.classId);
     return null;
   },
