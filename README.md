@@ -14,16 +14,19 @@ Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 > **Convention for agents:** anything named `class` / classroom roles is sample product code. Keep the _patterns_ (scoped authz, optimistic hooks, invite codes); replace the _nouns_.
 
+**Fork intent:** a ClassClarus-style product can keep most of step 9 (classroom domain). Other products (e.g. a hexcrawl manager) should smoke-test auth on the example UI first, then reshape or remove that domain.
+
 Toolchain notes also live in [`AGENTS.md`](./AGENTS.md) (`vp install`, `vp check`, `vp test`).
 
 ---
 
 ## Prerequisites
 
-- [Bun](https://bun.sh) (see `package.json` → `devEngines.packageManager`)
-- Vite+ CLI available (`vp`) — `prepare` runs `vp config`
+- [Bun](https://bun.sh) — this repo pins Bun via `package.json` → `devEngines.packageManager` (currently `1.3.14`; `onFail: "download"` will fetch a matching Bun when the engine check runs).
+- [Vite+](https://viteplus.dev/guide/) CLI (`vp`) — install globally if `vp` is missing (`bun install -g vite-plus` or follow the Vite+ docs). `prepare` runs `vp config` after install.
 - Convex account ([dashboard](https://dashboard.convex.dev))
 - Google Cloud project (if keeping Google sign-in)
+- Polar account ([polar.sh](https://polar.sh)) if keeping billing (sandbox for local/dev)
 
 ---
 
@@ -37,7 +40,7 @@ Copy this into a PR/issue and check items off. Paths are relative to the repo ro
 - [ ] Do **not** copy `.env`, `.env.local`, or any real secrets from another machine.
 - [ ] Rename the package: set `"name"` in [`package.json`](./package.json) (currently `"vctr"`).
 - [ ] This template is **MIT** licensed ([`LICENSE.md`](./LICENSE.md)). If you want a different license for your clone, update `LICENSE.md` (and any package/`APP_CONFIG` legal links that still assume MIT).
-- [ ] Optional: update the placeholder `<title>` in [`index.html`](./index.html) (currently `vctr`) — or leave it until branding (step 6) if you set titles from `APP_CONFIG` later.
+- [ ] Optional: update the placeholder `<title>` in [`index.html`](./index.html) (currently `vctr`) — or leave it until branding (step 7) if you set titles from `APP_CONFIG` later.
 
 ### 2. Install dependencies
 
@@ -144,9 +147,12 @@ All three are required — the env flag alone never shows the password UI:
 Subscriptions use [`@convex-dev/polar`](https://www.npmjs.com/package/@convex-dev/polar). The billing UI is [`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx). Trial length is app-managed (card-less) via [`convex/appConfig.ts`](./convex/appConfig.ts) `trial` — Polar checkout has **no** Polar-native trial.
 
 1. Create a [Polar](https://polar.sh) organization (use **sandbox** while developing).
-2. Create two **subscription** products (no trial on the product):
+2. Create two **subscription** products (no trial on the product). Example amounts used by this template’s billing copy:
    - Monthly: **USD 3** / month
    - Yearly: **USD 30** / year
+
+   If you choose different prices, update Polar **and** the display strings `billing.monthlyPrice` / `billing.yearlyPrice` in **every** locale under [`src/i18n/resources/`](./src/i18n/resources/) (prices are not read from Polar for the UI cards).
+
 3. Create an organization access token with at least: `products:read/write`, `subscriptions:read/write`, `customers:read/write`, `checkouts:read/write`, `checkout_links:read/write`, `customer_portal:read/write`, `customer_sessions:write`.
 4. Create a webhook pointing at your **Convex HTTP Actions** host (not your SPA):
 
@@ -182,15 +188,24 @@ For production later, set `POLAR_SERVER=production` and `POLAR_ACCESS_TOKEN` / `
    bunx convex run lib/admin:grantAppAdmin '{"userId":"<convex-user-id>"}'
    ```
 
-   Then call `polar:syncProducts` while signed in as that user (Dashboard → Functions, or from the app if wired).
+7. Sync products and confirm health (run as the signed-in `app_admin` user — Dashboard → Functions with that identity, or CLI if your auth context is set):
 
-7. Checkout success / portal return URLs are built server-side from `SITE_URL` + `/billing` — **do not** pass client URLs.
+   ```bash
+   bunx convex run polar:syncProducts
+   bunx convex run polar:billingHealth
+   ```
 
-- [ ] Sandbox products created ($3/mo, $30/yr, no Polar trial)
+   Expect `billingHealth` presence flags for access token, webhook secret, and both product IDs to be `true`, and `server` to match `POLAR_SERVER` (`sandbox` while developing).
+
+8. Checkout success / portal return URLs are built server-side from `SITE_URL` + `/billing` — **do not** pass client URLs.
+
+- [ ] Sandbox products created (template example: $3/mo, $30/yr, no Polar trial — or your prices + matching i18n)
+- [ ] If prices differ from $3/$30: updated `billing.monthlyPrice` / `billing.yearlyPrice` in all locales
 - [ ] Webhook → `{CONVEX_SITE_URL}/polar/events` with the four events above
 - [ ] Convex env vars set (`POLAR_SERVER`, sandbox token/secret, both product IDs)
 - [ ] Optional: adjust trial length in `APP_CONFIG.trial` (`days`, `warnWithinDays`, `forceWithinDays`)
-- [ ] Grant `app_admin` via `lib/admin:grantAppAdmin` for who may call `polar:syncProducts`
+- [ ] Granted `app_admin` via `lib/admin:grantAppAdmin`
+- [ ] Ran `polar:syncProducts` and verified `polar:billingHealth`
 
 ### 7. Branding (`APP_CONFIG` + assets)
 
@@ -207,10 +222,13 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 | `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                   |
 | `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                      |
 | `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                      |
+| `downloadUrl` / `selfHostUrl`           | Links on the billing Free card ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx))                                                      |
 | `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                             |
 | `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                            |
+| `trial`                                 | App-managed card-less trial: `days`, `warnWithinDays`, `forceWithinDays` (banner timing; not a Polar product trial)                                                                |
+| `uploads`                               | Per-user `quotaBytes` and per-preset `maxSizeBytes` (images / documents / audio)                                                                                                   |
 
-- [ ] All `APP_CONFIG` fields updated for the new product
+- [ ] All `APP_CONFIG` fields updated for the new product (including `downloadUrl`, `selfHostUrl`, `trial`, `uploads`)
 - [ ] `authzTenantId` is a stable new id (not `classclarus`)
 
 **Replace brand image files** (paths are hard-coded in [`src/components/brand/Logo.tsx`](./src/components/brand/Logo.tsx) and error routes — keep filenames or update imports):
@@ -269,7 +287,11 @@ Adding components later: `bunx --bun shadcn@latest add <component>` (aliases alr
 
 ### 9. Reshape the example domain
 
-Do this **after** auth + branding so you can smoke-test login on the example UI first if useful.
+Do this **after** auth + branding. Recommended order:
+
+1. Finish steps 3–8 and smoke-test Google sign-in on the **ClassClarus example** UI (step 10 checklist for login/brand/theme).
+2. Only then reshape or remove the classroom domain for a different product.
+3. ClassClarus-style clones can **keep** most of this step and only retarget brand/URLs/prices.
 
 **Authz model (example roles):** [`convex/lib/authzModel.ts`](./convex/lib/authzModel.ts)  
 Frontend permission helpers: [`src/lib/permissions/classPermissions.ts`](./src/lib/permissions/classPermissions.ts)  
@@ -308,6 +330,8 @@ Checklist:
 
 ### 10. Run and verify
 
+Prefer verifying login/brand/theme on the example app **before** a large step-9 domain rewrite.
+
 ```bash
 # Terminal A — Convex (if not already running)
 bunx convex dev
@@ -321,6 +345,7 @@ vp dev
 - [ ] Google sign-in completes (consent → redirect → authenticated shell)
 - [ ] Brand name/logo/favicon/tagline look correct
 - [ ] Theme looks correct in light and dark
+- [ ] Billing page loads products after `polar:syncProducts` (signed-in `app_admin` can re-check `polar:billingHealth`)
 - [ ] Spot-check UI primitives at `/ui` (auth required) — [`src/routes/_authenticated/_app/ui.tsx`](./src/routes/_authenticated/_app/ui.tsx)
 - [ ] `vp check` and `vp test` pass after your domain edits
 
@@ -340,9 +365,20 @@ vp test
 - [ ] Point a Polar **production** webhook at prod `{CONVEX_SITE_URL}/polar/events`
 - [ ] Confirm via admin `polar:billingHealth` that all presence flags are `true` and `server` is `production`
 - [ ] After first deploy with trial expiry jobs: `bunx convex run trialBackfill:scheduleExpiryJobs`
-- [ ] `APP_CONFIG.appUrl` / marketing / legal URLs point at production
-- [ ] Build SPA with prod `VITE_CONVEX_URL` / `VITE_CONVEX_SITE_URL`
-- [ ] Confirm Cloudflare Pages (or your host) serves `public/_headers` (CSP, HSTS, frame deny)
+- [ ] `APP_CONFIG.appUrl` / marketing / legal / download / self-host URLs point at production
+- [ ] Build SPA with **prod** `VITE_CONVEX_URL` / `VITE_CONVEX_SITE_URL` injected at **build** time (Vite bakes these in)
+
+**SPA host (Cloudflare Pages example — any static host works):**
+
+| Setting       | Value                                                                                                             |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Build command | `bun run build` (or `vp install && bun run build` if the host doesn’t restore `node_modules` the way Bun expects) |
+| Output dir    | `dist`                                                                                                            |
+| Env (build)   | `VITE_CONVEX_URL`, `VITE_CONVEX_SITE_URL` for the **prod** Convex deployment                                      |
+
+- [ ] Host build uses prod Convex Vite env vars
+- [ ] Confirm the host serves [`public/_headers`](./public/_headers) (CSP, HSTS, frame deny). Cloudflare Pages picks this up from `public/` → `dist/` automatically.
+- [ ] If you add new third-party origins (analytics, embeds, APIs), extend `connect-src` / `frame-src` (and related directives) in `public/_headers` — Polar + Convex + Google avatar hosts are already allowed.
 
 ---
 
