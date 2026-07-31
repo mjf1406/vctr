@@ -21,6 +21,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useClasses } from "@/hooks/classes/useClasses";
 import { useClassSearch } from "@/hooks/classes/useClassSearch";
@@ -53,10 +54,15 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
             className="flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10"
           >
             <Skeleton className="size-10 rounded-lg" />
-            <div className="flex flex-1 flex-col gap-2">
-              <Skeleton className="h-4 w-1/3" />
-              <Skeleton className="h-3 w-2/3" />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <Skeleton className="h-5 w-1/3" />
+                <Skeleton className="h-4 w-10" />
+                <Skeleton className="h-5 w-14" />
+              </div>
+              <Skeleton className="h-5 w-2/3" />
             </div>
+            <Skeleton className="size-8 shrink-0 rounded-lg" />
           </div>
         ))}
       </div>
@@ -65,17 +71,26 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((index) => (
-        <div key={index} className="rounded-2xl bg-card p-4 ring-1 ring-foreground/10">
-          <div className="flex items-start gap-3">
+        <Card key={index} size="sm">
+          <CardHeader className="flex flex-row items-start gap-3">
             <Skeleton className="size-10 rounded-lg" />
-            <div className="flex flex-1 flex-col gap-2">
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-3 w-1/4" />
+            <div className="min-w-0 flex-1">
+              <Skeleton className="h-6 w-1/2" />
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <Skeleton className="h-5 w-10" />
+                <Skeleton className="h-5 w-14" />
+              </div>
             </div>
-          </div>
-          <Skeleton className="mt-4 h-3 w-full" />
-          <Skeleton className="mt-2 h-3 w-2/3" />
-        </div>
+            <Skeleton className="size-8 shrink-0 rounded-lg" />
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            <Skeleton className="h-5 w-2/3" />
+            <div className="flex flex-col gap-0.5">
+              <Skeleton className="h-4 w-3/5" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );
