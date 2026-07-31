@@ -247,14 +247,14 @@ export const update = entitledClassMutation({
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "classUpdate", { key: ctx.userId, throws: true });
     await ctx.require("class:update");
-    await ctx.db.patch("classes", args.classId, {
+    await ctx.db.patch("classes", ctx.classDoc._id, {
       name: normalizeName(args.name),
       year: normalizeYear(args.year),
       description: normalizeDescription(args.description),
       icon: normalizeIcon(args.icon),
       updatedAt: Date.now(),
     });
-    const updated = await ctx.db.get("classes", args.classId);
+    const updated = await ctx.db.get("classes", ctx.classDoc._id);
     if (!updated) {
       throw new Error("Failed to update class");
     }
@@ -270,11 +270,11 @@ export const setArchived = entitledClassMutation({
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "classArchive", { key: ctx.userId, throws: true });
     await ctx.require("class:archive");
-    await ctx.db.patch("classes", args.classId, {
+    await ctx.db.patch("classes", ctx.classDoc._id, {
       archivedAt: args.archived ? Date.now() : undefined,
       updatedAt: Date.now(),
     });
-    const updated = await ctx.db.get("classes", args.classId);
+    const updated = await ctx.db.get("classes", ctx.classDoc._id);
     if (!updated) {
       throw new Error("Failed to update class archive state");
     }
@@ -294,9 +294,9 @@ export const remove = classMutation({
     if (args.confirmation !== expected) {
       throw new Error(`Type "${expected}" to confirm deletion`);
     }
-    await revokeAllClassMembership(ctx, args.classId);
-    await deleteJoinCodesForClass(ctx, args.classId);
-    await ctx.db.delete("classes", args.classId);
+    await revokeAllClassMembership(ctx, ctx.classDoc._id);
+    await deleteJoinCodesForClass(ctx, ctx.classDoc._id);
+    await ctx.db.delete("classes", ctx.classDoc._id);
     return null;
   },
 });
@@ -407,12 +407,12 @@ export const transferOwnership = classMutation({
     // Outgoing owner is demoted to teacher (not removed from the class).
     await authz.assignRole(ctx, ctx.userId, "teacher", ctx.scope);
 
-    await ctx.db.patch("classes", args.classId, {
+    await ctx.db.patch("classes", ctx.classDoc._id, {
       ownerId: args.toUserId,
       updatedAt: Date.now(),
     });
 
-    const updated = await ctx.db.get("classes", args.classId);
+    const updated = await ctx.db.get("classes", ctx.classDoc._id);
     if (!updated) {
       throw new Error("Failed to transfer ownership");
     }
