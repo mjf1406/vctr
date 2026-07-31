@@ -7,6 +7,7 @@ import { AsyncButton } from "@/components/ui/async-button";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { useChangeSubscription } from "@/hooks/billing/useChangeSubscription";
 import { useCreateCheckoutLink } from "@/hooks/billing/useCreateCheckoutLink";
+import { assertSafePolarCheckoutUrl } from "@/lib/billing/polarUrl";
 
 type PlanActionButtonProps = {
   productId: string;
@@ -46,7 +47,7 @@ export function PlanActionButton({
 
         PolarEmbedCheckout.init();
         const { url } = await createCheckoutLink.mutateAsync({ productId });
-        await PolarEmbedCheckout.create(url, { theme });
+        await PolarEmbedCheckout.create(assertSafePolarCheckoutUrl(url), { theme });
       }}
     >
       {children}

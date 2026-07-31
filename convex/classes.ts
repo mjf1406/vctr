@@ -295,11 +295,9 @@ export const setBanner = entitledClassMutation({
     await ctx.require("class:update");
 
     const file = await ctx.db.get("files", args.fileId);
-    if (!file) {
-      throw new Error("File not found");
-    }
-    if (file.classId !== ctx.classDoc._id) {
-      throw new Error("Banner must be a file from this class library");
+    // Uniform deny for missing vs wrong-class — avoid existence oracle.
+    if (!file || file.classId !== ctx.classDoc._id) {
+      throw new Error("File not found or access denied");
     }
     if (file.preset !== "images") {
       throw new Error("Banner must be an image");

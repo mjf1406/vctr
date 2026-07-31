@@ -5,8 +5,6 @@ import { useConvex } from "convex/react";
 
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { FIVE_MINUTES } from "@/lib/queryCache";
-
 export function fileBytesQueryKey(fileId: Id<"files">) {
   return ["files", "getFileBytes", fileId] as const;
 }
@@ -22,7 +20,8 @@ type FileBytesResult = {
  * Fetches bytes via an action (access re-checked server-side) and caches the Blob.
  * A mount-local blob: URL is created from the cached Blob and revoked on unmount —
  * never store revokeable URLs in the query cache.
- * gcTime: 5 minutes — access rarely changes.
+ * Files are immutable (replace = new fileId), so staleTime/gcTime are Infinity —
+ * fetch once per fileId until delete invalidation or tab cache drop.
  */
 export function useFileBytes(fileId: Id<"files"> | undefined) {
   const convex = useConvex();
@@ -47,8 +46,8 @@ export function useFileBytes(fileId: Id<"files"> | undefined) {
       };
     },
     enabled,
-    gcTime: FIVE_MINUTES,
-    staleTime: FIVE_MINUTES,
+    gcTime: Infinity,
+    staleTime: Infinity,
     retry: false,
   });
 

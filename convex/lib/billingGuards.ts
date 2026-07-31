@@ -18,16 +18,49 @@ export function assertConfiguredProduct(productId: string): void {
   }
 }
 
+function brandOrigin(): string {
+  return APP_CONFIG.appUrl.replace(/\/$/, "");
+}
+
+function isLocalDevHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+/**
+ * Whether `SITE_URL` may be used as the Polar redirect / embed origin.
+ * Allows the brand app origin, or localhost / 127.0.0.1 for local Convex + Vite.
+ */
+export function isAllowedAppOrigin(siteUrl: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(siteUrl);
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return false;
+  }
+
+  const brand = new URL(brandOrigin());
+  if (parsed.origin === brand.origin) {
+    return true;
+  }
+
+  return isLocalDevHost(parsed.hostname);
+}
+
 /**
  * App origin for Polar redirect / embed URLs.
- * Prefers `SITE_URL` (dev localhost or deployed SPA) over the production brand URL.
+ * Prefers a validated `SITE_URL` (dev localhost or brand SPA) over `APP_CONFIG.appUrl`.
+ * Invalid / disallowed values fall back to the brand URL — never an arbitrary origin.
  */
 export function resolveAppOrigin(): string {
   const siteUrl = process.env.SITE_URL?.trim().replace(/\/$/, "");
-  if (siteUrl) {
+  if (siteUrl && isAllowedAppOrigin(siteUrl)) {
     return siteUrl;
   }
-  return APP_CONFIG.appUrl.replace(/\/$/, "");
+  return brandOrigin();
 }
 
 /** Build an absolute same-app URL from a path (must start with `/`). */

@@ -154,6 +154,16 @@ export const getFileBytes = action({
     if (!file) {
       return null;
     }
+
+    await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+      name: "fileGetBytesGlobal",
+      key: "global",
+    });
+    await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+      name: "fileGetBytes",
+      key: file.viewerId,
+    });
+
     const blob = await ctx.storage.get(file.storageId);
     if (!blob) {
       return null;

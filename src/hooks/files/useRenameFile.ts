@@ -6,7 +6,6 @@ import type { FunctionReturnType } from "convex/server";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
 import { classFilesListQueryKey } from "@/hooks/files/useClassFiles";
-import { fileBytesQueryKey } from "@/hooks/files/useFileBytes";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import { messageFromError } from "@/lib/errors/convexError";
 
@@ -27,11 +26,10 @@ export function useRenameFile() {
   return useOptimisticMutation({
     mutationFn: (args: RenameFileArgs) => mutationFn({ fileId: args.fileId, name: args.name }),
     queryKeys: (args) => {
-      const keys = [fileBytesQueryKey(args.fileId)];
       if (args.classId !== undefined) {
-        keys.push(classFilesListQueryKey(args.classId));
+        return [classFilesListQueryKey(args.classId)];
       }
-      return keys;
+      return [];
     },
     applyOptimisticUpdate: (queryClient, args) => {
       if (args.classId === undefined) {

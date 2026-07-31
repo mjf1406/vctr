@@ -53,7 +53,8 @@ const schema = defineSchema({
     expirationJobId: v.optional(v.id("_scheduled_functions")),
   })
     .index("by_emailKey", ["emailKey"])
-    .index("by_userId", ["userId"]),
+    .index("by_userId", ["userId"])
+    .index("by_endsAt", ["endsAt"]),
   /**
    * Ownership registry for Convex storage blobs.
    * Only finalized uploads (validated MIME/size) get a row.

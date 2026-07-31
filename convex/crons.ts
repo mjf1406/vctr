@@ -16,4 +16,10 @@ crons.daily(
   internal.polarReconcile.reconcileSubscriptions,
 );
 
+crons.daily(
+  "expire overdue trial grants",
+  { hourUTC: 5, minuteUTC: 30 },
+  internal.trial.expireLapsedGrants,
+);
+
 export default crons;

@@ -133,8 +133,11 @@ UI entry points:
 
 #### Optional: password auth
 
-- [ ] Set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env.local` (see [`src/lib/auth/authPassword.ts`](./src/lib/auth/authPassword.ts)).
-- [ ] Add a Password provider to [`convex/auth.ts`](./convex/auth.ts) — today only `Google` is configured; enabling the flag alone is not enough.
+All three are required — the env flag alone never shows the password UI:
+
+- [ ] Add a Password provider to [`convex/auth.ts`](./convex/auth.ts) (today only `Google` is configured).
+- [ ] Set `PASSWORD_PROVIDER_REGISTERED = true` in [`src/lib/auth/authPassword.ts`](./src/lib/auth/authPassword.ts).
+- [ ] Set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env.local`.
 
 ### 6. Billing (Polar)
 

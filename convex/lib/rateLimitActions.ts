@@ -16,6 +16,8 @@ const rateLimitNameValidator = v.union(
   v.literal("billingOrdersGlobal"),
   v.literal("fileFinalize"),
   v.literal("fileFinalizeGlobal"),
+  v.literal("fileGetBytes"),
+  v.literal("fileGetBytesGlobal"),
   v.literal("signOutOtherSessions"),
 );
 

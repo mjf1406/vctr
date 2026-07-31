@@ -25,6 +25,8 @@ const accessibleFileValidator = v.object({
   _id: v.id("files"),
   storageId: v.id("_storage"),
   userId: v.id("users"),
+  /** Authenticated caller who passed the access check (for rate limiting). */
+  viewerId: v.id("users"),
   classId: v.optional(v.id("classes")),
   name: v.string(),
   contentType: v.string(),
@@ -59,6 +61,7 @@ export const getAccessibleFile = internalQuery({
       _id: file._id,
       storageId: file.storageId,
       userId: file.userId,
+      viewerId: userId,
       classId: file.classId,
       name: file.name,
       contentType: file.contentType,
