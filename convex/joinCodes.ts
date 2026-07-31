@@ -11,9 +11,9 @@ import {
 } from "./lib/authzModel.js";
 import { deleteJoinCodeById } from "./lib/joinCodesCleanup.js";
 import {
-  authedMutation,
   entitledClassMutation,
   entitledClassQuery,
+  entitledMutation,
 } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { authz } from "./authz.js";
@@ -195,7 +195,7 @@ export const revoke = entitledClassMutation({
   },
 });
 
-export const redeem = authedMutation({
+export const redeem = entitledMutation({
   args: {
     code: v.string(),
   },

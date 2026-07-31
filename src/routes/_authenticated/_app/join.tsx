@@ -27,6 +27,7 @@ import {
   redeemJoinCodeSchema,
 } from "@/lib/invitations/joinCodeFormSchema";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
+import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import { codeFromError, messageFromError } from "@/lib/errors/convexError";
 
 const joinSearchSchema = z.object({
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/_authenticated/_app/join")({
   component: function JoinPage() {
     const { t } = useTranslation("classes");
     const { t: tCommon } = useTranslation("common");
+    const { t: tBilling } = useTranslation("billing");
     const navigate = useNavigate();
     const searchStr = useRouterState({ select: (state) => state.location.searchStr });
     const { [JOIN_CODE_PARAM]: codeFromSearch } = Route.useSearch();
@@ -138,7 +140,9 @@ export const Route = createFileRoute("/_authenticated/_app/join")({
         });
       } catch (submitError) {
         const code = codeFromError(submitError);
-        if (code === "ALREADY_MEMBER") {
+        if (isSubscriptionRequiredError(submitError)) {
+          setError(tBilling("errorSubscriptionRequired"));
+        } else if (code === "ALREADY_MEMBER") {
           setError(t("joinAlreadyMember"));
         } else if (code === "INVALID_JOIN_CODE") {
           setError(t("joinInvalidCode"));

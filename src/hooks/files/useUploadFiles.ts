@@ -150,6 +150,7 @@ export function useUploadFiles(
   }, []);
 
   const generateUploadUrlMutation = useConvexMutation(api.files.generateUploadUrl);
+  const watchPendingUploadMutation = useConvexMutation(api.files.watchPendingUpload);
   const finalizeUploadAction = useAction(api.files.finalizeUpload);
   const queryClient = useQueryClient();
 
@@ -185,6 +186,8 @@ export function useUploadFiles(
             xhrByIdRef.current.set(item.id, abort);
           },
         });
+
+        await watchPendingUploadMutation({ storageId: result.storageId });
 
         const fileId = await finalizeUploadAction({
           storageId: result.storageId,
@@ -242,6 +245,7 @@ export function useUploadFiles(
       presetKey,
       queryClient,
       setItemsSync,
+      watchPendingUploadMutation,
     ],
   );
 

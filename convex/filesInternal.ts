@@ -2,7 +2,6 @@ import { ConvexError, v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 import { APP_CONFIG } from "./appConfig.js";
-import { internal } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
 import { internalMutation, internalQuery } from "./_generated/server.js";
 import { authz } from "./authz.js";
@@ -16,10 +15,8 @@ import {
   validateUploadAgainstPreset,
 } from "./lib/uploadPresets.js";
 
-const ORPHAN_AGE_MS = 60 * 60 * 1000;
-const PAGE_SIZE = 100;
-/** Abort a purge run if it would delete more than this many blobs (circuit breaker). */
-const MAX_ORPHAN_DELETES_PER_RUN = 500;
+/** Delay before a pending (unfinalized) storage blob is deleted if still unregistered. */
+export const ORPHAN_AGE_MS = 60 * 60 * 1000;
 
 const accessibleFileValidator = v.object({
   _id: v.id("files"),
@@ -194,63 +191,23 @@ export const registerFinalizedUpload = internalMutation({
 });
 
 /**
- * Delete Convex storage blobs older than one hour that have no matching `files` row.
- * Covers abandoned uploads where the client never called finalizeUpload.
- *
- * Circuit breaker: if a single run would delete more than MAX_ORPHAN_DELETES_PER_RUN
- * blobs, abort without deleting further pages (protects against a missing-registry bug).
+ * Delete a single storage blob if it still has no matching `files` row.
+ * Scheduled by `files.watchPendingUpload` after POST; no-ops once finalized.
  */
-export const purgeOrphanedStorage = internalMutation({
+export const deleteStorageIfOrphan = internalMutation({
   args: {
-    cursor: v.optional(v.union(v.string(), v.null())),
-    deleted: v.optional(v.number()),
+    storageId: v.id("_storage"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const now = Date.now();
-    let deleted = args.deleted ?? 0;
-    if (deleted >= MAX_ORPHAN_DELETES_PER_RUN) {
-      console.error("Orphan storage purge aborted (circuit breaker)", {
-        deleted,
-        limit: MAX_ORPHAN_DELETES_PER_RUN,
-      });
+    const registered = await ctx.db
+      .query("files")
+      .withIndex("by_storageId", (q) => q.eq("storageId", args.storageId))
+      .unique();
+    if (registered) {
       return null;
     }
-
-    const page = await ctx.db.system.query("_storage").paginate({
-      numItems: PAGE_SIZE,
-      cursor: args.cursor ?? null,
-    });
-
-    for (const blob of page.page) {
-      if (deleted >= MAX_ORPHAN_DELETES_PER_RUN) {
-        console.error("Orphan storage purge aborted (circuit breaker)", {
-          deleted,
-          limit: MAX_ORPHAN_DELETES_PER_RUN,
-        });
-        return null;
-      }
-      if (now - blob._creationTime < ORPHAN_AGE_MS) {
-        continue;
-      }
-      const registered = await ctx.db
-        .query("files")
-        .withIndex("by_storageId", (q) => q.eq("storageId", blob._id))
-        .unique();
-      if (registered) {
-        continue;
-      }
-      await ctx.storage.delete(blob._id);
-      deleted += 1;
-    }
-
-    if (!page.isDone) {
-      await ctx.scheduler.runAfter(0, internal.filesInternal.purgeOrphanedStorage, {
-        cursor: page.continueCursor,
-        deleted,
-      });
-    }
-
+    await ctx.storage.delete(args.storageId);
     return null;
   },
 });

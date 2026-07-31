@@ -5,6 +5,7 @@ import { action } from "./_generated/server.js";
 import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
 import { clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
 import { requireFileOwner } from "./lib/fileAccess.js";
+import { ORPHAN_AGE_MS } from "./filesInternal.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import {
   detectContentType,
@@ -39,7 +40,8 @@ const CLASS_FILES_LIST_LIMIT = 200;
  *
  * Requires an active trial or subscription and is rate-limited.
  * The client should POST the raw file bytes to this URL and expect a JSON
- * response like: `{ storageId: "..." }`, then call `finalizeUpload`.
+ * response like: `{ storageId: "..." }`, then call `watchPendingUpload` and
+ * `finalizeUpload`.
  */
 export const generateUploadUrl = entitledMutation({
   args: {},
@@ -48,6 +50,25 @@ export const generateUploadUrl = entitledMutation({
     await rateLimiter.limit(ctx, "fileUploadUrlGlobal", { key: "global", throws: true });
     await rateLimiter.limit(ctx, "fileUploadUrl", { key: ctx.userId, throws: true });
     return await ctx.storage.generateUploadUrl();
+  },
+});
+
+/**
+ * Schedule deletion of a freshly POSTed blob if it is never finalized.
+ * Call after the client receives `storageId` and before `finalizeUpload`.
+ * Safe if finalize succeeds first — `deleteStorageIfOrphan` no-ops when registered.
+ */
+export const watchPendingUpload = entitledMutation({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "fileWatchPending", { key: ctx.userId, throws: true });
+    await ctx.scheduler.runAfter(ORPHAN_AGE_MS, internal.filesInternal.deleteStorageIfOrphan, {
+      storageId: args.storageId,
+    });
+    return null;
   },
 });
 

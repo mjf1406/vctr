@@ -5,6 +5,7 @@ import {
   ClassPermissionsContext,
   type ClassPermissionsContextValue,
 } from "@/components/permissions/classPermissionsContext";
+import { useRemoveFileBytesOnAccessLoss } from "@/hooks/files/useFileBytes";
 import { useClassPermissions } from "@/hooks/permissions/useClassPermissions";
 import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import {
@@ -46,6 +47,9 @@ function ClassPermissionsFromQuery({
   children: ReactNode;
 }) {
   const { data, isPending, isError, error } = useClassPermissions(classId);
+  const subscriptionRequired = isError && isSubscriptionRequiredError(error);
+  useRemoveFileBytesOnAccessLoss(subscriptionRequired);
+
   const value = useMemo<ClassPermissionsContextValue>(() => {
     const permissions = data?.permissions ?? [];
     return {
@@ -56,7 +60,7 @@ function ClassPermissionsFromQuery({
     };
   }, [data, isPending, isError]);
 
-  if (isError && isSubscriptionRequiredError(error)) {
+  if (subscriptionRequired) {
     return <Navigate to="/billing" replace />;
   }
 

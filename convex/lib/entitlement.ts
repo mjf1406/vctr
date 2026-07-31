@@ -11,7 +11,9 @@ const ACTIVE_STATUSES = new Set(["active", "trialing"]);
  * app-managed trial has ended. Read-only — does not claim a trial grant.
  *
  * Query-safe: uses the scheduled `expiredAt` flag instead of `Date.now()`.
- * Mutations also re-check `endsAt` so a delayed scheduler run cannot grant a write window.
+ * Per-grant `markExpired` flips that flag at `endsAt`; a 5-minute cron sweep
+ * is the safety net if that job is lost (worst-case entitled-read window).
+ * Mutations also re-check `endsAt` so a delayed flip cannot grant a write window.
  */
 export async function assertEntitled(
   ctx: QueryCtx | MutationCtx,

@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuthActions, useConvexAuth } from "@convex-dev/auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronsUpDown, CreditCard, LogOut, Settings, Wallet } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useEntitlement } from "@/hooks/billing/useEntitlement";
+import { removeAllFileBytesQueries } from "@/hooks/files/useFileBytes";
 import { useCurrentUser } from "@/hooks/user/useCurrentUser";
 import { buildPlanSummary } from "@/lib/billing/planSummary";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
@@ -29,11 +31,13 @@ type NavUserProps = {
 
 function useAccountMenuState() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { isLoading, isAuthenticated } = useConvexAuth();
   const { data: user } = useCurrentUser();
   const { signOut } = useAuthActions();
 
   const handleSignOut = async () => {
+    removeAllFileBytesQueries(queryClient);
     await signOut();
     await navigate({ to: "/login" });
   };

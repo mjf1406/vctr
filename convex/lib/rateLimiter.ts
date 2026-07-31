@@ -25,6 +25,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   memberSetGuardianLinks: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   fileUploadUrl: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   fileUploadUrlGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
+  fileWatchPending: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   fileFinalize: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   fileFinalizeGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
   /** Per-user bound for hard reloads; client caches blobs forever under fileId. */

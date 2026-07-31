@@ -1,12 +1,31 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useConvexAuth } from "@convex-dev/auth/react";
 import { useConvex } from "convex/react";
 
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+
+/** Prefix for all file-byte TanStack queries (immutable blobs keyed by fileId). */
+export const FILE_BYTES_QUERY_PREFIX = ["files", "getFileBytes"] as const;
+
 export function fileBytesQueryKey(fileId: Id<"files">) {
-  return ["files", "getFileBytes", fileId] as const;
+  return [...FILE_BYTES_QUERY_PREFIX, fileId] as const;
+}
+
+/** Drop cached file bytes (access revocation, sign-out, banner replace). */
+export function removeAllFileBytesQueries(queryClient: QueryClient) {
+  void queryClient.removeQueries({ queryKey: FILE_BYTES_QUERY_PREFIX });
+}
+
+/** When `lost` becomes true, clear the forever file-byte cache for this session. */
+export function useRemoveFileBytesOnAccessLoss(lost: boolean) {
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (lost) {
+      removeAllFileBytesQueries(queryClient);
+    }
+  }, [lost, queryClient]);
 }
 
 type FileBytesResult = {
@@ -21,7 +40,8 @@ type FileBytesResult = {
  * A mount-local blob: URL is created from the cached Blob and revoked on unmount —
  * never store revokeable URLs in the query cache.
  * Files are immutable (replace = new fileId), so staleTime/gcTime are Infinity —
- * fetch once per fileId until delete invalidation or tab cache drop.
+ * fetch once per fileId until lifecycle invalidation (delete, banner swap,
+ * sign-out, or class access loss).
  */
 export function useFileBytes(fileId: Id<"files"> | undefined) {
   const convex = useConvex();

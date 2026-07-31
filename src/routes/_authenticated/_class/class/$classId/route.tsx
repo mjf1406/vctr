@@ -21,6 +21,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useClass } from "@/hooks/classes/useClass";
+import { useRemoveFileBytesOnAccessLoss } from "@/hooks/files/useFileBytes";
 import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 
@@ -31,12 +32,16 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
     const { data: classDoc, isPending, isError, error, refetch } = useClass(classId);
     const { t } = useTranslation("classes");
     const { t: tCommon } = useTranslation("common");
+    const subscriptionRequired = !isPending && isError && isSubscriptionRequiredError(error);
+    const classUnavailable = !isPending && (isError || !classDoc);
 
-    if (!isPending && isError && isSubscriptionRequiredError(error)) {
+    useRemoveFileBytesOnAccessLoss(subscriptionRequired || classUnavailable);
+
+    if (subscriptionRequired) {
       return <Navigate to="/billing" replace />;
     }
 
-    if (!isPending && (isError || !classDoc)) {
+    if (classUnavailable) {
       return (
         <div>
           <div className="flex min-h-svh flex-col">

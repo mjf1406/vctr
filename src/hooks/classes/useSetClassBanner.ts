@@ -6,6 +6,7 @@ import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
 import { classDetailQueryKey } from "@/hooks/classes/useClass";
 import { classesListQueryKey } from "@/hooks/classes/useClasses";
+import { fileBytesQueryKey } from "@/hooks/files/useFileBytes";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import type { ClassPublic } from "@/lib/classes/classes";
 import { messageFromError } from "@/lib/errors/convexError";
@@ -29,6 +30,11 @@ export function useSetClassBanner() {
     queryKeys: (args) => [listKey, classDetailQueryKey(args.classId)],
     applyOptimisticUpdate: (queryClient, args) => {
       const detailKey = classDetailQueryKey(args.classId);
+      const previous = queryClient.getQueryData<ClassDoc | null>(detailKey);
+      const previousBannerId = previous?.bannerFileId;
+      if (previousBannerId !== undefined && previousBannerId !== args.fileId) {
+        void queryClient.removeQueries({ queryKey: fileBytesQueryKey(previousBannerId) });
+      }
       const now = Date.now();
       const patch = { bannerFileId: args.fileId, updatedAt: now };
       queryClient.setQueryData<ClassPublic[]>(listKey, (old) => {

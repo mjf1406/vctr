@@ -1,11 +1,13 @@
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
+import { removeAllFileBytesQueries } from "@/hooks/files/useFileBytes";
 import { accountDeletionBlockersQueryKey } from "@/hooks/user/useAccountDeletionBlockers";
 import { currentUserQueryKey } from "@/hooks/user/useCurrentUser";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
@@ -28,14 +30,15 @@ export function useDeleteAccount() {
   const mutationFn = useConvexMutation(api.account.deleteAccount);
   const { signOut } = useAuthActions();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const userKey = currentUserQueryKey();
   const blockersKey = accountDeletionBlockersQueryKey();
 
   return useOptimisticMutation({
     mutationFn: (args: { confirmation: string }) => mutationFn(args),
     queryKeys: [userKey, blockersKey],
-    applyOptimisticUpdate: (queryClient) => {
-      queryClient.setQueryData<CurrentUser | null>(userKey, null);
+    applyOptimisticUpdate: (qc) => {
+      qc.setQueryData<CurrentUser | null>(userKey, null);
     },
     onError: (error) => {
       const code = codeFromError(error);
@@ -50,6 +53,7 @@ export function useDeleteAccount() {
       });
     },
     onSuccess: async () => {
+      removeAllFileBytesQueries(queryClient);
       await signOut();
       await navigate({ to: "/login" });
     },
