@@ -436,7 +436,7 @@ const ja = {
     navActivityLog: "アクティビティログ",
     navSettings: "設定",
     bannerTitle: "ダッシュボードバナー",
-    bannerDescription: "クラスのダッシュボード上部に表示する画像をアップロードします。",
+    bannerDescription: "クラスのダッシュボードに表示する画像をアップロードします。",
     bannerRemove: "バナーを削除",
     bannerPreviewAlt: "クラスダッシュボードバナー",
     bannerLoadFailed: "バナー画像を読み込めませんでした。",

@@ -30,6 +30,7 @@ import type * as lib_billingGuards from "../lib/billingGuards.js";
 import type * as lib_customFunctions from "../lib/customFunctions.js";
 import type * as lib_entitlement from "../lib/entitlement.js";
 import type * as lib_fileAccess from "../lib/fileAccess.js";
+import type * as lib_filesCleanup from "../lib/filesCleanup.js";
 import type * as lib_guardianLinks from "../lib/guardianLinks.js";
 import type * as lib_joinCodesCleanup from "../lib/joinCodesCleanup.js";
 import type * as lib_languages from "../lib/languages.js";
@@ -78,6 +79,7 @@ declare const fullApi: ApiFromModules<{
   "lib/customFunctions": typeof lib_customFunctions;
   "lib/entitlement": typeof lib_entitlement;
   "lib/fileAccess": typeof lib_fileAccess;
+  "lib/filesCleanup": typeof lib_filesCleanup;
   "lib/guardianLinks": typeof lib_guardianLinks;
   "lib/joinCodesCleanup": typeof lib_joinCodesCleanup;
   "lib/languages": typeof lib_languages;

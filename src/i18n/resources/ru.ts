@@ -437,7 +437,7 @@ const ru = {
     navActivityLog: "Журнал активности",
     navSettings: "Настройки",
     bannerTitle: "Баннер панели",
-    bannerDescription: "Загрузите изображение, которое отображается вверху панели класса.",
+    bannerDescription: "Загрузите изображение, которое отображается на панели класса.",
     bannerRemove: "Удалить баннер",
     bannerPreviewAlt: "Баннер панели класса",
     bannerLoadFailed: "Не удалось загрузить изображение баннера.",

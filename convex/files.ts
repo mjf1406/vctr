@@ -3,11 +3,13 @@ import { ConvexError, v } from "convex/values";
 import { api, internal } from "./_generated/api.js";
 import { action } from "./_generated/server.js";
 import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
+import { clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
 import { requireFileOwner } from "./lib/fileAccess.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import {
   detectContentType,
   getUploadPresetDefinition,
+  isEnabledUploadPreset,
   isUploadPresetKey,
   validateDetectedContentType,
 } from "./lib/uploadPresets.js";
@@ -80,7 +82,7 @@ export const finalizeUpload = action({
       key: user._id,
     });
 
-    if (!isUploadPresetKey(args.preset)) {
+    if (!isUploadPresetKey(args.preset) || !isEnabledUploadPreset(args.preset)) {
       await ctx.storage.delete(args.storageId);
       throw new ConvexError({
         code: "INVALID_UPLOAD",
@@ -225,6 +227,7 @@ export const deleteFile = entitledMutation({
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "fileDelete", { key: ctx.userId, throws: true });
     const file = await requireFileOwner(ctx, args.fileId, ctx.userId);
+    await clearBannerIfReferencesFile(ctx, args.fileId, file.classId);
     await ctx.storage.delete(file.storageId);
     await ctx.db.delete("files", args.fileId);
     return null;

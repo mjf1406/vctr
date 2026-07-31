@@ -446,7 +446,7 @@ const fr = {
     navActivityLog: "Journal d'activité",
     navSettings: "Paramètres",
     bannerTitle: "Bannière du tableau de bord",
-    bannerDescription: "Téléversez une image affichée en haut du tableau de bord de la classe.",
+    bannerDescription: "Téléversez une image affichée sur le tableau de bord de la classe.",
     bannerRemove: "Supprimer la bannière",
     bannerPreviewAlt: "Bannière du tableau de bord de la classe",
     bannerLoadFailed: "Impossible de charger l’image de la bannière.",

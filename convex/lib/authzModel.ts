@@ -18,7 +18,7 @@ export const permissions = definePermissions({
   students: { read: true, add: true, remove: true, suspend: true },
   guardians: { read: true, invite: true, remove: true, suspend: true },
   invitations: { read: true, create: true, revoke: true },
-  /** Class file library — mutate stays ownership-based (uploader), not role-based. */
+  /** Class file library — create is teacher+; mutate stays ownership-based (uploader). */
   files: { read: true, create: true },
   /** App-level admin (global / unscoped). Not a class membership role. */
   admin: { syncProducts: true, viewHealth: true },
@@ -35,7 +35,6 @@ export const roles = defineRoles(permissions, {
     assistantTeachers: ["read"],
     students: ["read"],
     guardians: ["read"],
-    files: ["create"],
   },
   teacher: {
     inherits: "assistant_teacher",
@@ -44,6 +43,7 @@ export const roles = defineRoles(permissions, {
     guardians: ["invite", "remove", "suspend"],
     assistantTeachers: ["invite", "remove", "suspend"],
     invitations: ["read", "create", "revoke"],
+    files: ["create"],
   },
   owner: {
     inherits: "teacher",

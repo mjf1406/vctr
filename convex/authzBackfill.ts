@@ -7,7 +7,7 @@ import { permissionSnapshotForScope } from "./lib/permissionSnapshot.js";
 
 /**
  * Re-materialize effective permissions after `defineRoles` / `definePermissions` changes.
- * Run once after deploying role-catalog updates (e.g. new `files:read` / `files:create`):
+ * Run once after deploying role-catalog updates (e.g. moving `files:create` to teacher):
  * `bunx convex run authzBackfill:syncCatalogRoles`
  */
 export const syncCatalogRoles = internalAction({

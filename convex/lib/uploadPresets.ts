@@ -9,6 +9,14 @@ export const UPLOAD_PRESET_KEYS = ["images", "documents", "audio"] as const;
 
 export type UploadPresetKey = (typeof UPLOAD_PRESET_KEYS)[number];
 
+/**
+ * Presets accepted by finalize/register today.
+ * `documents` stays defined for future OOXML-validated uploads but is rejected server-side.
+ */
+export const ENABLED_UPLOAD_PRESETS = ["images", "audio"] as const;
+
+export type EnabledUploadPresetKey = (typeof ENABLED_UPLOAD_PRESETS)[number];
+
 export type UploadPresetDefinition = {
   key: UploadPresetKey;
   allowedMimeTypes: readonly string[];
@@ -61,6 +69,10 @@ export const UPLOAD_PRESET_DEFINITIONS: Record<UploadPresetKey, UploadPresetDefi
 
 export function isUploadPresetKey(value: string): value is UploadPresetKey {
   return (UPLOAD_PRESET_KEYS as ReadonlyArray<string>).includes(value);
+}
+
+export function isEnabledUploadPreset(value: string): value is EnabledUploadPresetKey {
+  return (ENABLED_UPLOAD_PRESETS as ReadonlyArray<string>).includes(value);
 }
 
 export function getUploadPresetDefinition(presetKey: UploadPresetKey): UploadPresetDefinition {
@@ -177,13 +189,14 @@ export function detectContentType(bytes: Uint8Array): string | null {
   if (startsWithBytes(bytes, [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1])) {
     return "application/msword";
   }
-  // ZIP-based Office Open XML (.docx) — detect [Content_Types].xml marker later if needed;
-  // for now treat PK ZIP as docx when preset allows it.
+  // Reject ZIP / OOXML containers. Re-enable docx only after verifying
+  // [Content_Types].xml (and preferably word/) inside the archive — bare PK
+  // magic accepts arbitrary ZIPs as documents.
   if (
     startsWithBytes(bytes, [0x50, 0x4b, 0x03, 0x04]) ||
     startsWithBytes(bytes, [0x50, 0x4b, 0x05, 0x06])
   ) {
-    return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    return null;
   }
   // WAV: RIFF....WAVE
   if (

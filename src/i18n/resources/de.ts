@@ -442,7 +442,7 @@ const de = {
     navActivityLog: "Aktivitätsprotokoll",
     navSettings: "Einstellungen",
     bannerTitle: "Dashboard-Banner",
-    bannerDescription: "Laden Sie ein Bild hoch, das oben auf dem Klassendashboard angezeigt wird.",
+    bannerDescription: "Laden Sie ein Bild hoch, das auf dem Klassendashboard angezeigt wird.",
     bannerRemove: "Banner entfernen",
     bannerPreviewAlt: "Klassendashboard-Banner",
     bannerLoadFailed: "Bannerbild konnte nicht geladen werden.",

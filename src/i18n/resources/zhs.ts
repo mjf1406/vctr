@@ -423,7 +423,7 @@ const zhs = {
     navActivityLog: "活动日志",
     navSettings: "设置",
     bannerTitle: "仪表盘横幅",
-    bannerDescription: "上传显示在班级仪表盘顶部的图片。",
+    bannerDescription: "上传显示在班级仪表盘上的图片。",
     bannerRemove: "移除横幅",
     bannerPreviewAlt: "班级仪表盘横幅",
     bannerLoadFailed: "无法加载横幅图片。",

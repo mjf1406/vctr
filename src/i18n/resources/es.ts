@@ -438,7 +438,7 @@ const es = {
     navActivityLog: "Registro de actividad",
     navSettings: "Ajustes",
     bannerTitle: "Banner del panel",
-    bannerDescription: "Sube una imagen que se muestra en la parte superior del panel de la clase.",
+    bannerDescription: "Sube una imagen que se muestra en el panel de la clase.",
     bannerRemove: "Quitar banner",
     bannerPreviewAlt: "Banner del panel de la clase",
     bannerLoadFailed: "No se pudo cargar la imagen del banner.",

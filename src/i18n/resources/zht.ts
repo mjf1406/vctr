@@ -423,7 +423,7 @@ const zht = {
     navActivityLog: "活動紀錄",
     navSettings: "設定",
     bannerTitle: "儀表板橫幅",
-    bannerDescription: "上傳顯示在班級儀表板頂部的圖片。",
+    bannerDescription: "上傳顯示在班級儀表板上的圖片。",
     bannerRemove: "移除橫幅",
     bannerPreviewAlt: "班級儀表板橫幅",
     bannerLoadFailed: "無法載入橫幅圖片。",

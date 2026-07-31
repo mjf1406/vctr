@@ -437,7 +437,7 @@ const pt = {
     navActivityLog: "Registro de atividades",
     navSettings: "Configurações",
     bannerTitle: "Banner do painel",
-    bannerDescription: "Envie uma imagem exibida no topo do painel da turma.",
+    bannerDescription: "Envie uma imagem exibida no painel da turma.",
     bannerRemove: "Remover banner",
     bannerPreviewAlt: "Banner do painel da turma",
     bannerLoadFailed: "Não foi possível carregar a imagem do banner.",

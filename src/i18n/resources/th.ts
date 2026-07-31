@@ -425,7 +425,7 @@ const th = {
     navActivityLog: "บันทึกกิจกรรม",
     navSettings: "การตั้งค่า",
     bannerTitle: "แบนเนอร์แดชบอร์ด",
-    bannerDescription: "อัปโหลดรูปภาพที่แสดงด้านบนของแดชบอร์ดชั้นเรียน",
+    bannerDescription: "อัปโหลดรูปภาพที่แสดงบนแดชบอร์ดชั้นเรียน",
     bannerRemove: "ลบแบนเนอร์",
     bannerPreviewAlt: "แบนเนอร์แดชบอร์ดชั้นเรียน",
     bannerLoadFailed: "โหลดรูปแบนเนอร์ไม่ได้",

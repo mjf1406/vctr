@@ -175,6 +175,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
                 </div>
               ) : null}
               <FileDropzone
+                title={t("bannerTitle")}
                 variant="compact"
                 presetKey="images"
                 classId={classId}

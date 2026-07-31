@@ -10,6 +10,7 @@ import { classScope } from "./lib/authzModel.js";
 import { assertEntitled } from "./lib/entitlement.js";
 import { canAccessFile } from "./lib/fileAccess.js";
 import {
+  isEnabledUploadPreset,
   isUploadPresetKey,
   validateDetectedContentType,
   validateUploadAgainstPreset,
@@ -96,7 +97,7 @@ export const registerFinalizedUpload = internalMutation({
     }
     await assertEntitled(ctx, userId);
 
-    if (!isUploadPresetKey(args.preset)) {
+    if (!isUploadPresetKey(args.preset) || !isEnabledUploadPreset(args.preset)) {
       await ctx.storage.delete(args.storageId);
       throw new ConvexError({
         code: "INVALID_UPLOAD",

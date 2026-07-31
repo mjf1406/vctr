@@ -272,6 +272,11 @@ Do this **after** auth + branding so you can smoke-test login on the example UI 
 Frontend permission helpers: [`src/lib/permissions/classPermissions.ts`](./src/lib/permissions/classPermissions.ts)  
 Authz client: [`convex/authz.ts`](./convex/authz.ts) (`tenantId: APP_CONFIG.authzTenantId`)
 
+**Uploads / files**
+
+- Enabled presets today: **images** and **audio** only ([`convex/lib/uploadPresets.ts`](./convex/lib/uploadPresets.ts)). The `documents` preset definitions and PDF/OLE/txt sniffers remain in code but are **rejected server-side** until OOXML validation (e.g. `[Content_Types].xml` inside ZIP) is solid; bare ZIP/`PK` magic is rejected.
+- Class library: `files:create` = **owner / teacher** (not assistant_teacher); `files:read` = all class members (role-scoped, so students can load banners); rename/delete stay **uploader ownership**. After changing the role catalog, rematerialize via [`convex/authzBackfill.ts`](./convex/authzBackfill.ts).
+
 **Backend example modules:**
 
 - [`convex/schema.ts`](./convex/schema.ts) — `classes`, `joinCodes`, `userSettings`

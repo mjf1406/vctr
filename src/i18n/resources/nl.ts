@@ -441,7 +441,7 @@ const nl = {
     navActivityLog: "Activiteitenlog",
     navSettings: "Instellingen",
     bannerTitle: "Dashboardbanner",
-    bannerDescription: "Upload een afbeelding die bovenaan het klassendashboard wordt getoond.",
+    bannerDescription: "Upload een afbeelding die op het klassendashboard wordt getoond.",
     bannerRemove: "Banner verwijderen",
     bannerPreviewAlt: "Klassendashboardbanner",
     bannerLoadFailed: "Bannerafbeelding kon niet worden geladen.",

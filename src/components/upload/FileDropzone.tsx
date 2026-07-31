@@ -28,6 +28,8 @@ type FileDropzoneProps = {
   onUploaded?: (fileId: Id<"files">) => void;
   /** Allow selecting more than one file. Default true. */
   multiple?: boolean;
+  /** Label for what is being uploaded (e.g. "Dashboard banner"). */
+  title?: string;
   className?: string;
 };
 
@@ -37,6 +39,7 @@ export function FileDropzone({
   classId,
   onUploaded,
   multiple = true,
+  title,
   className,
 }: FileDropzoneProps) {
   const { t } = useTranslation("upload");
@@ -131,7 +134,7 @@ export function FileDropzone({
             <div className="flex min-w-0 items-center gap-3">
               <UploadCloud className="size-5 text-muted-foreground" aria-hidden="true" />
               <div className="min-w-0">
-                <div className="truncate text-sm font-medium">{t(label)}</div>
+                <div className="truncate text-sm font-medium">{title ?? t(label)}</div>
                 <EmptyDescription className="text-xs">{t(descriptionKey)}</EmptyDescription>
               </div>
             </div>
@@ -187,7 +190,7 @@ export function FileDropzone({
           <EmptyMedia variant="icon" size="20">
             <UploadCloud className="text-foreground" aria-hidden="true" />
           </EmptyMedia>
-          <EmptyTitle>{t("dragDropTitle")}</EmptyTitle>
+          <EmptyTitle>{title ?? t("dragDropTitle")}</EmptyTitle>
           <EmptyDescription className="max-w-xs text-center">{t(descriptionKey)}</EmptyDescription>
 
           <div className="mt-4">

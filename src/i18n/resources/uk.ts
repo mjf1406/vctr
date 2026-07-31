@@ -436,7 +436,7 @@ const uk = {
     navActivityLog: "Журнал активності",
     navSettings: "Налаштування",
     bannerTitle: "Банер панелі",
-    bannerDescription: "Завантажте зображення, яке показується вгорі панелі класу.",
+    bannerDescription: "Завантажте зображення, яке показується на панелі класу.",
     bannerRemove: "Видалити банер",
     bannerPreviewAlt: "Банер панелі класу",
     bannerLoadFailed: "Не вдалося завантажити зображення банера.",

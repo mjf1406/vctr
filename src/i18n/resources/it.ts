@@ -442,7 +442,7 @@ const it = {
     navActivityLog: "Registro attività",
     navSettings: "Impostazioni",
     bannerTitle: "Banner della dashboard",
-    bannerDescription: "Carica un’immagine mostrata in alto nella dashboard della classe.",
+    bannerDescription: "Carica un’immagine mostrata nella dashboard della classe.",
     bannerRemove: "Rimuovi banner",
     bannerPreviewAlt: "Banner della dashboard della classe",
     bannerLoadFailed: "Impossibile caricare l’immagine del banner.",

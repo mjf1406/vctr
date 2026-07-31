@@ -57,8 +57,9 @@ const schema = defineSchema({
   /**
    * Ownership registry for Convex storage blobs.
    * Only finalized uploads (validated MIME/size) get a row.
-   * Optional `classId` places the file in a class library (members can view;
-   * uploader retains update/delete). Absent `classId` = personal / owner-only.
+   * Optional `classId` places the file in a class library (`files:read` for members;
+   * `files:create` for owner/teacher; uploader retains update/delete).
+   * Absent `classId` = personal / owner-only.
    */
   files: defineTable({
     storageId: v.id("_storage"),

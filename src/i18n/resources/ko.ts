@@ -429,7 +429,7 @@ const ko = {
     navActivityLog: "활동 로그",
     navSettings: "설정",
     bannerTitle: "대시보드 배너",
-    bannerDescription: "클래스 대시보드 상단에 표시할 이미지를 업로드하세요.",
+    bannerDescription: "클래스 대시보드에 표시할 이미지를 업로드하세요.",
     bannerRemove: "배너 제거",
     bannerPreviewAlt: "클래스 대시보드 배너",
     bannerLoadFailed: "배너 이미지를 불러올 수 없습니다.",
