@@ -26,7 +26,7 @@ export const normalizeEmailKeys = internalMutation({
 
     for (const grant of grants) {
       const recomputed = normalizeEmail(grant.emailKey);
-      if (recomputed.includes("@") && recomputed !== grant.emailKey) {
+      if (recomputed && recomputed !== grant.emailKey) {
         await ctx.db.patch("trialGrants", grant._id, { emailKey: recomputed });
         updated += 1;
       }
@@ -62,13 +62,14 @@ export const normalizeEmailKeys = internalMutation({
     for (const user of users) {
       if (!user.email) continue;
       const emailKey = normalizeEmail(user.email);
-      if (!emailKey.includes("@")) continue;
+      if (!emailKey) continue;
       const existing = await ctx.db
         .query("trialGrants")
         .withIndex("by_emailKey", (q) => q.eq("emailKey", emailKey))
         .unique();
       if (existing) {
-        if (existing.userId !== user._id) {
+        // Only reattach cleared grants — never steal from a live user.
+        if (existing.userId === undefined) {
           await ctx.db.patch("trialGrants", existing._id, { userId: user._id as Id<"users"> });
         }
         continue;

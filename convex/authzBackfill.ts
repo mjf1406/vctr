@@ -51,6 +51,11 @@ export const smokeVerify = internalMutation({
     studentPermsMatchModel: v.boolean(),
   }),
   handler: async (ctx, args) => {
+    if (process.env.ALLOW_SMOKE_TESTS !== "true") {
+      throw new Error(
+        "smokeVerify is disabled. Set ALLOW_SMOKE_TESTS=true on the deployment to run.",
+      );
+    }
     const classDoc = await ctx.db.get("classes", args.classId);
     if (!classDoc) {
       throw new Error("Class not found");

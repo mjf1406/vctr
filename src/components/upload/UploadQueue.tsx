@@ -36,9 +36,13 @@ export function UploadQueue({ items, onAbort, onRetry }: UploadQueueProps) {
                       ? t("invalidType")
                       : item.errorCode === "invalid_size"
                         ? t("invalidSize")
-                        : item.errorCode === "finalize_failed"
-                          ? t("finalizeFailed")
-                          : t("uploadFailed"))}
+                        : item.errorCode === "invalid_content"
+                          ? t("invalidContent")
+                          : item.errorCode === "quota_exceeded"
+                            ? t("quotaExceeded")
+                            : item.errorCode === "finalize_failed"
+                              ? t("finalizeFailed")
+                              : t("uploadFailed"))}
                 </div>
               </div>
 

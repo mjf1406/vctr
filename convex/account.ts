@@ -1,5 +1,8 @@
 import { ConvexError, v } from "convex/values";
+import { invalidateSessions } from "@convex-dev/auth/server";
 
+import { api, internal } from "./_generated/api.js";
+import { action } from "./_generated/server.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import {
   accountDeleteConfirmationPhrase,
@@ -46,6 +49,35 @@ export const deleteAccount = authedMutation({
     }
 
     await deleteAccountData(ctx, ctx.userId);
+    return null;
+  },
+});
+
+/**
+ * Revoke all sessions except the caller's current one.
+ * Keeps the current device signed in; other devices must sign in again.
+ */
+export const signOutOtherSessions = action({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const user = await ctx.runQuery(api.users.currentUser, {});
+    if (!user) {
+      throw new ConvexError({
+        code: "UNAUTHENTICATED",
+        message: "Not authenticated",
+      });
+    }
+    await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+      name: "signOutOtherSessions",
+      key: user._id,
+    });
+
+    const session = await ctx.runQuery(api.users.currentSession, {});
+    await invalidateSessions(ctx, {
+      userId: user._id,
+      except: session ? [session._id] : [],
+    });
     return null;
   },
 });

@@ -118,6 +118,8 @@ const es = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "El contenido del archivo no coincide con un tipo permitido",
+    quotaExceeded: "Cuota de almacenamiento excedida",
     abort: "Abort",
     retry: "Retry",
 
@@ -147,6 +149,14 @@ const es = {
     securityDescription: "Proveedores vinculados y control de sesiones.",
     linkedProvidersTitle: "Proveedores vinculados",
     linkedProvidersEmpty: "No hay proveedores vinculados.",
+    signOutOtherDevices: "Cerrar sesión en otros dispositivos",
+    signOutOtherConfirmTitle: "¿Cerrar sesión en otros dispositivos?",
+    signOutOtherConfirmDescription: "Revoca las sesiones en todos los dispositivos excepto este.",
+    signOutOtherConfirmBody:
+      "Seguirás con la sesión iniciada aquí. Otros navegadores y dispositivos deberán iniciar sesión de nuevo.",
+    signOutOtherConfirmSubmit: "Cerrar sesión en otros dispositivos",
+    signOutOtherSuccess: "Sesión cerrada en otros dispositivos",
+    signOutOtherFailed: "No se pudo cerrar sesión en otros dispositivos",
     billingSummaryTitle: "Plan",
     billingSummaryDescription: "Resumen de tu acceso actual. Gestiona los planes en Facturación.",
     manageBilling: "Gestionar facturación",
@@ -398,6 +408,8 @@ const es = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "Permaneces en la clase como profesor tras la transferencia — no se te elimina.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -419,6 +431,7 @@ const es = {
     membersDescription: "Personas de esta clase con este rol.",
     membersEmptyTitle: "Todavía no hay nadie",
     membersEmptyDescription: "Crea un código de invitación para añadir personas a esta clase.",
+    unnamedMember: "Miembro sin nombre",
     membersLoadFailed: "No se pudieron cargar los miembros.",
     membersSearchLabel: "Buscar personas",
     membersSearchPlaceholder: "Buscar personas…",

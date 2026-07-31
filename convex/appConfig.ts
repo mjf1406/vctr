@@ -44,4 +44,17 @@ export const APP_CONFIG = {
     warnWithinDays: 14,
     forceWithinDays: 3,
   },
+  /**
+   * Upload size limits and per-user storage quota.
+   * Tunable without touching preset MIME lists — keep under Convex action return
+   * limits (16 MiB) so private byte serving stays viable.
+   */
+  uploads: {
+    quotaBytes: 100 * 1024 * 1024,
+    maxSizeBytes: {
+      images: 2 * 1024 * 1024,
+      documents: 500 * 1024,
+      audio: 5 * 1024 * 1024,
+    },
+  },
 } as const;

@@ -117,6 +117,8 @@ const ja = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "ファイルの内容が許可された種類と一致しません",
+    quotaExceeded: "ストレージ容量を超えました",
     abort: "Abort",
     retry: "Retry",
 
@@ -146,6 +148,14 @@ const ja = {
     securityDescription: "連携プロバイダーとセッションの管理。",
     linkedProvidersTitle: "連携プロバイダー",
     linkedProvidersEmpty: "連携プロバイダーが見つかりません。",
+    signOutOtherDevices: "他のデバイスからサインアウト",
+    signOutOtherConfirmTitle: "他のデバイスからサインアウトしますか？",
+    signOutOtherConfirmDescription: "このデバイス以外のすべてのセッションを取り消します。",
+    signOutOtherConfirmBody:
+      "こちらではサインインしたままです。他のブラウザやデバイスでは再度サインインが必要です。",
+    signOutOtherConfirmSubmit: "他のデバイスからサインアウト",
+    signOutOtherSuccess: "他のデバイスからサインアウトしました",
+    signOutOtherFailed: "他のデバイスからサインアウトできませんでした",
     billingSummaryTitle: "プラン",
     billingSummaryDescription: "現在のアクセス状況の概要です。プランは請求ページで管理できます。",
     manageBilling: "請求を管理",
@@ -397,6 +407,7 @@ const ja = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "譲渡後も教師としてクラスに残ります — 削除されません。",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -418,6 +429,7 @@ const ja = {
     membersDescription: "この役割のクラスメンバーです。",
     membersEmptyTitle: "まだ誰もいません",
     membersEmptyDescription: "招待コードを作成してクラスに人を追加してください。",
+    unnamedMember: "名前のないメンバー",
     membersLoadFailed: "メンバーを読み込めませんでした。",
     membersSearchLabel: "メンバーを検索",
     membersSearchPlaceholder: "メンバーを検索…",

@@ -39,7 +39,7 @@ export const getEntitlement = authedQuery({
     const grant = await ctx.db
       .query("trialGrants")
       .withIndex("by_userId", (q) => q.eq("userId", ctx.userId))
-      .unique();
+      .first();
 
     const subscription = await polar.getCurrentSubscription(ctx, {
       userId: ctx.userId,

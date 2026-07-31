@@ -4,12 +4,19 @@ export type UserDisplayFields = {
   email?: string | null;
 };
 
-export function getDisplayName(user: UserDisplayFields): string {
+/**
+ * Prefer name, then email, then a localized unnamed fallback when provided,
+ * otherwise a short id suffix.
+ */
+export function getDisplayName(user: UserDisplayFields, unnamedFallback?: string): string {
   if (user.name?.trim()) {
     return user.name.trim();
   }
   if (user.email?.trim()) {
     return user.email.trim();
+  }
+  if (unnamedFallback?.trim()) {
+    return unnamedFallback.trim();
   }
   return `User ${user._id.slice(-4)}`;
 }

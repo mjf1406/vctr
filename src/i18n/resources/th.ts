@@ -116,6 +116,8 @@ const th = {
     finalizeFailed: "ไม่สามารถตรวจสอบไฟล์ที่อัปโหลดได้",
     invalidType: "ประเภทไฟล์ไม่ได้รับอนุญาต",
     invalidSize: "ไฟล์มีขนาดเกินที่อนุญาต",
+    invalidContent: "เนื้อหาไฟล์ไม่ตรงกับประเภทที่อนุญาต",
+    quotaExceeded: "เกินโควตาพื้นที่จัดเก็บ",
     abort: "ยกเลิก",
     retry: "ลองใหม่",
 
@@ -145,6 +147,13 @@ const th = {
     securityDescription: "ผู้ให้บริการที่เชื่อมโยงและการจัดการเซสชัน",
     linkedProvidersTitle: "ผู้ให้บริการที่เชื่อมโยง",
     linkedProvidersEmpty: "ไม่พบผู้ให้บริการที่เชื่อมโยง",
+    signOutOtherDevices: "ออกจากระบบบนอุปกรณ์อื่น",
+    signOutOtherConfirmTitle: "ออกจากระบบบนอุปกรณ์อื่นหรือไม่?",
+    signOutOtherConfirmDescription: "เพิกถอนเซสชันบนอุปกรณ์ทั้งหมดยกเว้นเครื่องนี้",
+    signOutOtherConfirmBody: "คุณจะยังคงเข้าสู่ระบบที่นี่ เบราว์เซอร์และอุปกรณ์อื่นจะต้องเข้าสู่ระบบอีกครั้ง",
+    signOutOtherConfirmSubmit: "ออกจากระบบบนอุปกรณ์อื่น",
+    signOutOtherSuccess: "ออกจากระบบบนอุปกรณ์อื่นแล้ว",
+    signOutOtherFailed: "ไม่สามารถออกจากระบบบนอุปกรณ์อื่นได้",
     billingSummaryTitle: "แพ็กเกจ",
     billingSummaryDescription: "สรุปสิทธิ์การใช้งานปัจจุบัน จัดการแพ็กเกจได้ที่หน้าการชำระเงิน",
     manageBilling: "จัดการการชำระเงิน",
@@ -387,6 +396,7 @@ const th = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "คุณยังคงอยู่ในชั้นเรียนในฐานะครูหลังการโอน — คุณจะไม่ถูกลบออก",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -408,6 +418,7 @@ const th = {
     membersDescription: "สมาชิกในชั้นเรียนที่มีบทบาทนี้",
     membersEmptyTitle: "ยังไม่มีใครที่นี่",
     membersEmptyDescription: "สร้างรหัสเชิญเพื่อเพิ่มคนเข้าชั้นเรียนนี้",
+    unnamedMember: "สมาชิกไม่มีชื่อ",
     membersLoadFailed: "โหลดสมาชิกไม่สำเร็จ",
     membersSearchLabel: "ค้นหาบุคคล",
     membersSearchPlaceholder: "ค้นหาบุคคล…",

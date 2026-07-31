@@ -1,8 +1,15 @@
 import { ConvexError, v } from "convex/values";
 
-import { entitledMutation, entitledQuery } from "./lib/customFunctions.js";
+import { api, internal } from "./_generated/api.js";
+import { action } from "./_generated/server.js";
+import { entitledMutation } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
-import { isUploadPresetKey, validateUploadAgainstPreset } from "./lib/uploadPresets.js";
+import {
+  detectContentType,
+  getUploadPresetDefinition,
+  isUploadPresetKey,
+  validateDetectedContentType,
+} from "./lib/uploadPresets.js";
 
 const uploadPresetKeyValidator = v.union(
   v.literal("images"),
@@ -21,16 +28,17 @@ export const generateUploadUrl = entitledMutation({
   args: {},
   returns: v.string(),
   handler: async (ctx) => {
+    await rateLimiter.limit(ctx, "fileUploadUrlGlobal", { key: "global", throws: true });
     await rateLimiter.limit(ctx, "fileUploadUrl", { key: ctx.userId, throws: true });
     return await ctx.storage.generateUploadUrl();
   },
 });
 
 /**
- * Validate and register an uploaded blob in the ownership registry.
- * Deletes the blob and throws when size/MIME fail validation.
+ * Validate (magic bytes + size + quota) and register an uploaded blob.
+ * Runs as an action so it can read blob bytes for content sniffing.
  */
-export const finalizeUpload = entitledMutation({
+export const finalizeUpload = action({
   args: {
     storageId: v.id("_storage"),
     name: v.string(),
@@ -38,7 +46,22 @@ export const finalizeUpload = entitledMutation({
   },
   returns: v.id("files"),
   handler: async (ctx, args) => {
-    await rateLimiter.limit(ctx, "fileFinalize", { key: ctx.userId, throws: true });
+    const user = await ctx.runQuery(api.users.currentUser, {});
+    if (!user) {
+      throw new ConvexError({
+        code: "UNAUTHENTICATED",
+        message: "Not authenticated",
+      });
+    }
+
+    await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+      name: "fileFinalizeGlobal",
+      key: "global",
+    });
+    await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+      name: "fileFinalize",
+      key: user._id,
+    });
 
     if (!isUploadPresetKey(args.preset)) {
       await ctx.storage.delete(args.storageId);
@@ -48,70 +71,76 @@ export const finalizeUpload = entitledMutation({
       });
     }
 
-    const existing = await ctx.db
-      .query("files")
-      .withIndex("by_storageId", (q) => q.eq("storageId", args.storageId))
-      .unique();
-    if (existing) {
-      if (existing.userId !== ctx.userId) {
-        throw new ConvexError({
-          code: "UPLOAD_FORBIDDEN",
-          message: "File already registered",
-        });
-      }
-      return existing._id;
-    }
-
-    const metadata = await ctx.db.system.get("_storage", args.storageId);
-    if (!metadata) {
+    const blob = await ctx.storage.get(args.storageId);
+    if (!blob) {
       throw new ConvexError({
         code: "UPLOAD_NOT_FOUND",
         message: "Upload not found",
       });
     }
 
-    const validationError = validateUploadAgainstPreset(args.preset, {
-      size: metadata.size,
-      contentType: metadata.contentType,
-    });
-    if (validationError) {
+    const size = blob.size;
+    if (size > getUploadPresetDefinition(args.preset).maxSizeBytes) {
       await ctx.storage.delete(args.storageId);
       throw new ConvexError({
-        code: validationError === "invalid_size" ? "INVALID_UPLOAD_SIZE" : "INVALID_UPLOAD_TYPE",
-        message:
-          validationError === "invalid_size"
-            ? "File exceeds the maximum allowed size"
-            : "File type is not allowed",
+        code: "INVALID_UPLOAD_SIZE",
+        message: "File exceeds the maximum allowed size",
       });
     }
 
-    const name = args.name.trim().slice(0, 255) || "file";
-    return await ctx.db.insert("files", {
+    const sample = new Uint8Array(await blob.slice(0, 64).arrayBuffer());
+    const detected = detectContentType(sample);
+    if (validateDetectedContentType(args.preset, detected) !== null || !detected) {
+      await ctx.storage.delete(args.storageId);
+      throw new ConvexError({
+        code: "INVALID_UPLOAD_CONTENT",
+        message: "File content does not match an allowed type",
+      });
+    }
+
+    return await ctx.runMutation(internal.filesInternal.registerFinalizedUpload, {
       storageId: args.storageId,
-      userId: ctx.userId,
-      name,
-      contentType: metadata.contentType ?? "application/octet-stream",
-      size: metadata.size,
+      name: args.name,
       preset: args.preset,
-      createdAt: Date.now(),
+      contentType: detected,
+      size,
     });
   },
 });
 
 /**
- * Return a short-lived URL for a file the caller owns.
+ * Return file bytes for a file the caller owns.
+ * Ownership is re-checked on every call via `getOwnedFile`.
  */
-export const getFileUrl = entitledQuery({
+export const getFileBytes = action({
   args: {
     fileId: v.id("files"),
   },
-  returns: v.union(v.string(), v.null()),
+  returns: v.union(
+    v.object({
+      bytes: v.bytes(),
+      contentType: v.string(),
+      name: v.string(),
+    }),
+    v.null(),
+  ),
   handler: async (ctx, args) => {
-    const file = await ctx.db.get("files", args.fileId);
-    if (!file || file.userId !== ctx.userId) {
+    const file = await ctx.runQuery(internal.filesInternal.getOwnedFile, {
+      fileId: args.fileId,
+    });
+    if (!file) {
       return null;
     }
-    return await ctx.storage.getUrl(file.storageId);
+    const blob = await ctx.storage.get(file.storageId);
+    if (!blob) {
+      return null;
+    }
+    const buffer = await blob.arrayBuffer();
+    return {
+      bytes: buffer,
+      contentType: file.contentType,
+      name: file.name,
+    };
   },
 });
 

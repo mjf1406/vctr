@@ -121,6 +121,8 @@ const fr = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "Le contenu du fichier ne correspond pas à un type autorisé",
+    quotaExceeded: "Quota de stockage dépassé",
     abort: "Abort",
     retry: "Retry",
 
@@ -150,6 +152,14 @@ const fr = {
     securityDescription: "Fournisseurs liés et contrôle des sessions.",
     linkedProvidersTitle: "Fournisseurs liés",
     linkedProvidersEmpty: "Aucun fournisseur lié trouvé.",
+    signOutOtherDevices: "Déconnecter les autres appareils",
+    signOutOtherConfirmTitle: "Déconnecter les autres appareils ?",
+    signOutOtherConfirmDescription: "Révoquer les sessions sur tous les appareils sauf celui-ci.",
+    signOutOtherConfirmBody:
+      "Vous resterez connecté ici. Les autres navigateurs et appareils devront se reconnecter.",
+    signOutOtherConfirmSubmit: "Déconnecter les autres appareils",
+    signOutOtherSuccess: "Autres appareils déconnectés",
+    signOutOtherFailed: "Impossible de déconnecter les autres appareils",
     billingSummaryTitle: "Offre",
     billingSummaryDescription: "Aperçu de votre accès actuel. Gérez les offres dans Facturation.",
     manageBilling: "Gérer la facturation",
@@ -406,6 +416,8 @@ const fr = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "Vous restez dans la classe en tant qu'enseignant après le transfert — vous n'êtes pas retiré.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -428,6 +440,7 @@ const fr = {
     membersEmptyTitle: "Personne pour le moment",
     membersEmptyDescription:
       "Créez un code d'invitation pour ajouter des personnes à cette classe.",
+    unnamedMember: "Membre sans nom",
     membersLoadFailed: "Impossible de charger les membres.",
     membersSearchLabel: "Rechercher des personnes",
     membersSearchPlaceholder: "Rechercher des personnes…",

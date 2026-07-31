@@ -116,6 +116,8 @@ const ko = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "파일 내용이 허용된 유형과 일치하지 않습니다",
+    quotaExceeded: "저장 용량을 초과했습니다",
     abort: "Abort",
     retry: "Retry",
 
@@ -145,6 +147,14 @@ const ko = {
     securityDescription: "연결된 제공자와 세션 관리.",
     linkedProvidersTitle: "연결된 제공자",
     linkedProvidersEmpty: "연결된 제공자가 없습니다.",
+    signOutOtherDevices: "다른 기기에서 로그아웃",
+    signOutOtherConfirmTitle: "다른 기기에서 로그아웃할까요?",
+    signOutOtherConfirmDescription: "이 기기를 제외한 모든 세션을 취소합니다.",
+    signOutOtherConfirmBody:
+      "여기서는 로그인 상태가 유지됩니다. 다른 브라우저와 기기에서는 다시 로그인해야 합니다.",
+    signOutOtherConfirmSubmit: "다른 기기에서 로그아웃",
+    signOutOtherSuccess: "다른 기기에서 로그아웃되었습니다",
+    signOutOtherFailed: "다른 기기에서 로그아웃할 수 없습니다",
     billingSummaryTitle: "요금제",
     billingSummaryDescription: "현재 액세스 상태 요약입니다. 요금제는 결제 페이지에서 관리하세요.",
     manageBilling: "결제 관리",
@@ -390,6 +400,7 @@ const ko = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "이전 후에도 교사로 클래스에 남습니다 — 제거되지 않습니다.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -411,6 +422,7 @@ const ko = {
     membersDescription: "이 역할을 가진 클래스 구성원입니다.",
     membersEmptyTitle: "아직 아무도 없습니다",
     membersEmptyDescription: "초대 코드를 만들어 클래스에 사람을 추가하세요.",
+    unnamedMember: "이름 없는 멤버",
     membersLoadFailed: "구성원을 불러오지 못했습니다.",
     membersSearchLabel: "구성원 검색",
     membersSearchPlaceholder: "구성원 검색…",

@@ -216,6 +216,7 @@ export const create = entitledMutation({
   },
   returns: classValidator,
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classCreateGlobal", { key: "global", throws: true });
     await rateLimiter.limit(ctx, "classCreate", { key: ctx.userId, throws: true });
     const now = Date.now();
     const classId = await ctx.db.insert("classes", {
@@ -400,7 +401,10 @@ export const transferOwnership = classMutation({
     }
 
     await authz.assignRole(ctx, args.toUserId, "owner", ctx.scope);
+    // Drop the recipient's previous membership role so they are owner only.
+    await authz.revokeRole(ctx, args.toUserId, role, ctx.scope);
     await authz.revokeRole(ctx, ctx.userId, "owner", ctx.scope);
+    // Outgoing owner is demoted to teacher (not removed from the class).
     await authz.assignRole(ctx, ctx.userId, "teacher", ctx.scope);
 
     await ctx.db.patch("classes", args.classId, {

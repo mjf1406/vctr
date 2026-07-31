@@ -32,7 +32,7 @@ export const { getConfiguredProducts } = polar.api();
 
 /**
  * Sync products from the Polar dashboard into the local component table.
- * Restricted to emails listed in the `ADMIN_EMAILS` Convex env var.
+ * Restricted to users with the global `app_admin` role.
  */
 export const syncProducts = action({
   args: {},
@@ -56,7 +56,6 @@ export const billingHealth = action({
     webhookSecret: v.boolean(),
     monthlyProductId: v.boolean(),
     yearlyProductId: v.boolean(),
-    adminEmails: v.boolean(),
   }),
   handler: async (ctx) => {
     await requireAdmin(ctx);

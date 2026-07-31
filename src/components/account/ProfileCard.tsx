@@ -55,7 +55,9 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
       </CardHeader>
       <CardContent className="flex items-center gap-4">
         <Avatar className="size-14">
-          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
+          {safeImage ? (
+            <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+          ) : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <dl className="flex min-w-0 flex-1 flex-col gap-1">

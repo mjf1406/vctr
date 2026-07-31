@@ -117,6 +117,8 @@ const en = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "File content does not match an allowed type",
+    quotaExceeded: "Storage quota exceeded",
     abort: "Abort",
     retry: "Retry",
 
@@ -146,6 +148,14 @@ const en = {
     securityDescription: "Linked providers and session controls.",
     linkedProvidersTitle: "Linked providers",
     linkedProvidersEmpty: "No linked providers found.",
+    signOutOtherDevices: "Sign out other devices",
+    signOutOtherConfirmTitle: "Sign out other devices?",
+    signOutOtherConfirmDescription: "Revoke sessions on all devices except this one.",
+    signOutOtherConfirmBody:
+      "You will stay signed in here. Other browsers and devices will need to sign in again.",
+    signOutOtherConfirmSubmit: "Sign out other devices",
+    signOutOtherSuccess: "Other devices signed out",
+    signOutOtherFailed: "Could not sign out other devices",
     billingSummaryTitle: "Plan",
     billingSummaryDescription: "A quick look at your current access. Manage plans on Billing.",
     manageBilling: "Manage billing",
@@ -393,6 +403,8 @@ const en = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "You remain in the class as a teacher after the transfer — you are not removed.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -414,6 +426,7 @@ const en = {
     membersDescription: "People in this class with this role.",
     membersEmptyTitle: "No one here yet",
     membersEmptyDescription: "Create an invite code to add people to this class.",
+    unnamedMember: "Unnamed member",
     membersLoadFailed: "Could not load members.",
     membersSearchLabel: "Search people",
     membersSearchPlaceholder: "Search people…",

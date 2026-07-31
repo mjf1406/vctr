@@ -75,6 +75,7 @@ export function TransferOwnershipCredenza({
         </CredenzaHeader>
         <CredenzaBody className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">{t("transferBody")}</p>
+          <p className="text-sm text-muted-foreground">{t("transferDemotionNote")}</p>
           {isPending ? (
             <Skeleton className="h-10 w-full" />
           ) : isError ? (

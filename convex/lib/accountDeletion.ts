@@ -135,7 +135,7 @@ async function clearTrialGrantUserId(ctx: MutationCtx, userId: Id<"users">): Pro
   const grant = await ctx.db
     .query("trialGrants")
     .withIndex("by_userId", (q) => q.eq("userId", userId))
-    .unique();
+    .first();
   if (grant) {
     await ctx.db.patch("trialGrants", grant._id, { userId: undefined });
   }

@@ -30,13 +30,15 @@ async function loadClassContext(ctx: AuthedCtx, classId: Id<"classes">) {
   const requirePermission = async (permission: ClassPermission) => {
     try {
       await authz.require(ctx, ctx.userId, permission, scope);
-    } catch (error) {
-      console.error("Class permission denied", {
-        classId,
-        userId: ctx.userId,
-        permission,
-        detail: error instanceof Error ? error.message : String(error),
-      });
+    } catch {
+      // Skip logging for the uniform class:read gate — fabricated IDs would flood logs.
+      if (permission !== "class:read") {
+        console.error("Class permission denied", {
+          classId,
+          userId: ctx.userId,
+          permission,
+        });
+      }
       throw new ConvexError({
         code: "CLASS_UNAVAILABLE",
         message: "Class not found or access denied",

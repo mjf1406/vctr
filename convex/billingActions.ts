@@ -48,10 +48,15 @@ async function consumeBillingLimit(
       args: {
         name:
           | "billingCheckout"
+          | "billingCheckoutGlobal"
           | "billingPortal"
+          | "billingPortalGlobal"
           | "billingChange"
+          | "billingChangeGlobal"
           | "billingCancel"
-          | "billingOrders";
+          | "billingCancelGlobal"
+          | "billingOrders"
+          | "billingOrdersGlobal";
         key: string;
       },
     ) => Promise<null>;
@@ -59,6 +64,16 @@ async function consumeBillingLimit(
   name: "billingCheckout" | "billingPortal" | "billingChange" | "billingCancel" | "billingOrders",
   userId: string,
 ) {
+  const globalName = `${name}Global` as
+    | "billingCheckoutGlobal"
+    | "billingPortalGlobal"
+    | "billingChangeGlobal"
+    | "billingCancelGlobal"
+    | "billingOrdersGlobal";
+  await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+    name: globalName,
+    key: "global",
+  });
   await ctx.runMutation(internal.lib.rateLimitActions.consume, {
     name,
     key: userId,

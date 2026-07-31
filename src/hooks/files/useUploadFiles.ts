@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useConvexMutation } from "@convex-dev/react-query";
+import { useAction } from "convex/react";
 
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -12,6 +13,8 @@ export type UploadFileStatus = "queued" | "uploading" | "done" | "error" | "abor
 export type UploadErrorCode =
   | "invalid_type"
   | "invalid_size"
+  | "invalid_content"
+  | "quota_exceeded"
   | "upload_failed"
   | "finalize_failed"
   | "aborted";
@@ -51,6 +54,8 @@ function finalizeErrorCode(error: unknown): UploadErrorCode {
   const code = codeFromError(error);
   if (code === "INVALID_UPLOAD_SIZE") return "invalid_size";
   if (code === "INVALID_UPLOAD_TYPE") return "invalid_type";
+  if (code === "INVALID_UPLOAD_CONTENT") return "invalid_content";
+  if (code === "QUOTA_EXCEEDED") return "quota_exceeded";
   if (code === "INVALID_UPLOAD" || code === "UPLOAD_NOT_FOUND" || code === "UPLOAD_FORBIDDEN") {
     return "finalize_failed";
   }
@@ -136,7 +141,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
   }, []);
 
   const generateUploadUrlMutation = useConvexMutation(api.files.generateUploadUrl);
-  const finalizeUploadMutation = useConvexMutation(api.files.finalizeUpload);
+  const finalizeUploadAction = useAction(api.files.finalizeUpload);
 
   const xhrByIdRef = useRef<Map<string, () => void>>(new Map());
   const processingRef = useRef(false);
@@ -171,7 +176,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
           },
         });
 
-        const fileId = await finalizeUploadMutation({
+        const fileId = await finalizeUploadAction({
           storageId: result.storageId,
           name: item.file.name,
           preset: presetKey,
@@ -215,7 +220,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
         xhrByIdRef.current.delete(item.id);
       }
     },
-    [finalizeUploadMutation, generateUploadUrlMutation, presetKey, setItemsSync],
+    [finalizeUploadAction, generateUploadUrlMutation, presetKey, setItemsSync],
   );
 
   const processQueue = useCallback(async () => {

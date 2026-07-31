@@ -113,7 +113,9 @@ function NavUserAvatar() {
         }
       >
         <Avatar>
-          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
+          {safeImage ? (
+            <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+          ) : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -201,7 +203,9 @@ function NavUserSidebar() {
             }
           >
             <Avatar className="size-8 rounded-lg">
-              {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
+              {safeImage ? (
+                <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+              ) : null}
               <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">

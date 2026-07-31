@@ -58,7 +58,6 @@ export function polarEnvPresence(): {
   webhookSecret: boolean;
   monthlyProductId: boolean;
   yearlyProductId: boolean;
-  adminEmails: boolean;
 } {
   const server = polarServer();
   const isSandbox = server === "sandbox";
@@ -75,6 +74,5 @@ export function polarEnvPresence(): {
     ),
     monthlyProductId: Boolean(process.env.POLAR_PRODUCT_MONTHLY_ID?.trim()),
     yearlyProductId: Boolean(process.env.POLAR_PRODUCT_YEARLY_ID?.trim()),
-    adminEmails: Boolean(process.env.ADMIN_EMAILS?.trim()),
   };
 }

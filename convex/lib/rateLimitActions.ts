@@ -5,10 +5,18 @@ import { rateLimiter, type RateLimitName } from "./rateLimiter.js";
 
 const rateLimitNameValidator = v.union(
   v.literal("billingCheckout"),
+  v.literal("billingCheckoutGlobal"),
   v.literal("billingPortal"),
+  v.literal("billingPortalGlobal"),
   v.literal("billingChange"),
+  v.literal("billingChangeGlobal"),
   v.literal("billingCancel"),
+  v.literal("billingCancelGlobal"),
   v.literal("billingOrders"),
+  v.literal("billingOrdersGlobal"),
+  v.literal("fileFinalize"),
+  v.literal("fileFinalizeGlobal"),
+  v.literal("signOutOtherSessions"),
 );
 
 /**

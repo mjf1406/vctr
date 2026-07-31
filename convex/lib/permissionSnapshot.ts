@@ -49,13 +49,19 @@ export async function permissionSnapshotForScope(
     }
   }
   for (const row of globalRows) {
+    // Do not disclose app-level admin:* permissions via class snapshots.
+    if (row.permission.startsWith("admin:")) {
+      continue;
+    }
     if (row.effect === "allow" && !row.permission.includes("*") && row.permission !== "*") {
       allowCandidates.add(row.permission);
     }
   }
 
   const permissions = [...allowCandidates].filter(
-    (permission) => !denyPatterns.some((pattern) => matchesPermissionPattern(permission, pattern)),
+    (permission) =>
+      !permission.startsWith("admin:") &&
+      !denyPatterns.some((pattern) => matchesPermissionPattern(permission, pattern)),
   );
 
   // If a wildcard deny covers everything, snapshot is empty even when role remains assigned.

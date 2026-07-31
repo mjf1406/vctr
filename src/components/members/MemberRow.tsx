@@ -22,11 +22,14 @@ type MemberRowProps = {
 
 export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
   const { t } = useTranslation("classes");
-  const displayName = getDisplayName({
-    _id: member.userId,
-    name: member.name,
-    email: member.email,
-  });
+  const displayName = getDisplayName(
+    {
+      _id: member.userId,
+      name: member.name,
+      email: member.email,
+    },
+    t("unnamedMember"),
+  );
   const initials = getInitials({
     _id: member.userId,
     name: member.name,
@@ -40,7 +43,9 @@ export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
     <div className="flex h-full flex-col gap-3 rounded-2xl border p-4">
       <div className="flex min-w-0 flex-col items-center gap-2 text-center">
         <Avatar className="size-12">
-          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
+          {safeImage ? (
+            <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+          ) : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="flex min-w-0 flex-col items-center gap-1">

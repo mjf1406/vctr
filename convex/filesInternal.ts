@@ -1,14 +1,166 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
+import { APP_CONFIG } from "./appConfig.js";
 import { internal } from "./_generated/api.js";
-import { internalMutation } from "./_generated/server.js";
+import { internalMutation, internalQuery } from "./_generated/server.js";
+import { assertEntitled } from "./lib/entitlement.js";
+import {
+  isUploadPresetKey,
+  validateDetectedContentType,
+  validateUploadAgainstPreset,
+} from "./lib/uploadPresets.js";
 
 const ORPHAN_AGE_MS = 60 * 60 * 1000;
 const PAGE_SIZE = 100;
+/** Abort a purge run if it would delete more than this many blobs (circuit breaker). */
+const MAX_ORPHAN_DELETES_PER_RUN = 500;
+
+const ownedFileValidator = v.object({
+  _id: v.id("files"),
+  storageId: v.id("_storage"),
+  userId: v.id("users"),
+  name: v.string(),
+  contentType: v.string(),
+  size: v.number(),
+  preset: v.string(),
+  createdAt: v.number(),
+});
+
+/**
+ * Load a file the authenticated caller owns.
+ * Used by `files.getFileBytes` so ownership is re-checked on every fetch.
+ */
+export const getOwnedFile = internalQuery({
+  args: {
+    fileId: v.id("files"),
+  },
+  returns: v.union(ownedFileValidator, v.null()),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+    await assertEntitled(ctx, userId);
+    const file = await ctx.db.get("files", args.fileId);
+    if (!file || file.userId !== userId) {
+      return null;
+    }
+    return {
+      _id: file._id,
+      storageId: file.storageId,
+      userId: file.userId,
+      name: file.name,
+      contentType: file.contentType,
+      size: file.size,
+      preset: file.preset,
+      createdAt: file.createdAt,
+    };
+  },
+});
+
+/**
+ * Register a finalized upload after magic-byte validation in the action layer.
+ * Enforces per-user quota; deletes the blob before throwing on failure.
+ *
+ * Invariant: the `files` table is the sole registry for app-owned blobs.
+ * Anything in `_storage` without a matching `files` row is considered orphaned.
+ */
+export const registerFinalizedUpload = internalMutation({
+  args: {
+    storageId: v.id("_storage"),
+    name: v.string(),
+    preset: v.union(v.literal("images"), v.literal("documents"), v.literal("audio")),
+    contentType: v.string(),
+    size: v.number(),
+  },
+  returns: v.id("files"),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new ConvexError({
+        code: "UNAUTHENTICATED",
+        message: "Not authenticated",
+      });
+    }
+    await assertEntitled(ctx, userId);
+
+    if (!isUploadPresetKey(args.preset)) {
+      await ctx.storage.delete(args.storageId);
+      throw new ConvexError({
+        code: "INVALID_UPLOAD",
+        message: "Invalid upload preset",
+      });
+    }
+
+    const existing = await ctx.db
+      .query("files")
+      .withIndex("by_storageId", (q) => q.eq("storageId", args.storageId))
+      .unique();
+    if (existing) {
+      if (existing.userId !== userId) {
+        throw new ConvexError({
+          code: "UPLOAD_FORBIDDEN",
+          message: "File already registered",
+        });
+      }
+      return existing._id;
+    }
+
+    const sizeError = validateUploadAgainstPreset(args.preset, {
+      size: args.size,
+      contentType: args.contentType,
+    });
+    if (sizeError === "invalid_size") {
+      await ctx.storage.delete(args.storageId);
+      throw new ConvexError({
+        code: "INVALID_UPLOAD_SIZE",
+        message: "File exceeds the maximum allowed size",
+      });
+    }
+
+    const contentError = validateDetectedContentType(args.preset, args.contentType);
+    if (contentError) {
+      await ctx.storage.delete(args.storageId);
+      throw new ConvexError({
+        code: "INVALID_UPLOAD_CONTENT",
+        message: "File content does not match an allowed type",
+      });
+    }
+
+    // eslint-disable-next-line @convex-dev/no-collect-in-query -- per-user uploads are quota-bounded
+    const existingFiles = await ctx.db
+      .query("files")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .collect();
+    const usedBytes = existingFiles.reduce((sum, file) => sum + file.size, 0);
+    if (usedBytes + args.size > APP_CONFIG.uploads.quotaBytes) {
+      await ctx.storage.delete(args.storageId);
+      throw new ConvexError({
+        code: "QUOTA_EXCEEDED",
+        message: "Storage quota exceeded",
+      });
+    }
+
+    const name = args.name.trim().slice(0, 255) || "file";
+    return await ctx.db.insert("files", {
+      storageId: args.storageId,
+      userId,
+      name,
+      contentType: args.contentType,
+      size: args.size,
+      preset: args.preset,
+      createdAt: Date.now(),
+    });
+  },
+});
 
 /**
  * Delete Convex storage blobs older than one hour that have no matching `files` row.
  * Covers abandoned uploads where the client never called finalizeUpload.
+ *
+ * Circuit breaker: if a single run would delete more than MAX_ORPHAN_DELETES_PER_RUN
+ * blobs, abort without deleting further pages (protects against a missing-registry bug).
  */
 export const purgeOrphanedStorage = internalMutation({
   args: {
@@ -19,12 +171,27 @@ export const purgeOrphanedStorage = internalMutation({
   handler: async (ctx, args) => {
     const now = Date.now();
     let deleted = args.deleted ?? 0;
+    if (deleted >= MAX_ORPHAN_DELETES_PER_RUN) {
+      console.error("Orphan storage purge aborted (circuit breaker)", {
+        deleted,
+        limit: MAX_ORPHAN_DELETES_PER_RUN,
+      });
+      return null;
+    }
+
     const page = await ctx.db.system.query("_storage").paginate({
       numItems: PAGE_SIZE,
       cursor: args.cursor ?? null,
     });
 
     for (const blob of page.page) {
+      if (deleted >= MAX_ORPHAN_DELETES_PER_RUN) {
+        console.error("Orphan storage purge aborted (circuit breaker)", {
+          deleted,
+          limit: MAX_ORPHAN_DELETES_PER_RUN,
+        });
+        return null;
+      }
       if (now - blob._creationTime < ORPHAN_AGE_MS) {
         continue;
       }

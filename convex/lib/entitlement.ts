@@ -25,7 +25,7 @@ export async function assertEntitled(
   const grant = await ctx.db
     .query("trialGrants")
     .withIndex("by_userId", (q) => q.eq("userId", userId))
-    .unique();
+    .first();
 
   if (grant && grant.expiredAt === undefined) {
     // Belt-and-braces on mutations only: reject if endsAt has passed but the

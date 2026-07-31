@@ -116,6 +116,8 @@ const zht = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "檔案內容與允許的類型不符",
+    quotaExceeded: "已超出儲存配額",
     abort: "Abort",
     retry: "Retry",
 
@@ -145,6 +147,13 @@ const zht = {
     securityDescription: "已連結的提供者和工作階段管理。",
     linkedProvidersTitle: "已連結提供者",
     linkedProvidersEmpty: "找不到已連結的提供者。",
+    signOutOtherDevices: "登出其他裝置",
+    signOutOtherConfirmTitle: "登出其他裝置？",
+    signOutOtherConfirmDescription: "撤銷除此裝置外所有裝置上的工作階段。",
+    signOutOtherConfirmBody: "您將在此保持登入。其他瀏覽器和裝置需要重新登入。",
+    signOutOtherConfirmSubmit: "登出其他裝置",
+    signOutOtherSuccess: "已登出其他裝置",
+    signOutOtherFailed: "無法登出其他裝置",
     billingSummaryTitle: "方案",
     billingSummaryDescription: "目前存取權限概覽。請在帳單頁管理方案。",
     manageBilling: "管理帳單",
@@ -385,6 +394,7 @@ const zht = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "轉讓後您仍以教師身分留在班級中 — 不會被移除。",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -406,6 +416,7 @@ const zht = {
     membersDescription: "擁有此角色的班級成員。",
     membersEmptyTitle: "尚無成員",
     membersEmptyDescription: "建立邀請碼以將人員加入此班級。",
+    unnamedMember: "未命名成員",
     membersLoadFailed: "無法載入成員。",
     membersSearchLabel: "搜尋人員",
     membersSearchPlaceholder: "搜尋人員…",

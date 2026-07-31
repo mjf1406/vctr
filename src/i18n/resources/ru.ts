@@ -119,6 +119,8 @@ const ru = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "Содержимое файла не соответствует разрешённому типу",
+    quotaExceeded: "Превышена квота хранилища",
     abort: "Abort",
     retry: "Retry",
 
@@ -148,6 +150,14 @@ const ru = {
     securityDescription: "Связанные провайдеры и управление сессиями.",
     linkedProvidersTitle: "Связанные провайдеры",
     linkedProvidersEmpty: "Связанные провайдеры не найдены.",
+    signOutOtherDevices: "Выйти на других устройствах",
+    signOutOtherConfirmTitle: "Выйти на других устройствах?",
+    signOutOtherConfirmDescription: "Отозвать сеансы на всех устройствах, кроме этого.",
+    signOutOtherConfirmBody:
+      "Вы останетесь в системе здесь. В других браузерах и на других устройствах потребуется войти снова.",
+    signOutOtherConfirmSubmit: "Выйти на других устройствах",
+    signOutOtherSuccess: "Выход на других устройствах выполнен",
+    signOutOtherFailed: "Не удалось выйти на других устройствах",
     billingSummaryTitle: "План",
     billingSummaryDescription:
       "Краткий обзор вашего доступа. Управляйте планами в разделе «Оплата».",
@@ -398,6 +408,7 @@ const ru = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "После передачи вы остаётесь в классе как учитель — вас не удаляют.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -419,6 +430,7 @@ const ru = {
     membersDescription: "Участники класса с этой ролью.",
     membersEmptyTitle: "Пока никого нет",
     membersEmptyDescription: "Создайте код приглашения, чтобы добавить людей в этот класс.",
+    unnamedMember: "Участник без имени",
     membersLoadFailed: "Не удалось загрузить участников.",
     membersSearchLabel: "Поиск людей",
     membersSearchPlaceholder: "Поиск людей…",

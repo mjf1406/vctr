@@ -151,6 +151,7 @@ export const listByRole = entitledClassQuery({
       }
     }
 
+    const includeEmail = listRole === "teacher" || listRole === "assistant_teacher";
     const members: Array<{
       userId: Id<"users">;
       name?: string;
@@ -165,7 +166,7 @@ export const listByRole = entitledClassQuery({
         userId: user._id,
         name: user.name,
         image: user.image,
-        email: user.email,
+        email: includeEmail ? user.email : undefined,
         role,
       });
     }

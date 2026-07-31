@@ -119,6 +119,8 @@ const uk = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "Вміст файлу не відповідає дозволеному типу",
+    quotaExceeded: "Перевищено квоту сховища",
     abort: "Abort",
     retry: "Retry",
 
@@ -148,6 +150,14 @@ const uk = {
     securityDescription: "Пов’язані провайдери та керування сесіями.",
     linkedProvidersTitle: "Пов’язані провайдери",
     linkedProvidersEmpty: "Пов’язаних провайдерів не знайдено.",
+    signOutOtherDevices: "Вийти на інших пристроях",
+    signOutOtherConfirmTitle: "Вийти на інших пристроях?",
+    signOutOtherConfirmDescription: "Відкликати сеанси на всіх пристроях, окрім цього.",
+    signOutOtherConfirmBody:
+      "Ви залишитеся в системі тут. В інших браузерах і на інших пристроях потрібно буде увійти знову.",
+    signOutOtherConfirmSubmit: "Вийти на інших пристроях",
+    signOutOtherSuccess: "Вихід на інших пристроях виконано",
+    signOutOtherFailed: "Не вдалося вийти на інших пристроях",
     billingSummaryTitle: "План",
     billingSummaryDescription: "Короткий огляд вашого доступу. Керуйте планами в розділі «Оплата».",
     manageBilling: "Керувати оплатою",
@@ -397,6 +407,7 @@ const uk = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "Після передачі ви залишаєтеся в класі як учитель — вас не видаляють.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -418,6 +429,7 @@ const uk = {
     membersDescription: "Учасники класу з цією роллю.",
     membersEmptyTitle: "Поки нікого немає",
     membersEmptyDescription: "Створіть код запрошення, щоб додати людей до цього класу.",
+    unnamedMember: "Учасник без імені",
     membersLoadFailed: "Не вдалося завантажити учасників.",
     membersSearchLabel: "Пошук людей",
     membersSearchPlaceholder: "Пошук людей…",

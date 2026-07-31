@@ -120,6 +120,8 @@ const de = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "Dateiinhalt entspricht keinem erlaubten Typ",
+    quotaExceeded: "Speicherkontingent überschritten",
     abort: "Abort",
     retry: "Retry",
 
@@ -149,6 +151,14 @@ const de = {
     securityDescription: "Verknüpfte Provider und Sitzungsverwaltung.",
     linkedProvidersTitle: "Verknüpfte Provider",
     linkedProvidersEmpty: "Keine verknüpften Provider gefunden.",
+    signOutOtherDevices: "Andere Geräte abmelden",
+    signOutOtherConfirmTitle: "Andere Geräte abmelden?",
+    signOutOtherConfirmDescription: "Sitzungen auf allen Geräten außer diesem widerrufen.",
+    signOutOtherConfirmBody:
+      "Du bleibst hier angemeldet. Andere Browser und Geräte müssen sich erneut anmelden.",
+    signOutOtherConfirmSubmit: "Andere Geräte abmelden",
+    signOutOtherSuccess: "Andere Geräte abgemeldet",
+    signOutOtherFailed: "Andere Geräte konnten nicht abgemeldet werden",
     billingSummaryTitle: "Plan",
     billingSummaryDescription:
       "Kurzer Überblick über deinen aktuellen Zugang. Pläne unter Abrechnung verwalten.",
@@ -402,6 +412,8 @@ const de = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "Du bleibst nach der Übertragung als Lehrkraft in der Klasse — du wirst nicht entfernt.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -424,6 +436,7 @@ const de = {
     membersEmptyTitle: "Noch niemand hier",
     membersEmptyDescription:
       "Erstelle einen Einladungscode, um Personen zu dieser Klasse hinzuzufügen.",
+    unnamedMember: "Unbenanntes Mitglied",
     membersLoadFailed: "Mitglieder konnten nicht geladen werden.",
     membersSearchLabel: "Personen suchen",
     membersSearchPlaceholder: "Personen suchen…",

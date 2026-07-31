@@ -117,6 +117,8 @@ const pt = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "O conteúdo do arquivo não corresponde a um tipo permitido",
+    quotaExceeded: "Cota de armazenamento excedida",
     abort: "Abort",
     retry: "Retry",
 
@@ -146,6 +148,14 @@ const pt = {
     securityDescription: "Provedores vinculados e controle de sessões.",
     linkedProvidersTitle: "Provedores vinculados",
     linkedProvidersEmpty: "Nenhum provedor vinculado encontrado.",
+    signOutOtherDevices: "Sair de outros dispositivos",
+    signOutOtherConfirmTitle: "Sair de outros dispositivos?",
+    signOutOtherConfirmDescription: "Revogar sessões em todos os dispositivos exceto este.",
+    signOutOtherConfirmBody:
+      "Você permanecerá conectado aqui. Outros navegadores e dispositivos precisarão entrar novamente.",
+    signOutOtherConfirmSubmit: "Sair de outros dispositivos",
+    signOutOtherSuccess: "Sessão encerrada nos outros dispositivos",
+    signOutOtherFailed: "Não foi possível sair dos outros dispositivos",
     billingSummaryTitle: "Plano",
     billingSummaryDescription: "Resumo do seu acesso atual. Gerencie planos em Cobrança.",
     manageBilling: "Gerenciar cobrança",
@@ -397,6 +407,8 @@ const pt = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "Você permanece na turma como professor após a transferência — não é removido.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -418,6 +430,7 @@ const pt = {
     membersDescription: "Pessoas nesta turma com esta função.",
     membersEmptyTitle: "Ninguém aqui ainda",
     membersEmptyDescription: "Crie um código de convite para adicionar pessoas a esta turma.",
+    unnamedMember: "Membro sem nome",
     membersLoadFailed: "Não foi possível carregar os membros.",
     membersSearchLabel: "Pesquisar pessoas",
     membersSearchPlaceholder: "Pesquisar pessoas…",

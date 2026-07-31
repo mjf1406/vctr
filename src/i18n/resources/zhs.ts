@@ -116,6 +116,8 @@ const zhs = {
     finalizeFailed: "Could not verify the uploaded file",
     invalidType: "File type is not allowed",
     invalidSize: "File exceeds the maximum allowed size",
+    invalidContent: "文件内容与允许的类型不匹配",
+    quotaExceeded: "已超出存储配额",
     abort: "Abort",
     retry: "Retry",
 
@@ -145,6 +147,13 @@ const zhs = {
     securityDescription: "已关联的提供方和会话管理。",
     linkedProvidersTitle: "已关联提供方",
     linkedProvidersEmpty: "未找到已关联的提供方。",
+    signOutOtherDevices: "退出其他设备",
+    signOutOtherConfirmTitle: "退出其他设备？",
+    signOutOtherConfirmDescription: "撤销除本设备外所有设备上的会话。",
+    signOutOtherConfirmBody: "您将在此保持登录。其他浏览器和设备需要重新登录。",
+    signOutOtherConfirmSubmit: "退出其他设备",
+    signOutOtherSuccess: "已退出其他设备",
+    signOutOtherFailed: "无法退出其他设备",
     billingSummaryTitle: "方案",
     billingSummaryDescription: "当前访问权限概览。请在账单页管理方案。",
     manageBilling: "管理账单",
@@ -385,6 +394,7 @@ const zhs = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote: "转让后您仍以教师身份留在班级中 — 不会被移除。",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -406,6 +416,7 @@ const zhs = {
     membersDescription: "拥有此角色的班级成员。",
     membersEmptyTitle: "暂无成员",
     membersEmptyDescription: "创建邀请码以将人员添加到此班级。",
+    unnamedMember: "未命名成员",
     membersLoadFailed: "无法加载成员。",
     membersSearchLabel: "搜索人员",
     membersSearchPlaceholder: "搜索人员…",

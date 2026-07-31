@@ -18,6 +18,8 @@ export const permissions = definePermissions({
   students: { read: true, add: true, remove: true, suspend: true },
   guardians: { read: true, invite: true, remove: true, suspend: true },
   invitations: { read: true, create: true, revoke: true },
+  /** App-level admin (global / unscoped). Not a class membership role. */
+  admin: { syncProducts: true, viewHealth: true },
 });
 
 export const roles = defineRoles(permissions, {
@@ -45,12 +47,29 @@ export const roles = defineRoles(permissions, {
     class: ["delete"],
     teachers: ["invite", "remove", "suspend"],
   },
+  /** Global unscoped role — assigned without a class scope. */
+  app_admin: {
+    admin: ["syncProducts", "viewHealth"],
+  },
 });
 
-export type ClassPermission = PermissionString<typeof permissions>;
-export type ClassRole = keyof typeof roles;
+export type AppPermission = PermissionString<typeof permissions>;
+/** Permissions used inside class scopes (excludes app-level `admin:*`). */
+export type ClassPermission = Exclude<AppPermission, `admin:${string}`>;
 
-export const CLASS_ROLES = Object.keys(roles) as Array<ClassRole>;
+/** Explicit class membership roles — does NOT include `app_admin`. */
+export const CLASS_ROLE_NAMES = [
+  "owner",
+  "teacher",
+  "assistant_teacher",
+  "student",
+  "guardian",
+  "class_member",
+] as const;
+
+export type ClassRole = (typeof CLASS_ROLE_NAMES)[number];
+
+export const CLASS_ROLES: Array<ClassRole> = [...CLASS_ROLE_NAMES];
 
 /** Privilege order for resolving a single display role when multiple are assigned. */
 export const CLASS_ROLE_RANK: Record<ClassRole, number> = {
@@ -71,7 +90,7 @@ export function permissionsForRole(role: ClassRole): Array<string> {
 }
 
 export function isClassRole(value: string): value is ClassRole {
-  return Object.prototype.hasOwnProperty.call(roles, value);
+  return (CLASS_ROLE_NAMES as ReadonlyArray<string>).includes(value);
 }
 
 export function pickHighestClassRole(roleNames: Array<string>): ClassRole | null {

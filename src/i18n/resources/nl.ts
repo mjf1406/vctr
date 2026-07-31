@@ -119,6 +119,8 @@ const nl = {
     finalizeFailed: "Kon het geüploade bestand niet verifiëren",
     invalidType: "Bestandstype is niet toegestaan",
     invalidSize: "Bestand overschrijdt de maximale grootte",
+    invalidContent: "Bestandsinhoud komt niet overeen met een toegestaan type",
+    quotaExceeded: "Opslagquota overschreden",
     abort: "Afbreken",
     retry: "Opnieuw",
 
@@ -148,6 +150,14 @@ const nl = {
     securityDescription: "Gekoppelde providers en sessiebeheer.",
     linkedProvidersTitle: "Gekoppelde providers",
     linkedProvidersEmpty: "Geen gekoppelde providers gevonden.",
+    signOutOtherDevices: "Andere apparaten afmelden",
+    signOutOtherConfirmTitle: "Andere apparaten afmelden?",
+    signOutOtherConfirmDescription: "Sessies op alle apparaten behalve dit intrekken.",
+    signOutOtherConfirmBody:
+      "Je blijft hier aangemeld. Andere browsers en apparaten moeten opnieuw inloggen.",
+    signOutOtherConfirmSubmit: "Andere apparaten afmelden",
+    signOutOtherSuccess: "Andere apparaten afgemeld",
+    signOutOtherFailed: "Kon andere apparaten niet afmelden",
     billingSummaryTitle: "Abonnement",
     billingSummaryDescription:
       "Een kort overzicht van je huidige toegang. Beheer abonnementen bij Facturering.",
@@ -401,6 +411,8 @@ const nl = {
     transferDescription: "Choose a teacher to own {{name}}.",
     transferBody:
       "You will become a teacher in this class. The new owner can manage members and settings.",
+    transferDemotionNote:
+      "Je blijft na de overdracht als docent in de klas — je wordt niet verwijderd.",
     transferLoadFailed: "Could not load people who can receive ownership.",
     transferNoCandidates:
       "No teachers or assistant teachers are available. Add one before transferring, or delete the class.",
@@ -422,6 +434,7 @@ const nl = {
     membersDescription: "Mensen in deze klas met deze rol.",
     membersEmptyTitle: "Nog niemand hier",
     membersEmptyDescription: "Maak een uitnodigingscode om mensen aan deze klas toe te voegen.",
+    unnamedMember: "Naamloos lid",
     membersLoadFailed: "Kon leden niet laden.",
     membersSearchLabel: "Personen zoeken",
     membersSearchPlaceholder: "Personen zoeken…",

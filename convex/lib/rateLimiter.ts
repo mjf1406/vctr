@@ -4,11 +4,13 @@ import { components } from "../_generated/api.js";
 
 export const rateLimiter = new RateLimiter(components.rateLimiter, {
   classCreate: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
+  classCreateGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   classUpdate: { kind: "token bucket", rate: 30, period: MINUTE, capacity: 5 },
   classArchive: { kind: "token bucket", rate: 20, period: MINUTE, capacity: 5 },
   classDelete: { kind: "token bucket", rate: 10, period: HOUR, capacity: 2 },
   classTransferOwnership: { kind: "token bucket", rate: 10, period: HOUR, capacity: 2 },
   accountDelete: { kind: "token bucket", rate: 5, period: HOUR, capacity: 1 },
+  signOutOtherSessions: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
   joinCodeCreate: { kind: "token bucket", rate: 30, period: HOUR, capacity: 5 },
   joinCodeRevoke: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   joinCodeRedeemShort: { kind: "token bucket", rate: 5, period: 5 * MINUTE, capacity: 5 },
@@ -20,15 +22,22 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   memberSuspend: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   memberRemove: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   fileUploadUrl: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
+  fileUploadUrlGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
   fileFinalize: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
+  fileFinalizeGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
   fileDelete: { kind: "token bucket", rate: 60, period: HOUR, capacity: 20 },
   ensureTrialGrant: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },
   updateLanguage: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   billingCheckout: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
+  billingCheckoutGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingPortal: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },
+  billingPortalGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingChange: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
+  billingChangeGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingCancel: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
+  billingCancelGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingOrders: { kind: "token bucket", rate: 60, period: HOUR, capacity: 20 },
+  billingOrdersGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
 });
 
 export type RateLimitName = Parameters<typeof rateLimiter.limit>[1];

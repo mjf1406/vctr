@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
+    "audit": "bun audit",
     "preview": "vp preview",
     "prepare": "vp config"
   },

@@ -7,39 +7,48 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Normalize an email for trial-grant identity.
- * Applies Unicode NFKC, lowercases, trims, strips `+tag`, and strips dots for
- * Gmail/Googlemail. Non-ASCII remaining after NFKC is stripped.
+ * Applies Unicode NFKC, lowercases, and trims. Rejects (returns null) when the
+ * local part contains non-ASCII after NFKC or the address is malformed.
+ * Dot and `+tag` stripping apply only to gmail.com / googlemail.com.
  */
-export function normalizeEmail(email: string): string {
+export function normalizeEmail(email: string): string | null {
   const trimmed = email.normalize("NFKC").trim().toLowerCase();
   const at = trimmed.lastIndexOf("@");
-  if (at <= 0) {
-    return trimmed;
+  if (at <= 0 || at === trimmed.length - 1) {
+    return null;
   }
-  let local = stripNonAscii(trimmed.slice(0, at));
-  const domain = stripNonAscii(trimmed.slice(at + 1));
+  let local = trimmed.slice(0, at);
+  let domain = trimmed.slice(at + 1);
 
-  const plus = local.indexOf("+");
-  if (plus >= 0) {
-    local = local.slice(0, plus);
+  if (!local || !domain || !domain.includes(".")) {
+    return null;
+  }
+  if (hasNonAscii(local) || hasNonAscii(domain)) {
+    return null;
   }
 
   if (domain === "gmail.com" || domain === "googlemail.com") {
+    const plus = local.indexOf("+");
+    if (plus >= 0) {
+      local = local.slice(0, plus);
+    }
     local = local.replaceAll(".", "");
+    if (!local) {
+      return null;
+    }
     return `${local}@gmail.com`;
   }
 
   return `${local}@${domain}`;
 }
 
-function stripNonAscii(value: string): string {
-  let result = "";
+function hasNonAscii(value: string): boolean {
   for (const char of value) {
-    if (char.charCodeAt(0) <= 0x7f) {
-      result += char;
+    if (char.charCodeAt(0) > 0x7f) {
+      return true;
     }
   }
-  return result;
+  return false;
 }
 
 /**
@@ -65,14 +74,23 @@ export async function scheduleTrialExpiry(
 /**
  * Claim (or re-attach) the one-time trial grant for this email.
  * Existing grants keep their original `endsAt` — never reset.
+ * Never steals a grant owned by a live user; never creates a second grant for a user.
  */
 export async function claimTrialGrant(
   ctx: MutationCtx,
   userId: Id<"users">,
   email: string,
 ): Promise<void> {
+  const own = await ctx.db
+    .query("trialGrants")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .first();
+  if (own) {
+    return;
+  }
+
   const emailKey = normalizeEmail(email);
-  if (!emailKey.includes("@")) {
+  if (!emailKey) {
     return;
   }
 
@@ -82,7 +100,8 @@ export async function claimTrialGrant(
     .unique();
 
   if (existing) {
-    if (existing.userId !== userId) {
+    // Reattach only when the grant was cleared on account deletion.
+    if (existing.userId === undefined) {
       await ctx.db.patch("trialGrants", existing._id, { userId });
     }
     return;
