@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
-import { useConvexAuth } from "@convex-dev/auth/react";
 
 import { api } from "../../../convex/_generated/api";
+import { useAuthedQuery } from "@/hooks/useAuthedQuery";
 import { ONE_HOUR } from "@/lib/queryCache";
 
 export function currentUserQueryKey() {
@@ -10,10 +9,5 @@ export function currentUserQueryKey() {
 }
 
 export function useCurrentUser() {
-  const { isAuthenticated } = useConvexAuth();
-
-  return useQuery({
-    ...convexQuery(api.users.currentUser, isAuthenticated ? {} : "skip"),
-    gcTime: ONE_HOUR,
-  });
+  return useAuthedQuery(api.users.currentUser, {}, { gcTime: ONE_HOUR });
 }

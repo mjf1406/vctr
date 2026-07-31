@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 
-import { classScope } from "./lib/authzModel.js";
-import { entitledQuery } from "./lib/customFunctions.js";
+import { entitledClassQuery } from "./lib/customFunctions.js";
 import { permissionSnapshotForScope } from "./lib/permissionSnapshot.js";
 
 const classRoleValidator = v.union(
@@ -16,18 +15,15 @@ const classRoleValidator = v.union(
 /**
  * Effective permission snapshot for the current user in a class.
  * Used by UI gating (sidebar, action menus, page guards).
+ * Requires class:read via entitledClassQuery (uniform CLASS_UNAVAILABLE deny).
  */
-export const forClass = entitledQuery({
+export const forClass = entitledClassQuery({
   args: { classId: v.id("classes") },
   returns: v.object({
     role: v.union(classRoleValidator, v.null()),
     permissions: v.array(v.string()),
   }),
-  handler: async (ctx, args) => {
-    const classDoc = await ctx.db.get("classes", args.classId);
-    if (!classDoc) {
-      return { role: null, permissions: [] };
-    }
-    return await permissionSnapshotForScope(ctx, ctx.userId, classScope(args.classId));
+  handler: async (ctx) => {
+    return await permissionSnapshotForScope(ctx, ctx.userId, ctx.scope);
   },
 });

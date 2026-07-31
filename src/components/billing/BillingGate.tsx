@@ -1,7 +1,6 @@
 import PendingComponent from "@/components/loading/PendingComponent";
 import { useEntitlement } from "@/hooks/billing/useEntitlement";
-import { api } from "../../../convex/_generated/api";
-import { useConvexMutation } from "@convex-dev/react-query";
+import { useEnsureTrialGrant } from "@/hooks/billing/useEnsureTrialGrant";
 import { Navigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -20,7 +19,7 @@ function isAllowlisted(pathname: string): boolean {
 export function BillingGate({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { data, entitlement, isPending, isAuthLoading, refetch } = useEntitlement();
-  const ensureTrialGrant = useConvexMutation(api.billing.ensureTrialGrant);
+  const { mutateAsync: ensureTrialGrant } = useEnsureTrialGrant();
   const [ensureSettled, setEnsureSettled] = useState(false);
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export function BillingGate({ children }: { children: ReactNode }) {
       return;
     }
     let cancelled = false;
-    void ensureTrialGrant({})
+    void ensureTrialGrant()
       .then(async () => {
         await refetch();
       })

@@ -1,15 +1,11 @@
 import { PolarEmbedCheckout } from "@polar-sh/checkout/embed";
-import { useAction } from "convex/react";
-import { useTranslation } from "react-i18next";
 
 import type { VariantProps } from "class-variance-authority";
 import type { ReactNode } from "react";
 
-import { api } from "../../../convex/_generated/api";
 import { AsyncButton } from "@/components/ui/async-button";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { toast } from "@/components/ui/toast-manager";
-import { billingMessageFromError } from "@/lib/billing/errors";
+import { useCreateCheckoutLink } from "@/hooks/billing/useCreateCheckoutLink";
 
 type CheckoutButtonProps = {
   productId: string;
@@ -30,9 +26,7 @@ export function CheckoutButton({
   className,
   variant = "secondary",
 }: CheckoutButtonProps) {
-  const { t } = useTranslation("billing");
-  const { t: tCommon } = useTranslation("common");
-  const generateCheckoutLink = useAction(api.billingActions.createCheckoutLink);
+  const createCheckoutLink = useCreateCheckoutLink();
 
   return (
     <AsyncButton
@@ -40,19 +34,9 @@ export function CheckoutButton({
       variant={variant}
       className={className}
       onClick={async () => {
-        try {
-          PolarEmbedCheckout.init();
-          const { url } = await generateCheckoutLink({
-            productId,
-          });
-          await PolarEmbedCheckout.create(url, { theme });
-        } catch (error) {
-          toast.add({
-            type: "error",
-            title: billingMessageFromError(error, t, t("checkoutFailed"), tCommon("rateLimited")),
-          });
-          throw error;
-        }
+        PolarEmbedCheckout.init();
+        const { url } = await createCheckoutLink.mutateAsync({ productId });
+        await PolarEmbedCheckout.create(url, { theme });
       }}
     >
       {children}
