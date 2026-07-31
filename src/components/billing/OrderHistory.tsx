@@ -4,6 +4,7 @@ import { AsyncButton } from "@/components/ui/async-button";
 import { Badge } from "@/components/ui/badge";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { surfaceVariants } from "@/components/ui/surface-variants";
 import {
   Table,
   TableBody,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { useBillingHistory } from "@/hooks/billing/useBillingHistory";
 import { formatBillingDate, formatBillingMoney } from "@/lib/billing/format";
+import { cn } from "@/lib/utils";
 
 function orderStatusLabel(status: string, paid: boolean, t: (key: string) => string): string {
   if (paid || status === "paid") {
@@ -62,7 +64,7 @@ export function OrderHistory() {
       ) : null}
 
       {!isPending && !isError && items.length > 0 ? (
-        <div className="rounded-2xl ring-1 ring-foreground/10">
+        <div className={cn("overflow-hidden", surfaceVariants({ tier: "card" }))}>
           <Table>
             <TableHeader>
               <TableRow>

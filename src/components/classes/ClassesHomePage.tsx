@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { surfaceVariants } from "@/components/ui/surface-variants";
 import { useClasses } from "@/hooks/classes/useClasses";
 import { useClassSearch } from "@/hooks/classes/useClassSearch";
 import { useCreateClass } from "@/hooks/classes/useCreateClass";
@@ -51,7 +52,7 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
         {items.map((index) => (
           <div
             key={index}
-            className="flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10"
+            className={cn("flex items-center gap-3 p-4", surfaceVariants({ tier: "card" }))}
           >
             <Skeleton className="size-10 rounded-lg" />
             <div className="min-w-0 flex-1">

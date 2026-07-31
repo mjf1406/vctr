@@ -7,6 +7,7 @@ import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
 import { ActionMenu, type ActionMenuItem } from "@/components/ui/action-menu";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { surfaceVariants } from "@/components/ui/surface-variants";
 import type { ClassPublic } from "@/lib/classes/classes";
 import type { ClassViewMode } from "@/lib/classes/classSort";
 import { cn } from "@/lib/utils";
@@ -83,7 +84,8 @@ export function ClassCard({
     return (
       <div
         className={cn(
-          "relative flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10 transition-colors hover:bg-accent/40",
+          "relative flex items-center gap-3 p-4",
+          surfaceVariants({ tier: "card", interactive: !isArchived }),
           isArchived && "opacity-80",
         )}
       >
@@ -105,7 +107,8 @@ export function ClassCard({
   return (
     <Card
       size="sm"
-      className={cn("relative transition-colors hover:bg-accent/40", isArchived && "opacity-80")}
+      interactive={!isArchived}
+      className={cn("relative", isArchived && "opacity-80")}
     >
       {openLink}
       <CardHeader className="relative z-10 flex flex-row items-start gap-3 pointer-events-none">
