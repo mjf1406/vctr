@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
+import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
 
 type ProfileUser = {
   _id: string;
@@ -44,6 +45,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
 
   const displayName = getDisplayName(user);
   const initials = getInitials(user);
+  const safeImage = sanitizeAvatarUrl(user.image);
 
   return (
     <Card>
@@ -53,7 +55,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
       </CardHeader>
       <CardContent className="flex items-center gap-4">
         <Avatar className="size-14">
-          {user.image ? <AvatarImage src={user.image} alt={displayName} /> : null}
+          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <dl className="flex min-w-0 flex-1 flex-col gap-1">

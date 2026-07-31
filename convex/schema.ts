@@ -46,9 +46,27 @@ const schema = defineSchema({
     userId: v.optional(v.id("users")),
     startedAt: v.number(),
     endsAt: v.number(),
+    /** Set by the scheduled `markExpired` job when the trial lapses. */
+    expiredAt: v.optional(v.number()),
+    expirationJobId: v.optional(v.id("_scheduled_functions")),
   })
     .index("by_emailKey", ["emailKey"])
     .index("by_userId", ["userId"]),
+  /**
+   * Ownership registry for Convex storage blobs.
+   * Only finalized uploads (validated MIME/size) get a row.
+   */
+  files: defineTable({
+    storageId: v.id("_storage"),
+    userId: v.id("users"),
+    name: v.string(),
+    contentType: v.string(),
+    size: v.number(),
+    preset: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_storageId", ["storageId"]),
 });
 
 export default schema;

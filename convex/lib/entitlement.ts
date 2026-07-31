@@ -1,7 +1,7 @@
 import { ConvexError } from "convex/values";
 
 import type { Id } from "../_generated/dataModel.js";
-import type { MutationCtx } from "../_generated/server.js";
+import type { MutationCtx, QueryCtx } from "../_generated/server.js";
 import { polar } from "../polar.js";
 
 const ACTIVE_STATUSES = new Set(["active", "trialing"]);
@@ -9,9 +9,14 @@ const ACTIVE_STATUSES = new Set(["active", "trialing"]);
 /**
  * Throws if the user has no active/trialing Polar subscription and their
  * app-managed trial has ended. Read-only — does not claim a trial grant.
- * Safe to call from mutations (`Date.now` OK).
+ *
+ * Query-safe: uses the scheduled `expiredAt` flag instead of `Date.now()`.
+ * Mutations also re-check `endsAt` so a delayed scheduler run cannot grant a write window.
  */
-export async function assertEntitled(ctx: MutationCtx, userId: Id<"users">): Promise<void> {
+export async function assertEntitled(
+  ctx: QueryCtx | MutationCtx,
+  userId: Id<"users">,
+): Promise<void> {
   const subscription = await polar.getCurrentSubscription(ctx, { userId });
   if (subscription && ACTIVE_STATUSES.has(subscription.status)) {
     return;
@@ -22,7 +27,15 @@ export async function assertEntitled(ctx: MutationCtx, userId: Id<"users">): Pro
     .withIndex("by_userId", (q) => q.eq("userId", userId))
     .unique();
 
-  if (grant && grant.endsAt > Date.now()) {
+  if (grant && grant.expiredAt === undefined) {
+    // Belt-and-braces on mutations only: reject if endsAt has passed but the
+    // scheduled job has not yet flipped expiredAt.
+    if ("scheduler" in ctx && grant.endsAt <= Date.now()) {
+      throw new ConvexError({
+        code: "SUBSCRIPTION_REQUIRED",
+        message: "Subscription required. Your free trial has ended.",
+      });
+    }
     return;
   }
 

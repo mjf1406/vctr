@@ -113,6 +113,9 @@ const th = {
     uploaded: "อัปโหลดแล้ว",
     cancelled: "ยกเลิกแล้ว",
     uploadFailed: "อัปโหลดไม่สำเร็จ",
+    finalizeFailed: "ไม่สามารถตรวจสอบไฟล์ที่อัปโหลดได้",
+    invalidType: "ประเภทไฟล์ไม่ได้รับอนุญาต",
+    invalidSize: "ไฟล์มีขนาดเกินที่อนุญาต",
     abort: "ยกเลิก",
     retry: "ลองใหม่",
 

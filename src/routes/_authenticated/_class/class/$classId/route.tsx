@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { AppFooter } from "@/components/navigation/AppFooter";
@@ -21,15 +21,20 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useClass } from "@/hooks/classes/useClass";
+import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
   component: function ClassLayout() {
     const { classId: classIdParam } = Route.useParams();
     const classId = classIdParam as Id<"classes">;
-    const { data: classDoc, isPending, isError, refetch } = useClass(classId);
+    const { data: classDoc, isPending, isError, error, refetch } = useClass(classId);
     const { t } = useTranslation("classes");
     const { t: tCommon } = useTranslation("common");
+
+    if (!isPending && isError && isSubscriptionRequiredError(error)) {
+      return <Navigate to="/billing" replace />;
+    }
 
     if (!isPending && (isError || !classDoc)) {
       return (

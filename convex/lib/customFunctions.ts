@@ -12,6 +12,11 @@ import { assertEntitled } from "./entitlement.js";
 
 type AuthedCtx = (QueryCtx | MutationCtx) & { userId: Id<"users"> };
 
+/**
+ * Load a class and inject scope + can/require helpers.
+ * Requires `class:read` so non-members get the same CLASS_UNAVAILABLE denial
+ * for both real and fabricated class IDs (no existence oracle).
+ */
 async function loadClassContext(ctx: AuthedCtx, classId: Id<"classes">) {
   const classDoc = await ctx.db.get("classes", classId);
   if (!classDoc) {
@@ -38,6 +43,9 @@ async function loadClassContext(ctx: AuthedCtx, classId: Id<"classes">) {
       });
     }
   };
+
+  // Uniform deny for non-members — closes the existence oracle on class-scoped queries.
+  await requirePermission("class:read");
 
   return {
     classDoc: classDoc as Doc<"classes">,
@@ -86,6 +94,18 @@ export const authedQuery = customQuery(query, {
 });
 
 /**
+ * Query wrapper that requires authentication + an active trial or subscription.
+ * Use for class/tenant data reads that should not work after the free trial expires.
+ */
+export const entitledQuery = customQuery(authedQuery, {
+  args: {},
+  input: async (ctx) => {
+    await assertEntitled(ctx, ctx.userId);
+    return { ctx, args: {} };
+  },
+});
+
+/**
  * Class-scoped mutation: loads the class, injects scope + can/require helpers.
  * Callers still enforce the specific permission they need via `ctx.require(...)`.
  * Does not require entitlement (exit paths: delete, transfer ownership).
@@ -124,9 +144,27 @@ export const entitledClassMutation = customMutation(entitledMutation, {
 
 /**
  * Class-scoped query: loads the class, injects scope + can/require helpers.
- * Soft-deny (e.g. no class:read) should still be handled in the handler via `ctx.can`.
+ * Does not require entitlement (exit paths that still need class context).
  */
 export const classQuery = customQuery(authedQuery, {
+  args: { classId: v.id("classes") },
+  input: async (ctx, args) => {
+    const classCtx = await loadClassContext(ctx, args.classId);
+    return {
+      ctx: {
+        ...ctx,
+        ...classCtx,
+      },
+      args: {},
+    };
+  },
+});
+
+/**
+ * Class-scoped query that also requires an active trial or subscription.
+ * Use for class/member/invitation reads that should lock out after trial expiry.
+ */
+export const entitledClassQuery = customQuery(entitledQuery, {
   args: { classId: v.id("classes") },
   input: async (ctx, args) => {
     const classCtx = await loadClassContext(ctx, args.classId);

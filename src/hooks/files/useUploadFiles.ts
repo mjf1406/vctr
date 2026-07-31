@@ -5,10 +5,16 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { UploadPresetKey, UploadPreset } from "@/lib/upload/acceptPresets";
 import { getUploadPreset } from "@/lib/upload/acceptPresets";
+import { codeFromError } from "@/lib/errors/convexError";
 
 export type UploadFileStatus = "queued" | "uploading" | "done" | "error" | "aborted";
 
-export type UploadErrorCode = "invalid_type" | "invalid_size" | "upload_failed" | "aborted";
+export type UploadErrorCode =
+  | "invalid_type"
+  | "invalid_size"
+  | "upload_failed"
+  | "finalize_failed"
+  | "aborted";
 
 export type UploadFileItem = {
   id: string;
@@ -17,6 +23,7 @@ export type UploadFileItem = {
   progress: number; // 0..100
   attempt: number;
   storageId?: Id<"_storage">;
+  fileId?: Id<"files">;
   errorCode?: UploadErrorCode;
 };
 
@@ -38,6 +45,16 @@ function getFileExtension(file: File): string | null {
     return null;
   }
   return name.slice(idx);
+}
+
+function finalizeErrorCode(error: unknown): UploadErrorCode {
+  const code = codeFromError(error);
+  if (code === "INVALID_UPLOAD_SIZE") return "invalid_size";
+  if (code === "INVALID_UPLOAD_TYPE") return "invalid_type";
+  if (code === "INVALID_UPLOAD" || code === "UPLOAD_NOT_FOUND" || code === "UPLOAD_FORBIDDEN") {
+    return "finalize_failed";
+  }
+  return "finalize_failed";
 }
 
 async function uploadViaXhr(opts: {
@@ -119,6 +136,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
   }, []);
 
   const generateUploadUrlMutation = useConvexMutation(api.files.generateUploadUrl);
+  const finalizeUploadMutation = useConvexMutation(api.files.finalizeUpload);
 
   const xhrByIdRef = useRef<Map<string, () => void>>(new Map());
   const processingRef = useRef(false);
@@ -153,6 +171,12 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
           },
         });
 
+        const fileId = await finalizeUploadMutation({
+          storageId: result.storageId,
+          name: item.file.name,
+          preset: presetKey,
+        });
+
         setItemsSync((prev) =>
           prev.map((it) =>
             it.id === item.id
@@ -160,6 +184,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
                   ...it,
                   status: "done",
                   storageId: result.storageId,
+                  fileId,
                   progress: 100,
                 }
               : it,
@@ -167,11 +192,22 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
         );
       } catch (e) {
         const message = e instanceof Error ? e.message : "upload_failed";
-        const errorCode: UploadErrorCode = message === "aborted" ? "aborted" : "upload_failed";
+        let errorCode: UploadErrorCode;
+        if (message === "aborted") {
+          errorCode = "aborted";
+        } else if (codeFromError(e) !== undefined) {
+          errorCode = finalizeErrorCode(e);
+        } else {
+          errorCode = "upload_failed";
+        }
         setItemsSync((prev) =>
           prev.map((it) =>
             it.id === item.id
-              ? { ...it, status: errorCode === "aborted" ? "aborted" : "error", errorCode }
+              ? {
+                  ...it,
+                  status: errorCode === "aborted" ? "aborted" : "error",
+                  errorCode,
+                }
               : it,
           ),
         );
@@ -179,7 +215,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
         xhrByIdRef.current.delete(item.id);
       }
     },
-    [generateUploadUrlMutation, setItemsSync],
+    [finalizeUploadMutation, generateUploadUrlMutation, presetKey, setItemsSync],
   );
 
   const processQueue = useCallback(async () => {

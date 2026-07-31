@@ -116,6 +116,9 @@ const nl = {
     uploaded: "Geüpload",
     cancelled: "Geannuleerd",
     uploadFailed: "Upload mislukt",
+    finalizeFailed: "Kon het geüploade bestand niet verifiëren",
+    invalidType: "Bestandstype is niet toegestaan",
+    invalidSize: "Bestand overschrijdt de maximale grootte",
     abort: "Afbreken",
     retry: "Opnieuw",
 

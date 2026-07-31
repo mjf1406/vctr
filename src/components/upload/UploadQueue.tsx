@@ -31,7 +31,14 @@ export function UploadQueue({ items, onAbort, onRetry }: UploadQueueProps) {
                   {item.status === "uploading" && `${t("uploading")} (${item.progress}%)`}
                   {item.status === "done" && t("uploaded")}
                   {item.status === "aborted" && t("cancelled")}
-                  {item.status === "error" && t("uploadFailed")}
+                  {item.status === "error" &&
+                    (item.errorCode === "invalid_type"
+                      ? t("invalidType")
+                      : item.errorCode === "invalid_size"
+                        ? t("invalidSize")
+                        : item.errorCode === "finalize_failed"
+                          ? t("finalizeFailed")
+                          : t("uploadFailed"))}
                 </div>
               </div>
 

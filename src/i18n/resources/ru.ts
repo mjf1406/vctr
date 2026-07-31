@@ -116,6 +116,9 @@ const ru = {
     uploaded: "Uploaded",
     cancelled: "Cancelled",
     uploadFailed: "Upload failed",
+    finalizeFailed: "Could not verify the uploaded file",
+    invalidType: "File type is not allowed",
+    invalidSize: "File exceeds the maximum allowed size",
     abort: "Abort",
     retry: "Retry",
 

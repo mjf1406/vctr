@@ -316,9 +316,14 @@ vp test
 - [ ] `bunx @convex-dev/auth --prod`
 - [ ] Set `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` on **prod**
 - [ ] Google OAuth origins + redirect URI for prod SPA + prod `{CONVEX_SITE_URL}/api/auth/callback/google`
-- [ ] Set Polar prod env (`POLAR_SERVER=production`, `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, product IDs) and a prod webhook to prod `{CONVEX_SITE_URL}/polar/events`
+- [ ] **Polar (required — empty credentials now throw):** set `POLAR_SERVER=production` explicitly (do not omit; omitted defaults to sandbox)
+- [ ] Set `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_PRODUCT_MONTHLY_ID`, `POLAR_PRODUCT_YEARLY_ID` on prod
+- [ ] Point a Polar **production** webhook at prod `{CONVEX_SITE_URL}/polar/events`
+- [ ] Confirm via admin `polar:billingHealth` that all presence flags are `true` and `server` is `production`
+- [ ] After first deploy with trial expiry jobs: `bunx convex run trialBackfill:scheduleExpiryJobs`
 - [ ] `APP_CONFIG.appUrl` / marketing / legal URLs point at production
 - [ ] Build SPA with prod `VITE_CONVEX_URL` / `VITE_CONVEX_SITE_URL`
+- [ ] Confirm Cloudflare Pages (or your host) serves `public/_headers` (CSP, HSTS, frame deny)
 
 ---
 

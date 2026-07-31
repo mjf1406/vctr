@@ -5,6 +5,7 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
 import { classesListQueryKey } from "@/hooks/classes/useClasses";
+import { ownedClassesQueryKey } from "@/hooks/classes/useOwnedClasses";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import type { ClassPublic } from "@/lib/classes/classes";
 import { messageFromError } from "@/lib/errors/convexError";
@@ -21,10 +22,11 @@ export function useCreateClass() {
   const { t: tCommon } = useTranslation("common");
   const mutationFn = useConvexMutation(api.classes.create);
   const queryKey = classesListQueryKey();
+  const ownedKey = ownedClassesQueryKey();
 
   return useOptimisticMutation({
     mutationFn: (args: CreateClassArgs) => mutationFn(args),
-    queryKeys: [queryKey],
+    queryKeys: [queryKey, ownedKey],
     applyOptimisticUpdate: (queryClient, args) => {
       const optimisticId = `optimistic:${crypto.randomUUID()}` as Id<"classes">;
       const now = Date.now();

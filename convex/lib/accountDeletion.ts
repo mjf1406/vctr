@@ -109,6 +109,18 @@ async function deleteJoinCodesCreatedByUser(ctx: MutationCtx, userId: Id<"users"
   }
 }
 
+async function deleteFilesForUser(ctx: MutationCtx, userId: Id<"users">): Promise<void> {
+  // eslint-disable-next-line @convex-dev/no-collect-in-query -- per-user uploads are bounded by rate limits
+  const files = await ctx.db
+    .query("files")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .collect();
+  for (const file of files) {
+    await ctx.storage.delete(file.storageId);
+    await ctx.db.delete("files", file._id);
+  }
+}
+
 async function deleteUserSettings(ctx: MutationCtx, userId: Id<"users">): Promise<void> {
   const settings = await ctx.db
     .query("userSettings")
@@ -150,6 +162,7 @@ export async function deleteAccountData(ctx: MutationCtx, userId: Id<"users">): 
   }
 
   await deleteJoinCodesCreatedByUser(ctx, userId);
+  await deleteFilesForUser(ctx, userId);
   await deleteUserSettings(ctx, userId);
   await authz.deprovisionUser(ctx, userId, { actorId: userId, enableAudit: true });
   await deleteAuthSessionsForUser(ctx, userId);

@@ -68,7 +68,7 @@ export const Route = createFileRoute("/_authenticated/_app/account")({
           onSignOut={handleSignOut}
         />
         <BillingSummaryCard />
-        <DangerZoneCard userId={userQuery.data?._id} email={userQuery.data?.email} />
+        <DangerZoneCard email={userQuery.data?.email} />
       </div>
     );
   },

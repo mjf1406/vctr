@@ -11,6 +11,7 @@ import {
   type ClassMemberPublic,
 } from "@/lib/members/members";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
+import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
 
 type MemberRowProps = {
   member: ClassMemberPublic;
@@ -33,12 +34,13 @@ export function MemberRow({ member, isSelf, onRemove }: MemberRowProps) {
   });
   const removePermission = removePermissionForMember(member.role);
   const showRemove = !isSelf && removePermission !== null;
+  const safeImage = sanitizeAvatarUrl(member.image);
 
   return (
     <div className="flex h-full flex-col gap-3 rounded-2xl border p-4">
       <div className="flex min-w-0 flex-col items-center gap-2 text-center">
         <Avatar className="size-12">
-          {member.image ? <AvatarImage src={member.image} alt={displayName} /> : null}
+          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="flex min-w-0 flex-col items-center gap-1">

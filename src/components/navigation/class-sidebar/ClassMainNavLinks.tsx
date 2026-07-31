@@ -57,12 +57,12 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
   const { isMobile, state, setOpenMobile } = useSidebar();
   const { can, isPending } = useCan();
   const classId = classDoc._id;
-  const { data: memberCounts } = useClassMemberCounts(classId);
+  const { data: memberCounts, isError: memberCountsError } = useClassMemberCounts(classId);
   const peopleCollapsed = state === "collapsed" && !isMobile;
   const [peopleOpen, setPeopleOpen] = useState(false);
 
   const countFor = (role: MemberListRole | undefined): number | null => {
-    if (!role || !memberCounts) return null;
+    if (!role || !memberCounts || memberCountsError) return null;
     return memberCounts[role];
   };
 

@@ -20,6 +20,8 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   memberSuspend: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   memberRemove: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   fileUploadUrl: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
+  fileFinalize: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
+  fileDelete: { kind: "token bucket", rate: 60, period: HOUR, capacity: 20 },
   ensureTrialGrant: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },
   updateLanguage: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   billingCheckout: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },

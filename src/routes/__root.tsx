@@ -1,6 +1,6 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
+import { RouterDevtools } from "@/components/dev/RouterDevtools";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { RootErrorComponent } from "@/components/errors/RootErrorComponent";
 
@@ -19,7 +19,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <Outlet />
-      <TanStackRouterDevtools />
+      <RouterDevtools />
     </>
   ),
 });

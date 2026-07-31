@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { classScope } from "./lib/authzModel.js";
-import { authedQuery } from "./lib/customFunctions.js";
+import { entitledQuery } from "./lib/customFunctions.js";
 import { permissionSnapshotForScope } from "./lib/permissionSnapshot.js";
 
 const classRoleValidator = v.union(
@@ -17,7 +17,7 @@ const classRoleValidator = v.union(
  * Effective permission snapshot for the current user in a class.
  * Used by UI gating (sidebar, action menus, page guards).
  */
-export const forClass = authedQuery({
+export const forClass = entitledQuery({
   args: { classId: v.id("classes") },
   returns: v.object({
     role: v.union(classRoleValidator, v.null()),

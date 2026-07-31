@@ -1,10 +1,12 @@
 import { useMemo, type ReactNode } from "react";
+import { Navigate } from "@tanstack/react-router";
 
 import {
   ClassPermissionsContext,
   type ClassPermissionsContextValue,
 } from "@/components/permissions/classPermissionsContext";
 import { useClassPermissions } from "@/hooks/permissions/useClassPermissions";
+import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import {
   createPermissionChecker,
   permissionsFromRole,
@@ -43,16 +45,20 @@ function ClassPermissionsFromQuery({
   classId: Id<"classes">;
   children: ReactNode;
 }) {
-  const { data, isPending } = useClassPermissions(classId);
+  const { data, isPending, isError, error } = useClassPermissions(classId);
   const value = useMemo<ClassPermissionsContextValue>(() => {
     const permissions = data?.permissions ?? [];
     return {
       role: (data?.role as ClassRole | null | undefined) ?? null,
       permissions,
       can: createPermissionChecker(permissions),
-      isPending,
+      isPending: isPending || isError,
     };
-  }, [data, isPending]);
+  }, [data, isPending, isError]);
+
+  if (isError && isSubscriptionRequiredError(error)) {
+    return <Navigate to="/billing" replace />;
+  }
 
   return (
     <ClassPermissionsContext.Provider value={value}>{children}</ClassPermissionsContext.Provider>

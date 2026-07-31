@@ -17,7 +17,7 @@ import {
   SUSPEND_PERMISSION_BY_ROLE,
   type MemberListRole,
 } from "./lib/authzModel.js";
-import { classQuery, entitledClassMutation } from "./lib/customFunctions.js";
+import { entitledClassMutation, entitledClassQuery } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 
 const memberListRoleValidator = v.union(
@@ -115,7 +115,7 @@ export const setSuspended = entitledClassMutation({
  * List members for a people page (teachers includes owners).
  * Class people lists are intentionally small / classroom-sized.
  */
-export const listByRole = classQuery({
+export const listByRole = entitledClassQuery({
   args: {
     role: memberListRoleValidator,
   },
@@ -187,7 +187,7 @@ export const listByRole = classQuery({
  * Sidebar counts per people-list role.
  * Returns null for roles the viewer cannot read.
  */
-export const countsByRole = classQuery({
+export const countsByRole = entitledClassQuery({
   args: {},
   returns: memberCountsValidator,
   handler: async (ctx) => {

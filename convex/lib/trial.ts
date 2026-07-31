@@ -1,4 +1,5 @@
 import { APP_CONFIG } from "../appConfig.js";
+import { internal } from "../_generated/api.js";
 import type { Id } from "../_generated/dataModel.js";
 import type { MutationCtx } from "../_generated/server.js";
 
@@ -42,6 +43,26 @@ function stripNonAscii(value: string): string {
 }
 
 /**
+ * Schedule (or re-schedule) the trial expiry flip for a grant.
+ * Cancels any previous job first.
+ */
+export async function scheduleTrialExpiry(
+  ctx: MutationCtx,
+  grantId: Id<"trialGrants">,
+  endsAt: number,
+  previousJobId?: Id<"_scheduled_functions">,
+): Promise<Id<"_scheduled_functions">> {
+  if (previousJobId !== undefined) {
+    try {
+      await ctx.scheduler.cancel(previousJobId);
+    } catch {
+      // Job may already have run or been cancelled.
+    }
+  }
+  return await ctx.scheduler.runAt(endsAt, internal.trial.markExpired, { grantId });
+}
+
+/**
  * Claim (or re-attach) the one-time trial grant for this email.
  * Existing grants keep their original `endsAt` — never reset.
  */
@@ -68,10 +89,13 @@ export async function claimTrialGrant(
   }
 
   const now = Date.now();
-  await ctx.db.insert("trialGrants", {
+  const endsAt = now + APP_CONFIG.trial.days * MS_PER_DAY;
+  const grantId = await ctx.db.insert("trialGrants", {
     emailKey,
     userId,
     startedAt: now,
-    endsAt: now + APP_CONFIG.trial.days * MS_PER_DAY,
+    endsAt,
   });
+  const expirationJobId = await scheduleTrialExpiry(ctx, grantId, endsAt);
+  await ctx.db.patch("trialGrants", grantId, { expirationJobId });
 }

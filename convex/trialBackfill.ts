@@ -2,7 +2,7 @@ import { v } from "convex/values";
 
 import { internalMutation } from "./_generated/server.js";
 import type { Doc, Id } from "./_generated/dataModel.js";
-import { claimTrialGrant, normalizeEmail } from "./lib/trial.js";
+import { claimTrialGrant, normalizeEmail, scheduleTrialExpiry } from "./lib/trial.js";
 
 /**
  * Recompute trial grant emailKeys after NFKC normalization changes,
@@ -78,5 +78,49 @@ export const normalizeEmailKeys = internalMutation({
     }
 
     return { updated, merged, claimed };
+  },
+});
+
+/**
+ * Schedule `markExpired` (or set `expiredAt` immediately) for every trial grant
+ * that lacks an expiration job. Required after deploying the scheduled-expiry flag.
+ *
+ *   bunx convex run trialBackfill:scheduleExpiryJobs
+ */
+export const scheduleExpiryJobs = internalMutation({
+  args: {},
+  returns: v.object({
+    expired: v.number(),
+    scheduled: v.number(),
+    skipped: v.number(),
+  }),
+  handler: async (ctx) => {
+    // eslint-disable-next-line @convex-dev/no-collect-in-query -- one-shot backfill
+    const grants = await ctx.db.query("trialGrants").collect();
+    const now = Date.now();
+    let expired = 0;
+    let scheduled = 0;
+    let skipped = 0;
+
+    for (const grant of grants) {
+      if (grant.expiredAt !== undefined) {
+        skipped += 1;
+        continue;
+      }
+      if (grant.endsAt <= now) {
+        await ctx.db.patch("trialGrants", grant._id, { expiredAt: now });
+        expired += 1;
+        continue;
+      }
+      if (grant.expirationJobId !== undefined) {
+        skipped += 1;
+        continue;
+      }
+      const expirationJobId = await scheduleTrialExpiry(ctx, grant._id, grant.endsAt);
+      await ctx.db.patch("trialGrants", grant._id, { expirationJobId });
+      scheduled += 1;
+    }
+
+    return { expired, scheduled, skipped };
   },
 });

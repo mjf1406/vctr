@@ -18,6 +18,7 @@ import {
   classQuery,
   entitledClassMutation,
   entitledMutation,
+  entitledQuery,
 } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
@@ -132,7 +133,7 @@ async function revokeAllClassMembership(ctx: MutationCtx, classId: Id<"classes">
   }
 }
 
-export const listMine = authedQuery({
+export const listMine = entitledQuery({
   args: {},
   returns: v.array(classWithRoleValidator),
   handler: async (ctx) => {
@@ -172,7 +173,25 @@ export const listMine = authedQuery({
   },
 });
 
-export const get = authedQuery({
+/**
+ * Classes owned by the current user.
+ * Intentionally ungated by entitlement so expired owners can still transfer or
+ * delete classes from /account (exit path for the owns_classes deletion blocker).
+ */
+export const listOwned = authedQuery({
+  args: {},
+  returns: v.array(classValidator),
+  handler: async (ctx) => {
+    // eslint-disable-next-line @convex-dev/no-collect-in-query -- owned classes per user are bounded
+    const owned = await ctx.db
+      .query("classes")
+      .withIndex("by_owner", (q) => q.eq("ownerId", ctx.userId))
+      .collect();
+    return owned;
+  },
+});
+
+export const get = entitledQuery({
   args: { classId: v.id("classes") },
   returns: v.union(classValidator, v.null()),
   handler: async (ctx, args) => {

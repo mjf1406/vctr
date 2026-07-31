@@ -10,7 +10,11 @@ import {
   type JoinCodeRole,
 } from "./lib/authzModel.js";
 import { deleteJoinCodeById } from "./lib/joinCodesCleanup.js";
-import { authedMutation, classQuery, entitledClassMutation } from "./lib/customFunctions.js";
+import {
+  authedMutation,
+  entitledClassMutation,
+  entitledClassQuery,
+} from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { authz } from "./authz.js";
 import { internal } from "./_generated/api.js";
@@ -105,7 +109,7 @@ function toPublicJoinCode(doc: Doc<"joinCodes">) {
   };
 }
 
-export const listForClass = classQuery({
+export const listForClass = entitledClassQuery({
   args: {
     now: v.number(),
   },

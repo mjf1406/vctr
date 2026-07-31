@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { DeleteAccountCredenza } from "@/components/account/DeleteAccountCredenza";
@@ -9,14 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDeleteClass } from "@/hooks/classes/useDeleteClass";
-import { useClasses } from "@/hooks/classes/useClasses";
+import { useOwnedClasses } from "@/hooks/classes/useOwnedClasses";
 import { useTransferOwnership } from "@/hooks/classes/useTransferOwnership";
 import { useAccountDeletionBlockers } from "@/hooks/user/useAccountDeletionBlockers";
 import { useDeleteAccount } from "@/hooks/user/useDeleteAccount";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type DangerZoneCardProps = {
-  userId: string | undefined;
   email: string | null | undefined;
 };
 
@@ -26,7 +25,7 @@ type OwnedClassAction = {
   mode: "transfer" | "delete";
 };
 
-export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
+export function DangerZoneCard({ email }: DangerZoneCardProps) {
   const { t } = useTranslation("account");
   const { t: tClasses } = useTranslation("classes");
   const [open, setOpen] = useState(false);
@@ -39,12 +38,7 @@ export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
     isPending: blockersPending,
     isError: blockersError,
   } = useAccountDeletionBlockers();
-  const { data: classes } = useClasses();
-
-  const ownedClasses = useMemo(() => {
-    if (!userId || !classes) return [];
-    return classes.filter((classDoc) => classDoc.ownerId === userId);
-  }, [classes, userId]);
+  const { data: ownedClasses = [] } = useOwnedClasses();
 
   const blocked = (blockers?.length ?? 0) > 0;
   const ownsClasses = blockers?.includes("owns_classes") ?? false;

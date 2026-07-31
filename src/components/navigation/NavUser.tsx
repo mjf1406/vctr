@@ -8,6 +8,7 @@ import { useEntitlement } from "@/hooks/billing/useEntitlement";
 import { useCurrentUser } from "@/hooks/user/useCurrentUser";
 import { buildPlanSummary } from "@/lib/billing/planSummary";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
+import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -97,6 +98,7 @@ function NavUserAvatar() {
 
   const displayName = getDisplayName(user);
   const initials = getInitials(user);
+  const safeImage = sanitizeAvatarUrl(user.image);
 
   return (
     <DropdownMenu>
@@ -111,7 +113,7 @@ function NavUserAvatar() {
         }
       >
         <Avatar>
-          {user.image ? <AvatarImage src={user.image} alt={displayName} /> : null}
+          {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -184,6 +186,7 @@ function NavUserSidebar() {
 
   const displayName = getDisplayName(user);
   const initials = getInitials(user);
+  const safeImage = sanitizeAvatarUrl(user.image);
 
   return (
     <SidebarMenu>
@@ -198,7 +201,7 @@ function NavUserSidebar() {
             }
           >
             <Avatar className="size-8 rounded-lg">
-              {user.image ? <AvatarImage src={user.image} alt={displayName} /> : null}
+              {safeImage ? <AvatarImage src={safeImage} alt={displayName} /> : null}
               <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
