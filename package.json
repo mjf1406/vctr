@@ -14,7 +14,7 @@
     "prepare": "vp config"
   },
   "dependencies": {
-    "@auth/core": "0.41.1",
+    "@auth/core": "0.41.3",
     "@base-ui/react": "^1.6.0",
     "@convex-dev/auth": "^0.0.94",
     "@convex-dev/migrations": "^0.3.6",

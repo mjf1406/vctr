@@ -2,6 +2,7 @@ import { v } from "convex/values";
 
 import { polar } from "./polar.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
+import { rateLimiter } from "./lib/rateLimiter.js";
 import { claimTrialGrant } from "./lib/trial.js";
 
 const subscriptionSummaryValidator = v.object({
@@ -80,6 +81,7 @@ export const ensureTrialGrant = authedMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
+    await rateLimiter.limit(ctx, "ensureTrialGrant", { key: ctx.userId, throws: true });
     const user = await ctx.db.get("users", ctx.userId);
     if (user?.email) {
       await claimTrialGrant(ctx, ctx.userId, user.email);

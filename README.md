@@ -36,6 +36,7 @@ Copy this into a PR/issue and check items off. Paths are relative to the repo ro
 - [ ] Clone or fork this template into a **new** git remote (do not share the template’s Convex deployment).
 - [ ] Do **not** copy `.env`, `.env.local`, or any real secrets from another machine.
 - [ ] Rename the package: set `"name"` in [`package.json`](./package.json) (currently `"vctr"`).
+- [ ] This template is **MIT** licensed ([`LICENSE.md`](./LICENSE.md)). If you want a different license for your clone, update `LICENSE.md` (and any package/`APP_CONFIG` legal links that still assume MIT).
 - [ ] Optional: update the placeholder `<title>` in [`index.html`](./index.html) (currently `vctr`) — or leave it until branding (step 6) if you set titles from `APP_CONFIG` later.
 
 ### 2. Install dependencies
@@ -166,14 +167,16 @@ bunx convex env set POLAR_PRODUCT_YEARLY_ID "<polar-yearly-product-id>"
 
 For production later, set `POLAR_SERVER=production` and `POLAR_ACCESS_TOKEN` / `POLAR_WEBHOOK_SECRET` (same product ID vars, or separate products).
 
-6. If products already existed in Polar before first deploy, sync them once (Dashboard → Functions, or `bunx convex run polar:syncProducts`).
+6. If products already existed in Polar before first deploy, sync them once as an admin:
+   `bunx convex env set ADMIN_EMAILS your@email.com`
+   then call `polar:syncProducts` while signed in as that email (Dashboard → Functions), or keep using an internal admin workflow.
+7. Checkout success / portal return URLs are built server-side from `SITE_URL` + `/billing` — **do not** pass client URLs.
 
 - [ ] Sandbox products created ($3/mo, $30/yr, no Polar trial)
 - [ ] Webhook → `{CONVEX_SITE_URL}/polar/events` with the four events above
 - [ ] Convex env vars set (`POLAR_SERVER`, sandbox token/secret, both product IDs)
 - [ ] Optional: adjust trial length in `APP_CONFIG.trial` (`days`, `warnWithinDays`, `forceWithinDays`)
-
-Checkout success URL is the current page (`window.location.href` from `CheckoutLink`) — **do not** set a separate `POLAR_SUCCESS_URL`.
+- [ ] Set `ADMIN_EMAILS` for who may call `polar:syncProducts`
 
 ### 7. Branding (`APP_CONFIG` + assets)
 
@@ -367,3 +370,9 @@ Polar secrets belong on the **Convex deployment** (`bunx convex env set`), not i
 - Convex + `@convex-dev/auth` + `@djpanda/convex-authz` + `@convex-dev/rate-limiter` + `@convex-dev/polar`
 - shadcn (Base UI) + Tailwind v4
 - i18n: `react-i18next` ([`src/i18n/`](./src/i18n/))
+
+---
+
+## License
+
+This template is released under the [MIT License](./LICENSE.md). If you clone it and want a different license for your project, update [`LICENSE.md`](./LICENSE.md).

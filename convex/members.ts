@@ -17,7 +17,8 @@ import {
   SUSPEND_PERMISSION_BY_ROLE,
   type MemberListRole,
 } from "./lib/authzModel.js";
-import { classMutation, classQuery } from "./lib/customFunctions.js";
+import { classQuery, entitledClassMutation } from "./lib/customFunctions.js";
+import { rateLimiter } from "./lib/rateLimiter.js";
 
 const memberListRoleValidator = v.union(
   v.literal("teacher"),
@@ -75,13 +76,14 @@ async function countUsersForListRole(
  * Suspend / unsuspend a class member via a scoped deny override ("*").
  * Role assignment is preserved; unsuspend removes the override.
  */
-export const setSuspended = classMutation({
+export const setSuspended = entitledClassMutation({
   args: {
     userId: v.id("users"),
     suspended: v.boolean(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "memberSuspend", { key: ctx.userId, throws: true });
     if (args.userId === ctx.userId) {
       throw new Error("You cannot suspend yourself");
     }
@@ -214,12 +216,13 @@ export const countsByRole = classQuery({
 /**
  * Remove a class member by offboarding their scoped authz membership.
  */
-export const remove = classMutation({
+export const remove = entitledClassMutation({
   args: {
     userId: v.id("users"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "memberRemove", { key: ctx.userId, throws: true });
     if (args.userId === ctx.userId) {
       throw new Error("You cannot remove yourself");
     }

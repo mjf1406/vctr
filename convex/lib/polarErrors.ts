@@ -5,6 +5,8 @@ type PolarLikeError = {
   error?: string;
   detail?: string;
   message?: string;
+  statusCode?: number;
+  status?: number;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -38,30 +40,59 @@ export function isAlreadyCanceledError(error: unknown): boolean {
   return polarErrorCode(error) === "AlreadyCanceledSubscription";
 }
 
+/** Redact email-like substrings from strings that may reach logs or clients. */
+export function scrubDetail(value: string): string {
+  return value.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]");
+}
+
+function correlationId(): string {
+  return `bill_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function httpStatus(error: unknown): number | undefined {
+  if (!isRecord(error)) {
+    return undefined;
+  }
+  if (typeof error.statusCode === "number") {
+    return error.statusCode;
+  }
+  if (typeof error.status === "number") {
+    return error.status;
+  }
+  return undefined;
+}
+
 /**
  * Convert Polar / unexpected billing failures into a stable ConvexError.
- * Keeps raw SDK dumps out of the client toast path.
+ * Keeps raw SDK dumps (and PII) out of logs and the client toast path.
  */
 export function throwBillingError(
   error: unknown,
   fallbackCode: string,
   fallbackMessage: string,
+  operation = "billing",
 ): never {
   const code = polarErrorCode(error) ?? fallbackCode;
   const polar = isRecord(error) ? (error as PolarLikeError) : undefined;
-  const detail =
+  const rawDetail =
     (typeof polar?.detail === "string" && polar.detail.trim()) ||
     (typeof polar?.message === "string" && !polar.message.includes("{")
       ? polar.message.trim()
       : undefined);
+  const id = correlationId();
 
   console.error("Billing action failed", {
     code,
-    detail: detail ?? (error instanceof Error ? error.message : String(error)),
+    operation,
+    status: httpStatus(error),
+    correlationId: id,
   });
+
+  const safeDetail = rawDetail ? scrubDetail(rawDetail) : undefined;
 
   throw new ConvexError({
     code,
-    message: detail && detail.length < 160 ? detail : fallbackMessage,
+    message: safeDetail && safeDetail.length < 160 ? safeDetail : fallbackMessage,
+    correlationId: id,
   });
 }

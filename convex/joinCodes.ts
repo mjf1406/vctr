@@ -10,17 +10,16 @@ import {
   type JoinCodeRole,
 } from "./lib/authzModel.js";
 import { deleteJoinCodeById } from "./lib/joinCodesCleanup.js";
-import { authedMutation, classMutation, classQuery } from "./lib/customFunctions.js";
-import { requireEntitlement } from "./lib/entitlement.js";
+import { authedMutation, classQuery, entitledClassMutation } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { authz } from "./authz.js";
 import { internal } from "./_generated/api.js";
 import { ConvexError, v } from "convex/values";
 
 const CODE_LENGTH = 6;
-const MAX_TTL_MS = 72 * 60 * 60 * 1000;
+const MAX_TTL_MS = 24 * 60 * 60 * 1000;
 const MIN_USES = 1;
-const MAX_USES = 1000;
+const MAX_USES = 100;
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const CODE_GENERATE_ATTEMPTS = 12;
 
@@ -63,7 +62,7 @@ function normalizeMaxUses(maxUses: number): number {
 
 function normalizeTtlMs(ttlMs: number): number {
   if (!Number.isFinite(ttlMs) || ttlMs <= 0 || ttlMs > MAX_TTL_MS) {
-    throw new Error("Expiry must be between 1 second and 3 days");
+    throw new Error("Expiry must be between 1 second and 24 hours");
   }
   return ttlMs;
 }
@@ -126,7 +125,7 @@ export const listForClass = classQuery({
   },
 });
 
-export const create = classMutation({
+export const create = entitledClassMutation({
   args: {
     role: joinCodeRoleValidator,
     ttlMs: v.number(),
@@ -134,7 +133,6 @@ export const create = classMutation({
   },
   returns: joinCodeValidator,
   handler: async (ctx, args) => {
-    await requireEntitlement(ctx, ctx.userId);
     await rateLimiter.limit(ctx, "joinCodeCreate", { key: ctx.userId, throws: true });
     await ctx.require("invitations:create");
 
@@ -176,12 +174,13 @@ export const create = classMutation({
   },
 });
 
-export const revoke = classMutation({
+export const revoke = entitledClassMutation({
   args: {
     joinCodeId: v.id("joinCodes"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "joinCodeRevoke", { key: ctx.userId, throws: true });
     await ctx.require("invitations:revoke");
     const codeDoc = await ctx.db.get("joinCodes", args.joinCodeId);
     if (!codeDoc || codeDoc.classId !== ctx.classDoc._id) {
@@ -201,8 +200,17 @@ export const redeem = authedMutation({
     role: joinCodeRoleValidator,
   }),
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "joinCodeRedeemGlobal", { throws: true });
     await rateLimiter.limit(ctx, "joinCodeRedeemShort", { key: ctx.userId, throws: true });
     await rateLimiter.limit(ctx, "joinCodeRedeemHourly", { key: ctx.userId, throws: true });
+
+    const rejectInvalid = async (): Promise<never> => {
+      await rateLimiter.limit(ctx, "joinCodeRedeemFailure", { key: ctx.userId, throws: true });
+      throw new ConvexError({
+        code: "INVALID_JOIN_CODE",
+        message: "Invalid or expired invite code",
+      });
+    };
 
     const code = normalizeJoinCode(args.code);
     const codeDoc = await ctx.db
@@ -211,36 +219,24 @@ export const redeem = authedMutation({
       .unique();
 
     if (!codeDoc) {
-      throw new ConvexError({
-        code: "INVALID_JOIN_CODE",
-        message: "Invalid or expired invite code",
-      });
+      return await rejectInvalid();
     }
 
     const now = Date.now();
     if (codeDoc.expiresAt <= now) {
       await deleteJoinCodeById(ctx, codeDoc._id);
-      throw new ConvexError({
-        code: "INVALID_JOIN_CODE",
-        message: "Invalid or expired invite code",
-      });
+      return await rejectInvalid();
     }
 
     if (codeDoc.useCount >= codeDoc.maxUses) {
       await deleteJoinCodeById(ctx, codeDoc._id);
-      throw new ConvexError({
-        code: "INVALID_JOIN_CODE",
-        message: "Invalid or expired invite code",
-      });
+      return await rejectInvalid();
     }
 
     const classDoc = await ctx.db.get("classes", codeDoc.classId);
     if (!classDoc) {
       await deleteJoinCodeById(ctx, codeDoc._id);
-      throw new ConvexError({
-        code: "INVALID_JOIN_CODE",
-        message: "Invalid or expired invite code",
-      });
+      return await rejectInvalid();
     }
 
     if (classDoc.archivedAt !== undefined) {

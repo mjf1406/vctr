@@ -13,8 +13,7 @@ export function useCustomerPortal() {
 
   return useMutation({
     mutationFn: async () => {
-      const returnUrl = typeof window !== "undefined" ? window.location.href : undefined;
-      const { url } = await generateUrl({ returnUrl });
+      const { url } = await generateUrl({});
       window.open(url, "_blank", "noopener,noreferrer");
       return url;
     },

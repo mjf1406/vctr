@@ -35,7 +35,7 @@ export function PlanActionButton({
 }: PlanActionButtonProps) {
   const { t } = useTranslation("billing");
   const { t: tCommon } = useTranslation("common");
-  const generateCheckoutLink = useAction(api.polar.generateCheckoutLink);
+  const generateCheckoutLink = useAction(api.billingActions.createCheckoutLink);
   const changeSubscription = useChangeSubscription();
 
   return (
@@ -53,9 +53,7 @@ export function PlanActionButton({
         try {
           PolarEmbedCheckout.init();
           const { url } = await generateCheckoutLink({
-            productIds: [productId],
-            origin: window.location.origin,
-            successUrl: window.location.href,
+            productId,
           });
           await PolarEmbedCheckout.create(url, { theme });
         } catch (error) {

@@ -4,6 +4,7 @@ import { v } from "convex/values";
 import { api, components } from "./_generated/api.js";
 import type { DataModel } from "./_generated/dataModel.js";
 import { action } from "./_generated/server.js";
+import { requireAdmin } from "./lib/admin.js";
 import { POLAR_ENV } from "./lib/polarEnv.js";
 
 export const polar = new Polar<DataModel, { proMonthly: string; proYearly: string }>(
@@ -26,21 +27,18 @@ export const polar = new Polar<DataModel, { proMonthly: string; proYearly: strin
   },
 );
 
-export const {
-  changeCurrentSubscription,
-  cancelCurrentSubscription,
-  getConfiguredProducts,
-  listAllProducts,
-  listAllSubscriptions,
-  generateCheckoutLink,
-  generateCustomerPortalUrl,
-} = polar.api();
+/** Public pricing catalog for configured products only. */
+export const { getConfiguredProducts } = polar.api();
 
-/** One-time sync of products that already exist in the Polar dashboard. */
+/**
+ * Sync products from the Polar dashboard into the local component table.
+ * Restricted to emails listed in the `ADMIN_EMAILS` Convex env var.
+ */
 export const syncProducts = action({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
+    await requireAdmin(ctx);
     await polar.syncProducts(ctx);
     return null;
   },

@@ -12,7 +12,13 @@ import {
   pickHighestClassRole,
   type ClassRole,
 } from "./lib/authzModel.js";
-import { authedQuery, classMutation, entitledMutation } from "./lib/customFunctions.js";
+import {
+  authedQuery,
+  classMutation,
+  classQuery,
+  entitledClassMutation,
+  entitledMutation,
+} from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
 
@@ -210,7 +216,7 @@ export const create = entitledMutation({
   },
 });
 
-export const update = classMutation({
+export const update = entitledClassMutation({
   args: {
     name: v.string(),
     year: v.number(),
@@ -236,7 +242,7 @@ export const update = classMutation({
   },
 });
 
-export const setArchived = classMutation({
+export const setArchived = entitledClassMutation({
   args: {
     archived: v.boolean(),
   },
@@ -272,5 +278,121 @@ export const remove = classMutation({
     await deleteJoinCodesForClass(ctx, args.classId);
     await ctx.db.delete("classes", args.classId);
     return null;
+  },
+});
+
+const eligibleOwnerValidator = v.object({
+  userId: v.id("users"),
+  name: v.optional(v.string()),
+  email: v.optional(v.string()),
+  image: v.optional(v.string()),
+  role: v.union(v.literal("teacher"), v.literal("assistant_teacher")),
+});
+
+/**
+ * Teachers and assistant teachers who can receive ownership (non-suspended).
+ */
+export const eligibleOwners = classQuery({
+  args: {},
+  returns: v.array(eligibleOwnerValidator),
+  handler: async (ctx) => {
+    await ctx.require("class:delete");
+
+    const byUserId = new Map<string, "teacher" | "assistant_teacher">();
+    for (const role of ["teacher", "assistant_teacher"] as const) {
+      const users = await ctx.runQuery(components.authz.queries.getUsersWithRole, {
+        tenantId: APP_CONFIG.authzTenantId,
+        role,
+        scope: ctx.scope,
+      });
+      for (const entry of users) {
+        if (entry.userId === ctx.userId) continue;
+        const existing = byUserId.get(entry.userId);
+        if (!existing || role === "teacher") {
+          byUserId.set(entry.userId, role);
+        }
+      }
+    }
+
+    const results: Array<{
+      userId: Id<"users">;
+      name?: string;
+      email?: string;
+      image?: string;
+      role: "teacher" | "assistant_teacher";
+    }> = [];
+
+    for (const [userId, role] of byUserId) {
+      const canAct = await authz.can(ctx, userId, "class:read", ctx.scope);
+      if (!canAct) continue;
+      const user = await ctx.db.get("users", userId as Id<"users">);
+      if (!user) continue;
+      results.push({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role,
+      });
+    }
+
+    results.sort((a, b) => {
+      const nameA = (a.name ?? a.email ?? a.userId).toLocaleLowerCase();
+      const nameB = (b.name ?? b.email ?? b.userId).toLocaleLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    return results;
+  },
+});
+
+/**
+ * Transfer class ownership to a teacher or assistant_teacher.
+ * Unentitled exit path so expired-trial owners can still satisfy GDPR deletion.
+ */
+export const transferOwnership = classMutation({
+  args: {
+    toUserId: v.id("users"),
+  },
+  returns: classValidator,
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classTransferOwnership", { key: ctx.userId, throws: true });
+    await ctx.require("class:delete");
+
+    if (args.toUserId === ctx.userId) {
+      throw new Error("You already own this class");
+    }
+
+    if (ctx.classDoc.ownerId !== ctx.userId) {
+      throw new Error("Only the current owner can transfer ownership");
+    }
+
+    const targetRoles = await authz.getUserRoles(ctx, args.toUserId, ctx.scope);
+    const role = pickHighestClassRole(
+      targetRoles.map((entry: { role: string }) => entry.role).filter(isClassRole),
+    );
+    if (role !== "teacher" && role !== "assistant_teacher") {
+      throw new Error("Recipient must be a teacher or assistant teacher in this class");
+    }
+
+    const canAct = await authz.can(ctx, args.toUserId, "class:read", ctx.scope);
+    if (!canAct) {
+      throw new Error("Recipient is suspended and cannot receive ownership");
+    }
+
+    await authz.assignRole(ctx, args.toUserId, "owner", ctx.scope);
+    await authz.revokeRole(ctx, ctx.userId, "owner", ctx.scope);
+    await authz.assignRole(ctx, ctx.userId, "teacher", ctx.scope);
+
+    await ctx.db.patch("classes", args.classId, {
+      ownerId: args.toUserId,
+      updatedAt: Date.now(),
+    });
+
+    const updated = await ctx.db.get("classes", args.classId);
+    if (!updated) {
+      throw new Error("Failed to transfer ownership");
+    }
+    return updated;
   },
 });

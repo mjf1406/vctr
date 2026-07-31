@@ -8,7 +8,10 @@ const BILLING_ERROR_KEYS = {
   CHANGE_FAILED: "changeFailed",
   ORDERS_FAILED: "ordersLoadFailed",
   PORTAL_FAILED: "portalFailed",
+  CHECKOUT_FAILED: "checkoutFailed",
+  INVALID_PRODUCT: "errorInvalidProduct",
   UNAUTHENTICATED: "errorUnauthenticated",
+  SUBSCRIPTION_REQUIRED: "errorSubscriptionRequired",
 } as const;
 
 type BillingErrorKey = (typeof BILLING_ERROR_KEYS)[keyof typeof BILLING_ERROR_KEYS];

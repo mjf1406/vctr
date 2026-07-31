@@ -2,8 +2,9 @@ import { ordersList } from "@polar-sh/sdk/funcs/ordersList.js";
 import { unwrapResultIterator } from "@polar-sh/sdk/types/operations.js";
 import { ConvexError, v } from "convex/values";
 
-import { api } from "./_generated/api.js";
+import { api, internal } from "./_generated/api.js";
 import { action } from "./_generated/server.js";
+import { assertConfiguredProduct, resolveAppOrigin, resolveAppUrl } from "./lib/billingGuards.js";
 import { isAlreadyCanceledError, throwBillingError } from "./lib/polarErrors.js";
 import { polar } from "./polar.js";
 
@@ -40,6 +41,30 @@ async function requireBillingUser(ctx: {
   return { userId: user._id, email: user.email };
 }
 
+async function consumeBillingLimit(
+  ctx: {
+    runMutation: (
+      ref: typeof internal.lib.rateLimitActions.consume,
+      args: {
+        name:
+          | "billingCheckout"
+          | "billingPortal"
+          | "billingChange"
+          | "billingCancel"
+          | "billingOrders";
+        key: string;
+      },
+    ) => Promise<null>;
+  },
+  name: "billingCheckout" | "billingPortal" | "billingChange" | "billingCancel" | "billingOrders",
+  userId: string,
+) {
+  await ctx.runMutation(internal.lib.rateLimitActions.consume, {
+    name,
+    key: userId,
+  });
+}
+
 /**
  * Cancel the current subscription at period end.
  * Already-canceled Polar responses are treated as success (idempotent).
@@ -51,6 +76,7 @@ export const cancelSubscription = action({
   returns: v.null(),
   handler: async (ctx, args) => {
     const { userId } = await requireBillingUser(ctx);
+    await consumeBillingLimit(ctx, "billingCancel", userId);
 
     try {
       const current = await polar.getCurrentSubscription(ctx, { userId });
@@ -66,7 +92,12 @@ export const cancelSubscription = action({
       if (isAlreadyCanceledError(error)) {
         return null;
       }
-      throwBillingError(error, "CANCEL_FAILED", "Could not cancel subscription");
+      throwBillingError(
+        error,
+        "CANCEL_FAILED",
+        "Could not cancel subscription",
+        "cancelSubscription",
+      );
     }
   },
 });
@@ -80,13 +111,15 @@ export const changeSubscription = action({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await requireBillingUser(ctx);
+    const { userId } = await requireBillingUser(ctx);
+    await consumeBillingLimit(ctx, "billingChange", userId);
+    assertConfiguredProduct(args.productId);
 
     try {
       await polar.changeSubscription(ctx, { productId: args.productId });
       return null;
     } catch (error) {
-      throwBillingError(error, "CHANGE_FAILED", "Could not change plan");
+      throwBillingError(error, "CHANGE_FAILED", "Could not change plan", "changeSubscription");
     }
   },
 });
@@ -102,6 +135,7 @@ export const listOrders = action({
   returns: orderHistoryValidator,
   handler: async (ctx, args) => {
     const { userId } = await requireBillingUser(ctx);
+    await consumeBillingLimit(ctx, "billingOrders", userId);
     const page = Math.max(1, args.page ?? 1);
     const limit = Math.min(50, Math.max(1, args.limit ?? 10));
 
@@ -144,29 +178,61 @@ export const listOrders = action({
       if (error instanceof ConvexError) {
         throw error;
       }
-      throwBillingError(error, "ORDERS_FAILED", "Could not load order history");
+      throwBillingError(error, "ORDERS_FAILED", "Could not load order history", "listOrders");
     }
   },
 });
 
 /**
- * Customer portal URL with stable error codes for the client.
+ * Customer portal URL. Return URL is always the app `/billing` page.
  */
 export const generateCustomerPortalUrl = action({
-  args: {
-    returnUrl: v.optional(v.string()),
-  },
+  args: {},
   returns: v.object({ url: v.string() }),
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const { userId } = await requireBillingUser(ctx);
+    await consumeBillingLimit(ctx, "billingPortal", userId);
 
     try {
       return await polar.createCustomerPortalSession(ctx, {
         userId,
-        returnUrl: args.returnUrl,
+        returnUrl: resolveAppUrl("/billing"),
       });
     } catch (error) {
-      throwBillingError(error, "PORTAL_FAILED", "Could not open Polar portal");
+      throwBillingError(
+        error,
+        "PORTAL_FAILED",
+        "Could not open Polar portal",
+        "generateCustomerPortalUrl",
+      );
+    }
+  },
+});
+
+/**
+ * Checkout link for a configured product. URLs are built server-side.
+ */
+export const createCheckoutLink = action({
+  args: {
+    productId: v.string(),
+  },
+  returns: v.object({ url: v.string() }),
+  handler: async (ctx, args) => {
+    const { userId, email } = await requireBillingUser(ctx);
+    await consumeBillingLimit(ctx, "billingCheckout", userId);
+    assertConfiguredProduct(args.productId);
+
+    try {
+      const checkout = await polar.createCheckoutSession(ctx, {
+        productIds: [args.productId],
+        userId,
+        email,
+        origin: resolveAppOrigin(),
+        successUrl: resolveAppUrl("/billing"),
+      });
+      return { url: checkout.url };
+    } catch (error) {
+      throwBillingError(error, "CHECKOUT_FAILED", "Could not start checkout", "createCheckoutLink");
     }
   },
 });

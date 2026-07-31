@@ -15,6 +15,7 @@ export default [
     ignores: [
       "node_modules",
       "dist",
+      "public/**",
       "convex/_generated/**",
       "src/routeTree.gen.ts",
       "convex/**/*.test.ts",

@@ -6,16 +6,17 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Normalize an email for trial-grant identity.
- * Lowercases, trims, strips `+tag`, and strips dots for Gmail/Googlemail.
+ * Applies Unicode NFKC, lowercases, trims, strips `+tag`, and strips dots for
+ * Gmail/Googlemail. Non-ASCII remaining after NFKC is stripped.
  */
 export function normalizeEmail(email: string): string {
-  const trimmed = email.trim().toLowerCase();
+  const trimmed = email.normalize("NFKC").trim().toLowerCase();
   const at = trimmed.lastIndexOf("@");
   if (at <= 0) {
     return trimmed;
   }
-  let local = trimmed.slice(0, at);
-  const domain = trimmed.slice(at + 1);
+  let local = stripNonAscii(trimmed.slice(0, at));
+  const domain = stripNonAscii(trimmed.slice(at + 1));
 
   const plus = local.indexOf("+");
   if (plus >= 0) {
@@ -28,6 +29,16 @@ export function normalizeEmail(email: string): string {
   }
 
   return `${local}@${domain}`;
+}
+
+function stripNonAscii(value: string): string {
+  let result = "";
+  for (const char of value) {
+    if (char.charCodeAt(0) <= 0x7f) {
+      result += char;
+    }
+  }
+  return result;
 }
 
 /**

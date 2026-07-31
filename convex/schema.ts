@@ -42,7 +42,8 @@ const schema = defineSchema({
    */
   trialGrants: defineTable({
     emailKey: v.string(),
-    userId: v.id("users"),
+    /** Cleared on account deletion; reattached on re-signup via emailKey. */
+    userId: v.optional(v.id("users")),
     startedAt: v.number(),
     endsAt: v.number(),
   })

@@ -83,10 +83,6 @@ function ttlLabelKey(option: JoinCodeTtlOption): string {
       return "inviteTtl12h";
     case "1d":
       return "inviteTtl1d";
-    case "2d":
-      return "inviteTtl2d";
-    case "3d":
-      return "inviteTtl3d";
   }
 }
 
@@ -325,7 +321,7 @@ export function CreateJoinCodeCredenza({
                                     type="number"
                                     inputMode="numeric"
                                     min={1}
-                                    max={1000}
+                                    max={100}
                                     value={usesCustomField.state.value}
                                     onBlur={usesCustomField.handleBlur}
                                     onChange={(event) =>

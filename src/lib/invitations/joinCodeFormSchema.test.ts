@@ -23,7 +23,7 @@ describe("joinCodeFormSchema", () => {
 
   test("maps TTL options and rejects out-of-range uses", () => {
     expect(ttlMsForOption("15m")).toBe(15 * 60 * 1000);
-    expect(ttlMsForOption("3d")).toBe(72 * 60 * 60 * 1000);
+    expect(ttlMsForOption("1d")).toBe(24 * 60 * 60 * 1000);
 
     const valid = createJoinCodeFormSchema.parse({
       role: "student",

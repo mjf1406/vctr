@@ -5,6 +5,7 @@ import { query } from "./_generated/server.js";
 import { listLinkedProviders } from "./lib/accountDeletion.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import { languageValidator } from "./lib/languages.js";
+import { rateLimiter } from "./lib/rateLimiter.js";
 
 export { languageValidator };
 
@@ -79,6 +80,7 @@ export const updateLanguage = authedMutation({
   },
   returns: userSettingsValidator,
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "updateLanguage", { key: ctx.userId, throws: true });
     const userId = ctx.userId;
 
     const existing = await ctx.db

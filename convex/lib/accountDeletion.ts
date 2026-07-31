@@ -119,9 +119,20 @@ async function deleteUserSettings(ctx: MutationCtx, userId: Id<"users">): Promis
   }
 }
 
+async function clearTrialGrantUserId(ctx: MutationCtx, userId: Id<"users">): Promise<void> {
+  const grant = await ctx.db
+    .query("trialGrants")
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
+    .unique();
+  if (grant) {
+    await ctx.db.patch("trialGrants", grant._id, { userId: undefined });
+  }
+}
+
 /**
  * Hard-delete the authenticated user's account data.
  * Preserves `trialGrants` (anti-abuse) and Polar billing records (legal/tax).
+ * Clears `trialGrants.userId` so the emailKey remains the durable identity.
  */
 export async function deleteAccountData(ctx: MutationCtx, userId: Id<"users">): Promise<void> {
   const blockers = await getAccountDeletionBlockers(ctx, userId);
@@ -143,5 +154,6 @@ export async function deleteAccountData(ctx: MutationCtx, userId: Id<"users">): 
   await authz.deprovisionUser(ctx, userId, { actorId: userId, enableAudit: true });
   await deleteAuthSessionsForUser(ctx, userId);
   await deleteAuthAccountsForUser(ctx, userId);
+  await clearTrialGrantUserId(ctx, userId);
   await ctx.db.delete("users", userId);
 }

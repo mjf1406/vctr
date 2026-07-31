@@ -4,21 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      (function () {
-        try {
-          var key = "%APP_THEME_STORAGE_KEY%";
-          var theme = localStorage.getItem(key) || "system";
-          var resolved =
-            theme === "system"
-              ? window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light"
-              : theme;
-          document.documentElement.classList.add(resolved);
-        } catch (_) {}
-      })();
-    </script>
+    <meta name="app-theme-storage-key" content="%APP_THEME_STORAGE_KEY%" />
+    <script src="/theme-bootstrap.js"></script>
     <link href="/src/style.css" rel="stylesheet" />
     <title>vctr</title>
   </head>

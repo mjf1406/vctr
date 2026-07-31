@@ -3,22 +3,37 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { DeleteAccountCredenza } from "@/components/account/DeleteAccountCredenza";
+import { DeleteClassCredenza } from "@/components/classes/DeleteClassCredenza";
+import { TransferOwnershipCredenza } from "@/components/classes/TransferOwnershipCredenza";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDeleteClass } from "@/hooks/classes/useDeleteClass";
+import { useClasses } from "@/hooks/classes/useClasses";
+import { useTransferOwnership } from "@/hooks/classes/useTransferOwnership";
 import { useAccountDeletionBlockers } from "@/hooks/user/useAccountDeletionBlockers";
 import { useDeleteAccount } from "@/hooks/user/useDeleteAccount";
-import { useClasses } from "@/hooks/classes/useClasses";
+import type { Id } from "../../../convex/_generated/dataModel";
 
 type DangerZoneCardProps = {
   userId: string | undefined;
   email: string | null | undefined;
 };
 
+type OwnedClassAction = {
+  classId: Id<"classes">;
+  name: string;
+  mode: "transfer" | "delete";
+};
+
 export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
   const { t } = useTranslation("account");
+  const { t: tClasses } = useTranslation("classes");
   const [open, setOpen] = useState(false);
+  const [classAction, setClassAction] = useState<OwnedClassAction | null>(null);
   const deleteAccount = useDeleteAccount();
+  const deleteClass = useDeleteClass();
+  const transferOwnership = useTransferOwnership();
   const {
     data: blockers,
     isPending: blockersPending,
@@ -26,9 +41,9 @@ export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
   } = useAccountDeletionBlockers();
   const { data: classes } = useClasses();
 
-  const ownedClassCount = useMemo(() => {
-    if (!userId || !classes) return 0;
-    return classes.filter((classDoc) => classDoc.ownerId === userId).length;
+  const ownedClasses = useMemo(() => {
+    if (!userId || !classes) return [];
+    return classes.filter((classDoc) => classDoc.ownerId === userId);
   }, [classes, userId]);
 
   const blocked = (blockers?.length ?? 0) > 0;
@@ -48,28 +63,72 @@ export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
           ) : blockersError ? (
             <p className="text-sm text-muted-foreground">{t("blockersLoadFailed")}</p>
           ) : blocked ? (
-            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+            <div className="flex flex-col gap-3 text-sm text-muted-foreground">
               <p className="font-medium text-foreground">{t("deleteBlockedTitle")}</p>
-              <ul className="list-disc pl-5">
-                {ownsClasses ? (
-                  <li>
-                    {ownedClassCount > 0
-                      ? t("deleteBlockedOwnsClassesCount", { count: ownedClassCount })
-                      : t("deleteBlockedOwnsClasses")}{" "}
+              {ownsClasses ? (
+                <div className="flex flex-col gap-2">
+                  <p>
+                    {ownedClasses.length > 0
+                      ? t("deleteBlockedOwnsClassesCount", { count: ownedClasses.length })
+                      : t("deleteBlockedOwnsClasses")}
+                  </p>
+                  {ownedClasses.length > 0 ? (
+                    <ul className="flex flex-col gap-2">
+                      {ownedClasses.map((classDoc) => (
+                        <li
+                          key={classDoc._id}
+                          className="flex flex-col gap-2 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                          <span className="font-medium text-foreground">{classDoc.name}</span>
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                setClassAction({
+                                  classId: classDoc._id,
+                                  name: classDoc.name,
+                                  mode: "transfer",
+                                })
+                              }
+                            >
+                              {t("transferOwnership")}
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="destructive"
+                              className="bg-destructive text-white hover:bg-destructive/90 dark:bg-destructive dark:hover:bg-destructive/90"
+                              onClick={() =>
+                                setClassAction({
+                                  classId: classDoc._id,
+                                  name: classDoc.name,
+                                  mode: "delete",
+                                })
+                              }
+                            >
+                              {tClasses("deleteAction")}
+                            </Button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
                     <Link to="/" className="underline underline-offset-2">
                       {t("deleteBlockedManageClasses")}
                     </Link>
-                  </li>
-                ) : null}
-                {hasSubscription ? (
-                  <li>
-                    {t("deleteBlockedActiveSubscription")}{" "}
-                    <Link to="/billing" className="underline underline-offset-2">
-                      {t("manageBilling")}
-                    </Link>
-                  </li>
-                ) : null}
-              </ul>
+                  )}
+                </div>
+              ) : null}
+              {hasSubscription ? (
+                <p>
+                  {t("deleteBlockedActiveSubscription")}{" "}
+                  <Link to="/billing" className="underline underline-offset-2">
+                    {t("manageBilling")}
+                  </Link>
+                </p>
+              ) : null}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">{t("deleteReadyBody")}</p>
@@ -95,6 +154,41 @@ export function DangerZoneCard({ userId, email }: DangerZoneCardProps) {
           await deleteAccount.mutateAsync({ confirmation });
         }}
       />
+
+      {classAction?.mode === "delete" ? (
+        <DeleteClassCredenza
+          open
+          onOpenChange={(next) => {
+            if (!next) setClassAction(null);
+          }}
+          className={classAction.name}
+          onConfirm={async (confirmation) => {
+            await deleteClass.mutateAsync({
+              classId: classAction.classId,
+              confirmation,
+            });
+            setClassAction(null);
+          }}
+        />
+      ) : null}
+
+      {classAction?.mode === "transfer" ? (
+        <TransferOwnershipCredenza
+          open
+          onOpenChange={(next) => {
+            if (!next) setClassAction(null);
+          }}
+          classId={classAction.classId}
+          className={classAction.name}
+          onConfirm={async (toUserId) => {
+            await transferOwnership.mutateAsync({
+              classId: classAction.classId,
+              toUserId,
+            });
+            setClassAction(null);
+          }}
+        />
+      ) : null}
     </>
   );
 }
