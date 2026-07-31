@@ -167,16 +167,27 @@ bunx convex env set POLAR_PRODUCT_YEARLY_ID "<polar-yearly-product-id>"
 
 For production later, set `POLAR_SERVER=production` and `POLAR_ACCESS_TOKEN` / `POLAR_WEBHOOK_SECRET` (same product ID vars, or separate products).
 
-6. If products already existed in Polar before first deploy, sync them once as an admin:
-   `bunx convex env set ADMIN_EMAILS your@email.com`
-   then call `polar:syncProducts` while signed in as that email (Dashboard → Functions), or keep using an internal admin workflow.
+6. Grant yourself the global `app_admin` role (needed for `polar:syncProducts` / billing health). Sign in once, copy your `users._id` from the Convex dashboard, then run:
+
+   ```powershell
+   # PowerShell (escape inner quotes)
+   bunx convex run lib/admin:grantAppAdmin '{\"userId\":\"<convex-user-id>\"}'
+   ```
+
+   ```bash
+   # bash / zsh
+   bunx convex run lib/admin:grantAppAdmin '{"userId":"<convex-user-id>"}'
+   ```
+
+   Then call `polar:syncProducts` while signed in as that user (Dashboard → Functions, or from the app if wired).
+
 7. Checkout success / portal return URLs are built server-side from `SITE_URL` + `/billing` — **do not** pass client URLs.
 
 - [ ] Sandbox products created ($3/mo, $30/yr, no Polar trial)
 - [ ] Webhook → `{CONVEX_SITE_URL}/polar/events` with the four events above
 - [ ] Convex env vars set (`POLAR_SERVER`, sandbox token/secret, both product IDs)
 - [ ] Optional: adjust trial length in `APP_CONFIG.trial` (`days`, `warnWithinDays`, `forceWithinDays`)
-- [ ] Set `ADMIN_EMAILS` for who may call `polar:syncProducts`
+- [ ] Grant `app_admin` via `lib/admin:grantAppAdmin` for who may call `polar:syncProducts`
 
 ### 7. Branding (`APP_CONFIG` + assets)
 

@@ -29,7 +29,8 @@ export async function requireAdmin(ctx: ActionCtx): Promise<{ userId: string; em
 
 /**
  * One-time seeder: grant the global `app_admin` role to a user.
- * Run via: `bunx convex run lib/admin:grantAppAdmin '{"userId":"..."}'`
+ * PowerShell: `bunx convex run lib/admin:grantAppAdmin '{\"userId\":\"...\"}'`
+ * bash/zsh: `bunx convex run lib/admin:grantAppAdmin '{"userId":"..."}'`
  */
 export const grantAppAdmin = internalMutation({
   args: {
