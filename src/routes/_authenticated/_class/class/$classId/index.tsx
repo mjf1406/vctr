@@ -53,7 +53,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId/")({
                 classId={classId}
                 multiple={false}
                 onUploaded={handleBannerUploaded}
-                className="w-full max-w-4xl [&_[data-slot=empty]]:aspect-[3/1] [&_[data-slot=empty]]:min-h-0 [&_[data-slot=empty]]:rounded-xl [&_[data-slot=empty]]:p-6"
+                className="w-full max-w-4xl [&_[data-slot=empty]]:rounded-xl"
               />
             </Can>
           )}

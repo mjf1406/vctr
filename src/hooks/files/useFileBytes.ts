@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useConvexAuth } from "@convex-dev/auth/react";
 import { useConvex } from "convex/react";
@@ -12,15 +12,17 @@ export function fileBytesQueryKey(fileId: Id<"files">) {
 }
 
 type FileBytesResult = {
-  objectUrl: string;
+  blob: Blob;
   contentType: string;
   name: string;
 };
 
 /**
  * Object URL for a file the current user may access (owner or class `files:read`).
- * Fetches bytes via an action (access re-checked server-side) and builds a blob: URL.
- * gcTime: 5 minutes — access rarely changes; revoke the object URL on unmount.
+ * Fetches bytes via an action (access re-checked server-side) and caches the Blob.
+ * A mount-local blob: URL is created from the cached Blob and revoked on unmount —
+ * never store revokeable URLs in the query cache.
+ * gcTime: 5 minutes — access rarely changes.
  */
 export function useFileBytes(fileId: Id<"files"> | undefined) {
   const convex = useConvex();
@@ -39,7 +41,7 @@ export function useFileBytes(fileId: Id<"files"> | undefined) {
       }
       const blob = new Blob([result.bytes], { type: result.contentType });
       return {
-        objectUrl: URL.createObjectURL(blob),
+        blob,
         contentType: result.contentType,
         name: result.name,
       };
@@ -50,18 +52,22 @@ export function useFileBytes(fileId: Id<"files"> | undefined) {
     retry: false,
   });
 
-  const objectUrl = data?.objectUrl;
+  const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
+    if (!data?.blob) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(data.blob);
+    setUrl(objectUrl);
     return () => {
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
+      URL.revokeObjectURL(objectUrl);
     };
-  }, [objectUrl]);
+  }, [data?.blob]);
 
   return {
     data,
-    url: data?.objectUrl ?? null,
+    url,
     isPending: isAuthLoading || isPending,
     isAuthLoading,
     isError,

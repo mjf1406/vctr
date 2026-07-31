@@ -161,8 +161,8 @@ export function FileDropzone({
     <div className={className}>
       <Empty
         className={cn(
-          "min-h-[320px] cursor-pointer select-none",
-          isDragging && "ring-2 ring-primary/50",
+          "min-h-[320px] cursor-pointer select-none border-2 border-dashed border-muted-foreground/60 bg-muted/50 transition-colors hover:border-muted-foreground hover:bg-muted/70",
+          isDragging && "border-primary bg-primary/15 ring-2 ring-primary/50",
         )}
         role="button"
         tabIndex={0}
