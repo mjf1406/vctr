@@ -15,6 +15,8 @@ const schema = defineSchema({
     year: v.number(),
     description: v.optional(v.string()),
     icon: v.optional(v.string()),
+    /** Class-scoped image file shown on the dashboard. */
+    bannerFileId: v.optional(v.id("files")),
     updatedAt: v.number(),
     archivedAt: v.optional(v.number()),
   }).index("by_owner", ["ownerId"]),

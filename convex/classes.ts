@@ -47,6 +47,7 @@ const classValidator = v.object({
   year: v.number(),
   description: v.optional(v.string()),
   icon: v.optional(v.string()),
+  bannerFileId: v.optional(v.id("files")),
   updatedAt: v.number(),
   archivedAt: v.optional(v.number()),
 });
@@ -278,6 +279,56 @@ export const setArchived = entitledClassMutation({
     const updated = await ctx.db.get("classes", ctx.classDoc._id);
     if (!updated) {
       throw new Error("Failed to update class archive state");
+    }
+    return updated;
+  },
+});
+
+export const setBanner = entitledClassMutation({
+  args: {
+    fileId: v.id("files"),
+  },
+  returns: classValidator,
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "classUpdate", { key: ctx.userId, throws: true });
+    await ctx.require("class:update");
+
+    const file = await ctx.db.get("files", args.fileId);
+    if (!file) {
+      throw new Error("File not found");
+    }
+    if (file.classId !== ctx.classDoc._id) {
+      throw new Error("Banner must be a file from this class library");
+    }
+    if (file.preset !== "images") {
+      throw new Error("Banner must be an image");
+    }
+
+    await ctx.db.patch("classes", ctx.classDoc._id, {
+      bannerFileId: args.fileId,
+      updatedAt: Date.now(),
+    });
+    const updated = await ctx.db.get("classes", ctx.classDoc._id);
+    if (!updated) {
+      throw new Error("Failed to set class banner");
+    }
+    return updated;
+  },
+});
+
+export const clearBanner = entitledClassMutation({
+  args: {},
+  returns: classValidator,
+  handler: async (ctx) => {
+    await rateLimiter.limit(ctx, "classUpdate", { key: ctx.userId, throws: true });
+    await ctx.require("class:update");
+    await ctx.db.patch("classes", ctx.classDoc._id, {
+      bannerFileId: undefined,
+      updatedAt: Date.now(),
+    });
+    const updated = await ctx.db.get("classes", ctx.classDoc._id);
+    if (!updated) {
+      throw new Error("Failed to clear class banner");
     }
     return updated;
   },

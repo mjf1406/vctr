@@ -105,7 +105,10 @@ export const finalizeUpload = action({
       });
     }
 
-    const sample = new Uint8Array(await blob.slice(0, 64).arrayBuffer());
+    // Avoid blob.slice(): Convex storage blobs throw RangeError on slice+arrayBuffer
+    // when size > slice length (get-convex/convex-backend#507).
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    const sample = bytes.subarray(0, Math.min(64, bytes.length));
     const detected = detectContentType(sample);
     if (validateDetectedContentType(args.preset, detected) !== null || !detected) {
       await ctx.storage.delete(args.storageId);

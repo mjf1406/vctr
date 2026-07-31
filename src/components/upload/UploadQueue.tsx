@@ -48,22 +48,12 @@ export function UploadQueue({ items, onAbort, onRetry }: UploadQueueProps) {
 
               <div className="flex items-center gap-2">
                 {showAbort && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    nativeButton={false}
-                    onClick={() => onAbort(item.id)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => onAbort(item.id)}>
                     {t("abort")}
                   </Button>
                 )}
                 {showRetry && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    nativeButton={false}
-                    onClick={() => onRetry(item.id)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => onRetry(item.id)}>
                     {t("retry")}
                   </Button>
                 )}
