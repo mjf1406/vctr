@@ -281,6 +281,11 @@ const it = {
     proLabel: "Pro",
     trialLabel: "Prova",
     summaryRenews: "{{plan}} · rinnova il {{date}}",
+    giftTitle: "Usi la versione gratuita?",
+    giftBody: "Scaricata o self-hosted? Una mancia aiuta a continuare lo sviluppo.",
+    giftDisclaimer: "Dando una mancia, riconosci di non ricevere nulla in cambio.",
+    giftKofiAlt: "Sostienimi su Ko-fi",
+    giftPatreonAlt: "Diventa Patron",
     summaryCancels: "{{plan}} · termina il {{date}}",
   },
   classes: {

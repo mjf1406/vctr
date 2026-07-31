@@ -276,6 +276,11 @@ const pt = {
     proLabel: "Pro",
     trialLabel: "Teste",
     summaryRenews: "{{plan}} · renova em {{date}}",
+    giftTitle: "Usa a versão gratuita?",
+    giftBody: "Transferiu ou faz self-host? Uma gorjeta ajuda a continuar o desenvolvimento.",
+    giftDisclaimer: "Ao dar gorjeta, reconhece que não recebe nada em troca.",
+    giftKofiAlt: "Apoie-me no Ko-fi",
+    giftPatreonAlt: "Torne-se Patron",
     summaryCancels: "{{plan}} · encerra em {{date}}",
   },
   classes: {

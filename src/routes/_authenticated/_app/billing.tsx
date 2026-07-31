@@ -222,6 +222,30 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
             ) : null}
           </div>
         )}
+
+        <div className="mx-auto flex w-full max-w-lg mt-36 flex-col items-center gap-3 text-center">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-semibold tracking-tight">{t("giftTitle")}</h2>
+            <p className="text-sm text-muted-foreground">{t("giftBody")}</p>
+            <p className="text-xs text-muted-foreground">{t("giftDisclaimer")}</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a href={APP_CONFIG.kofiUrl} target="_blank" rel="noreferrer">
+              <img
+                src="/gift/support_me_on_kofi_blue.png"
+                alt={t("giftKofiAlt")}
+                className="h-10 w-auto"
+              />
+            </a>
+            <a href={APP_CONFIG.patreonUrl} target="_blank" rel="noreferrer">
+              <img
+                src="/gift/become_a_patron_button.png"
+                alt={t("giftPatreonAlt")}
+                className="h-10 w-auto"
+              />
+            </a>
+          </div>
+        </div>
       </div>
     );
   },

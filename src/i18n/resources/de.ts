@@ -279,6 +279,11 @@ const de = {
     proLabel: "Pro",
     trialLabel: "Test",
     summaryRenews: "{{plan}} · verlängert am {{date}}",
+    giftTitle: "Nutzt du die Gratisversion?",
+    giftBody: "Heruntergeladen oder selbst gehostet? Ein kleiner Tip hilft der Weiterentwicklung.",
+    giftDisclaimer: "Mit dem Tippen bestätigst du, dass du nichts im Gegenzug erhältst.",
+    giftKofiAlt: "Unterstütze mich auf Ko-fi",
+    giftPatreonAlt: "Werde Patron",
     summaryCancels: "{{plan}} · endet am {{date}}",
   },
   classes: {

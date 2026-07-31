@@ -280,6 +280,11 @@ const nl = {
     proLabel: "Pro",
     trialLabel: "Proef",
     summaryRenews: "{{plan}} · verlengt op {{date}}",
+    giftTitle: "Gebruik je de gratis versie?",
+    giftBody: "Gedownload of zelf gehost? Een fooi helpt de ontwikkeling verder.",
+    giftDisclaimer: "Door te tippen erken je dat je niets terugkrijgt.",
+    giftKofiAlt: "Steun me op Ko-fi",
+    giftPatreonAlt: "Word Patron",
     summaryCancels: "{{plan}} · eindigt op {{date}}",
   },
   classes: {

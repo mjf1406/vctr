@@ -274,6 +274,11 @@ const en = {
     proLabel: "Pro",
     trialLabel: "Trial",
     summaryRenews: "{{plan}} · renews {{date}}",
+    giftTitle: "Using the free version?",
+    giftBody: "Downloaded or self-hosting? A small tip helps keep development going.",
+    giftDisclaimer: "By tipping, you acknowledge you receive nothing in return.",
+    giftKofiAlt: "Support me on Ko-fi",
+    giftPatreonAlt: "Become a Patron",
     summaryCancels: "{{plan}} · cancels {{date}}",
   },
   classes: {

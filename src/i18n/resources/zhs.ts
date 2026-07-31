@@ -267,6 +267,11 @@ const zhs = {
     proLabel: "Pro",
     trialLabel: "试用",
     summaryRenews: "{{plan}} · {{date}} 续订",
+    giftTitle: "在用免费版？",
+    giftBody: "下载或自托管的话，一点小费能帮助继续开发。",
+    giftDisclaimer: "打赏即表示您确认不会获得任何回报。",
+    giftKofiAlt: "在 Ko-fi 上支持我",
+    giftPatreonAlt: "成为 Patron",
     summaryCancels: "{{plan}} · {{date}} 结束",
   },
   classes: {

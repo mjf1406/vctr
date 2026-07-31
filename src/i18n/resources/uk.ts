@@ -278,6 +278,11 @@ const uk = {
     proLabel: "Pro",
     trialLabel: "Пробний",
     summaryRenews: "{{plan}} · поновлення {{date}}",
+    giftTitle: "Користуєтесь безкоштовною версією?",
+    giftBody: "Завантажили чи розмістили самі? Невелика подяка допомагає розвитку.",
+    giftDisclaimer: "Надсилаючи чайові, ви підтверджуєте, що нічого не отримуєте взамін.",
+    giftKofiAlt: "Підтримати на Ko-fi",
+    giftPatreonAlt: "Стати Patron",
     summaryCancels: "{{plan}} · завершення {{date}}",
   },
   classes: {

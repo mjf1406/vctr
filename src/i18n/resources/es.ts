@@ -279,6 +279,11 @@ const es = {
     proLabel: "Pro",
     trialLabel: "Prueba",
     summaryRenews: "{{plan}} · se renueva el {{date}}",
+    giftTitle: "¿Usas la versión gratuita?",
+    giftBody: "¿Descargaste o te autoalojas? Una propina ayuda a seguir desarrollando.",
+    giftDisclaimer: "Al dar propina, reconoces que no recibes nada a cambio.",
+    giftKofiAlt: "Apóyame en Ko-fi",
+    giftPatreonAlt: "Hazte Patron",
     summaryCancels: "{{plan}} · se cancela el {{date}}",
   },
   classes: {

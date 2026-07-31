@@ -284,6 +284,11 @@ const fr = {
     proLabel: "Pro",
     trialLabel: "Essai",
     summaryRenews: "{{plan}} · renouvelle le {{date}}",
+    giftTitle: "Vous utilisez la version gratuite ?",
+    giftBody: "Téléchargée ou auto-hébergée ? Un pourboire aide à poursuivre le développement.",
+    giftDisclaimer: "En donnant un pourboire, vous reconnaissez ne rien recevoir en retour.",
+    giftKofiAlt: "Soutenez-moi sur Ko-fi",
+    giftPatreonAlt: "Devenir Patron",
     summaryCancels: "{{plan}} · se termine le {{date}}",
   },
   classes: {

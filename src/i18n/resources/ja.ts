@@ -278,6 +278,11 @@ const ja = {
     proLabel: "Pro",
     trialLabel: "トライアル",
     summaryRenews: "{{plan}} · {{date}} に更新",
+    giftTitle: "無料版を使っていますか？",
+    giftBody: "ダウンロードやセルフホストの場合、ささやかな支援が開発の助けになります。",
+    giftDisclaimer: "チップを送ると、対価として何も受け取らないことに同意したものとみなします。",
+    giftKofiAlt: "Ko-fiで支援する",
+    giftPatreonAlt: "Patronになる",
     summaryCancels: "{{plan}} · {{date}} に終了",
   },
   classes: {

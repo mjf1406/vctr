@@ -272,6 +272,11 @@ const ko = {
     proLabel: "Pro",
     trialLabel: "체험",
     summaryRenews: "{{plan}} · {{date}}에 갱신",
+    giftTitle: "무료 버전을 쓰고 계신가요?",
+    giftBody: "다운로드했거나 셀프 호스팅 중이라면, 작은 팁이 개발에 도움이 됩니다.",
+    giftDisclaimer: "팁을 보내면 대가로 아무것도 받지 않는다는 점에 동의하는 것입니다.",
+    giftKofiAlt: "Ko-fi로 후원하기",
+    giftPatreonAlt: "Patron 되기",
     summaryCancels: "{{plan}} · {{date}}에 종료",
   },
   classes: {

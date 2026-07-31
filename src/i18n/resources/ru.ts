@@ -280,6 +280,11 @@ const ru = {
     proLabel: "Pro",
     trialLabel: "Пробный",
     summaryRenews: "{{plan}} · продление {{date}}",
+    giftTitle: "Пользуетесь бесплатной версией?",
+    giftBody: "Скачали или развернули сами? Небольшой чаевой помогает развитию.",
+    giftDisclaimer: "Отправляя чаевые, вы подтверждаете, что ничего не получаете взамен.",
+    giftKofiAlt: "Поддержать на Ko-fi",
+    giftPatreonAlt: "Стать Patron",
     summaryCancels: "{{plan}} · окончание {{date}}",
   },
   classes: {

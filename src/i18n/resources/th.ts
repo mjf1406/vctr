@@ -268,6 +268,11 @@ const th = {
     proLabel: "Pro",
     trialLabel: "ทดลองใช้",
     summaryRenews: "{{plan}} · ต่ออายุ {{date}}",
+    giftTitle: "ใช้เวอร์ชันฟรีอยู่หรือไม่?",
+    giftBody: "ดาวน์โหลดหรือโฮสต์เอง? ทิปเล็กน้อยช่วยให้พัฒนต่อไปได้",
+    giftDisclaimer: "การให้ทิปถือว่าคุณยอมรับว่าจะไม่ได้รับสิ่งใดเป็นการตอบแทน",
+    giftKofiAlt: "สนับสนุนบน Ko-fi",
+    giftPatreonAlt: "เป็น Patron",
     summaryCancels: "{{plan}} · สิ้นสุด {{date}}",
   },
   classes: {

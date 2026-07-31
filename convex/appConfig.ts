@@ -22,6 +22,9 @@ export const APP_CONFIG = {
   downloadUrl: "https://github.com/mjf1406/classclarus-app",
   /** Self-hosting docs (billing Free card). */
   selfHostUrl: "https://github.com/mjf1406/classclarus-app",
+  /** Tip / gift links (billing page; replace placeholders). */
+  kofiUrl: "https://ko-fi.com/YOUR_PAGE",
+  patreonUrl: "https://www.patreon.com/YOUR_PAGE",
   /** Product-level authz namespace — set before first real deploy; rematerialize if changed later. */
   authzTenantId: "classclarus",
   /** Browser chrome — hex (meta theme-color is unreliable with oklch). */
