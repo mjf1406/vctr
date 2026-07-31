@@ -18,9 +18,9 @@ type FileBytesResult = {
 };
 
 /**
- * Object URL for a file the current user owns.
- * Fetches bytes via an action (ownership re-checked server-side) and builds a blob: URL.
- * gcTime: 5 minutes — ownership rarely changes; revoke the object URL on unmount.
+ * Object URL for a file the current user may access (owner or class `files:read`).
+ * Fetches bytes via an action (access re-checked server-side) and builds a blob: URL.
+ * gcTime: 5 minutes — access rarely changes; revoke the object URL on unmount.
  */
 export function useFileBytes(fileId: Id<"files"> | undefined) {
   const convex = useConvex();

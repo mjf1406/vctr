@@ -3,8 +3,12 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 
 import { APP_CONFIG } from "./appConfig.js";
 import { internal } from "./_generated/api.js";
+import type { Id } from "./_generated/dataModel.js";
 import { internalMutation, internalQuery } from "./_generated/server.js";
+import { authz } from "./authz.js";
+import { classScope } from "./lib/authzModel.js";
 import { assertEntitled } from "./lib/entitlement.js";
+import { canAccessFile } from "./lib/fileAccess.js";
 import {
   isUploadPresetKey,
   validateDetectedContentType,
@@ -16,10 +20,11 @@ const PAGE_SIZE = 100;
 /** Abort a purge run if it would delete more than this many blobs (circuit breaker). */
 const MAX_ORPHAN_DELETES_PER_RUN = 500;
 
-const ownedFileValidator = v.object({
+const accessibleFileValidator = v.object({
   _id: v.id("files"),
   storageId: v.id("_storage"),
   userId: v.id("users"),
+  classId: v.optional(v.id("classes")),
   name: v.string(),
   contentType: v.string(),
   size: v.number(),
@@ -28,14 +33,14 @@ const ownedFileValidator = v.object({
 });
 
 /**
- * Load a file the authenticated caller owns.
- * Used by `files.getFileBytes` so ownership is re-checked on every fetch.
+ * Load a file the authenticated caller may read (owner or class `files:read`).
+ * Used by `files.getFileBytes` so access is re-checked on every fetch.
  */
-export const getOwnedFile = internalQuery({
+export const getAccessibleFile = internalQuery({
   args: {
     fileId: v.id("files"),
   },
-  returns: v.union(ownedFileValidator, v.null()),
+  returns: v.union(accessibleFileValidator, v.null()),
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
@@ -43,13 +48,17 @@ export const getOwnedFile = internalQuery({
     }
     await assertEntitled(ctx, userId);
     const file = await ctx.db.get("files", args.fileId);
-    if (!file || file.userId !== userId) {
+    if (!file) {
+      return null;
+    }
+    if (!(await canAccessFile(ctx, file, userId))) {
       return null;
     }
     return {
       _id: file._id,
       storageId: file.storageId,
       userId: file.userId,
+      classId: file.classId,
       name: file.name,
       contentType: file.contentType,
       size: file.size,
@@ -62,6 +71,7 @@ export const getOwnedFile = internalQuery({
 /**
  * Register a finalized upload after magic-byte validation in the action layer.
  * Enforces per-user quota; deletes the blob before throwing on failure.
+ * Optional `classId` requires `files:create` in that class scope.
  *
  * Invariant: the `files` table is the sole registry for app-owned blobs.
  * Anything in `_storage` without a matching `files` row is considered orphaned.
@@ -73,6 +83,7 @@ export const registerFinalizedUpload = internalMutation({
     preset: v.union(v.literal("images"), v.literal("documents"), v.literal("audio")),
     contentType: v.string(),
     size: v.number(),
+    classId: v.optional(v.id("classes")),
   },
   returns: v.id("files"),
   handler: async (ctx, args) => {
@@ -128,6 +139,28 @@ export const registerFinalizedUpload = internalMutation({
       });
     }
 
+    let classId: Id<"classes"> | undefined;
+    if (args.classId !== undefined) {
+      const classDoc = await ctx.db.get("classes", args.classId);
+      if (!classDoc) {
+        await ctx.storage.delete(args.storageId);
+        throw new ConvexError({
+          code: "UPLOAD_FORBIDDEN",
+          message: "File not found or access denied",
+        });
+      }
+      try {
+        await authz.require(ctx, userId, "files:create", classScope(args.classId));
+      } catch {
+        await ctx.storage.delete(args.storageId);
+        throw new ConvexError({
+          code: "UPLOAD_FORBIDDEN",
+          message: "File not found or access denied",
+        });
+      }
+      classId = args.classId;
+    }
+
     // eslint-disable-next-line @convex-dev/no-collect-in-query -- per-user uploads are quota-bounded
     const existingFiles = await ctx.db
       .query("files")
@@ -146,6 +179,7 @@ export const registerFinalizedUpload = internalMutation({
     return await ctx.db.insert("files", {
       storageId: args.storageId,
       userId,
+      ...(classId !== undefined ? { classId } : {}),
       name,
       contentType: args.contentType,
       size: args.size,

@@ -55,10 +55,13 @@ const schema = defineSchema({
   /**
    * Ownership registry for Convex storage blobs.
    * Only finalized uploads (validated MIME/size) get a row.
+   * Optional `classId` places the file in a class library (members can view;
+   * uploader retains update/delete). Absent `classId` = personal / owner-only.
    */
   files: defineTable({
     storageId: v.id("_storage"),
     userId: v.id("users"),
+    classId: v.optional(v.id("classes")),
     name: v.string(),
     contentType: v.string(),
     size: v.number(),
@@ -66,7 +69,22 @@ const schema = defineSchema({
     createdAt: v.number(),
   })
     .index("by_userId", ["userId"])
-    .index("by_storageId", ["storageId"]),
+    .index("by_storageId", ["storageId"])
+    .index("by_classId", ["classId"]),
+  /**
+   * Many-to-many guardian ↔ student links within a class.
+   * Cleared when either side leaves the guardian/student role.
+   */
+  guardianStudentLinks: defineTable({
+    classId: v.id("classes"),
+    guardianUserId: v.id("users"),
+    studentUserId: v.id("users"),
+    createdAt: v.number(),
+    createdBy: v.id("users"),
+  })
+    .index("by_class_guardian", ["classId", "guardianUserId"])
+    .index("by_class_student", ["classId", "studentUserId"])
+    .index("by_class_guardian_student", ["classId", "guardianUserId", "studentUserId"]),
 });
 
 export default schema;

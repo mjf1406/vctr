@@ -24,11 +24,23 @@ export function useRemoveClassMember(listRole: MemberListRole) {
 
   return useOptimisticMutation({
     mutationFn: (args: RemoveClassMemberArgs) => mutationFn(args),
-    queryKeys: (args) => [
-      classMembersByRoleQueryKey(args.classId, listRole),
-      classMemberCountsQueryKey(args.classId),
-    ],
-    invalidateQueryKeys: (args) => [classesListQueryKey(), classPermissionsQueryKey(args.classId)],
+    queryKeys: (args) => {
+      const keys = [
+        classMembersByRoleQueryKey(args.classId, listRole),
+        classMemberCountsQueryKey(args.classId),
+      ];
+      if (listRole === "student") {
+        keys.push(classMembersByRoleQueryKey(args.classId, "guardian"));
+      }
+      return keys;
+    },
+    invalidateQueryKeys: (args) => {
+      const keys = [classesListQueryKey(), classPermissionsQueryKey(args.classId)];
+      if (listRole === "student") {
+        keys.push(classMembersByRoleQueryKey(args.classId, "guardian"));
+      }
+      return keys;
+    },
     applyOptimisticUpdate: (queryClient, args) => {
       const queryKey = classMembersByRoleQueryKey(args.classId, listRole);
       const countsKey = classMemberCountsQueryKey(args.classId);
@@ -42,6 +54,18 @@ export function useRemoveClassMember(listRole: MemberListRole) {
         if (current === null) return old;
         return { ...old, [listRole]: Math.max(0, current - 1) };
       });
+      if (listRole === "student") {
+        const guardiansKey = classMembersByRoleQueryKey(args.classId, "guardian");
+        queryClient.setQueryData<ClassMemberPublic[]>(guardiansKey, (old) => {
+          if (!old) return old;
+          return old.map((member) => ({
+            ...member,
+            linkedStudents: member.linkedStudents?.filter(
+              (student) => student.userId !== args.userId,
+            ),
+          }));
+        });
+      }
     },
     onError: (error) => {
       toast.add({

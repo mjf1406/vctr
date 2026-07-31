@@ -1,9 +1,25 @@
 import { v } from "convex/values";
 
 import { authz } from "./authz.js";
-import { internalMutation } from "./_generated/server.js";
+import { internalAction, internalMutation } from "./_generated/server.js";
 import { classScope, permissionsForRole } from "./lib/authzModel.js";
 import { permissionSnapshotForScope } from "./lib/permissionSnapshot.js";
+
+/**
+ * Re-materialize effective permissions after `defineRoles` / `definePermissions` changes.
+ * Run once after deploying role-catalog updates (e.g. new `files:read` / `files:create`):
+ * `bunx convex run authzBackfill:syncCatalogRoles`
+ */
+export const syncCatalogRoles = internalAction({
+  args: {},
+  returns: v.object({
+    rolesProcessed: v.number(),
+    usersProcessed: v.number(),
+  }),
+  handler: async (ctx) => {
+    return await authz.syncRoles(ctx);
+  },
+});
 
 /**
  * One-time backfill: assign the owner role for every existing class.

@@ -18,12 +18,14 @@ export const permissions = definePermissions({
   students: { read: true, add: true, remove: true, suspend: true },
   guardians: { read: true, invite: true, remove: true, suspend: true },
   invitations: { read: true, create: true, revoke: true },
+  /** Class file library — mutate stays ownership-based (uploader), not role-based. */
+  files: { read: true, create: true },
   /** App-level admin (global / unscoped). Not a class membership role. */
   admin: { syncProducts: true, viewHealth: true },
 });
 
 export const roles = defineRoles(permissions, {
-  class_member: { class: ["read"] },
+  class_member: { class: ["read"], files: ["read"] },
   student: { inherits: "class_member" },
   guardian: { inherits: "class_member" },
   assistant_teacher: {
@@ -33,6 +35,7 @@ export const roles = defineRoles(permissions, {
     assistantTeachers: ["read"],
     students: ["read"],
     guardians: ["read"],
+    files: ["create"],
   },
   teacher: {
     inherits: "assistant_teacher",
@@ -166,4 +169,32 @@ export const JOIN_CODE_INVITE_PERMISSION_BY_ROLE = {
 
 export function isJoinCodeRole(value: string): value is JoinCodeRole {
   return (JOIN_CODE_ROLES as ReadonlyArray<string>).includes(value);
+}
+
+/** Owners and teachers may reassign roles for members strictly below them. */
+export function canManageClassRoles(actorRole: ClassRole | null | undefined): boolean {
+  return actorRole === "owner" || actorRole === "teacher";
+}
+
+/** True when `otherRole` ranks strictly below `actorRole`. */
+export function isStrictlyBelow(actorRole: ClassRole, otherRole: ClassRole): boolean {
+  return CLASS_ROLE_RANK[otherRole] < CLASS_ROLE_RANK[actorRole];
+}
+
+/**
+ * Join-code roles the actor may assign (strictly below their own rank).
+ * Owners can assign teacher; teachers cannot.
+ */
+export function assignableRolesFor(actorRole: ClassRole): Array<JoinCodeRole> {
+  if (!canManageClassRoles(actorRole)) return [];
+  return JOIN_CODE_ROLES.filter((role) => isStrictlyBelow(actorRole, role));
+}
+
+/** Whether the actor may change this member's current role. */
+export function canChangeMemberRole(
+  actorRole: ClassRole | null | undefined,
+  memberRole: ClassRole,
+): boolean {
+  if (!actorRole || !canManageClassRoles(actorRole)) return false;
+  return isStrictlyBelow(actorRole, memberRole);
 }

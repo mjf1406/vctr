@@ -30,13 +30,25 @@ export function createOptimisticJoinCodeId(): Id<"joinCodes"> {
  */
 export const JOIN_CODE_PARAM = "jc";
 
-/** Absolute share URL: `{origin}{BASE_URL}join?jc=…` */
-export function joinCodeShareUrl(code: string): string {
+function joinAppBaseUrl(): string {
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
-  return new URL(
-    `join?${JOIN_CODE_PARAM}=${encodeURIComponent(code)}`,
-    `${window.location.origin}${base}`,
-  ).href;
+  return `${window.location.origin}${base}`;
+}
+
+/** Absolute join page URL: `{origin}{BASE_URL}join` */
+export function joinPageUrl(): string {
+  return new URL("join", joinAppBaseUrl()).href;
+}
+
+/** Absolute share URL: `{origin}{BASE_URL}join?jc=…` */
+export function joinCodeShareUrl(code: string): string {
+  return new URL(`join?${JOIN_CODE_PARAM}=${encodeURIComponent(code)}`, joinAppBaseUrl()).href;
+}
+
+/** Absolute projector/display URL: `{origin}{BASE_URL}join-display?jc=…` */
+export function joinCodeDisplayUrl(code: string): string {
+  return new URL(`join-display?${JOIN_CODE_PARAM}=${encodeURIComponent(code)}`, joinAppBaseUrl())
+    .href;
 }

@@ -1,6 +1,15 @@
 import type { Id } from "../../../convex/_generated/dataModel";
-import type { ClassRole, MemberListRole } from "@/lib/permissions/classPermissions";
-import { REMOVE_PERMISSION_BY_ROLE } from "@/lib/permissions/classPermissions";
+import type { ClassRole, JoinCodeRole, MemberListRole } from "@/lib/permissions/classPermissions";
+import {
+  assignableRolesFor,
+  canChangeMemberRole,
+  REMOVE_PERMISSION_BY_ROLE,
+} from "@/lib/permissions/classPermissions";
+
+export type LinkedStudentPublic = {
+  userId: Id<"users">;
+  name?: string;
+};
 
 export type ClassMemberPublic = {
   userId: Id<"users">;
@@ -8,6 +17,7 @@ export type ClassMemberPublic = {
   image?: string;
   email?: string;
   role: Extract<ClassRole, "owner" | "teacher" | "assistant_teacher" | "student" | "guardian">;
+  linkedStudents?: LinkedStudentPublic[];
 };
 
 export type ClassMemberCounts = {
@@ -17,7 +27,7 @@ export type ClassMemberCounts = {
   guardian: number | null;
 };
 
-export type { MemberListRole };
+export type { JoinCodeRole, MemberListRole };
 
 export function removePermissionForMember(
   role: ClassMemberPublic["role"],
@@ -25,8 +35,16 @@ export function removePermissionForMember(
   return REMOVE_PERMISSION_BY_ROLE[role];
 }
 
+/** People-page list that includes this membership role (owners appear under teachers). */
+export function memberListRoleFor(role: ClassMemberPublic["role"]): MemberListRole {
+  if (role === "owner" || role === "teacher") return "teacher";
+  return role;
+}
+
+export { assignableRolesFor, canChangeMemberRole };
+
 export function roleLabelKey(
-  role: ClassMemberPublic["role"],
+  role: ClassMemberPublic["role"] | JoinCodeRole,
 ): "roleOwner" | "roleTeacher" | "roleAssistantTeacher" | "roleStudent" | "roleGuardian" {
   switch (role) {
     case "owner":

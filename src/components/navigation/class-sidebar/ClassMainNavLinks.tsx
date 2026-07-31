@@ -27,6 +27,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -57,13 +58,13 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
   const { isMobile, state, setOpenMobile } = useSidebar();
   const { can, isPending } = useCan();
   const classId = classDoc._id;
-  const { data: memberCounts, isError: memberCountsError } = useClassMemberCounts(classId);
+  const { data: memberCounts } = useClassMemberCounts(classId);
   const peopleCollapsed = state === "collapsed" && !isMobile;
   const [peopleOpen, setPeopleOpen] = useState(false);
 
   const countFor = (role: MemberListRole | undefined): number | null => {
-    if (!role || !memberCounts || memberCountsError) return null;
-    return memberCounts[role];
+    if (!role) return null;
+    return memberCounts?.[role] ?? null;
   };
 
   const closeMobileSidebar = () => {
@@ -248,7 +249,7 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                           <SidebarMenuSubItem key={item.to}>
                             <SidebarMenuSubButton
                               isActive={isActive}
-                              className="pr-2"
+                              className={count !== null ? "pr-8" : undefined}
                               render={
                                 <Link
                                   to={item.to}
@@ -258,13 +259,11 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
                               }
                             >
                               <item.icon />
-                              <span className="min-w-0 flex-1 truncate">{item.title}</span>
-                              {count !== null ? (
-                                <span className="ml-auto shrink-0 tabular-nums text-sidebar-foreground/70">
-                                  {count}
-                                </span>
-                              ) : null}
+                              <span>{item.title}</span>
                             </SidebarMenuSubButton>
+                            {count !== null ? (
+                              <SidebarMenuBadge className="top-1">{count}</SidebarMenuBadge>
+                            ) : null}
                           </SidebarMenuSubItem>
                         );
                       })}

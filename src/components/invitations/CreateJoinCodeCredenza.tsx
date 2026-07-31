@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useTranslation } from "react-i18next";
 
+import { ClassRoleSelectLabel } from "@/components/badges/ClassRoleBadges";
 import { Button } from "@/components/ui/button";
 import {
   Credenza,
@@ -56,19 +57,6 @@ function fieldErrorMessage(errors: unknown): string | undefined {
     return typeof message === "string" ? message : undefined;
   }
   return undefined;
-}
-
-function roleLabelKey(role: JoinCodeRole): string {
-  switch (role) {
-    case "teacher":
-      return "roleTeacher";
-    case "assistant_teacher":
-      return "roleAssistantTeacher";
-    case "student":
-      return "roleStudent";
-    case "guardian":
-      return "roleGuardian";
-  }
 }
 
 function ttlLabelKey(option: JoinCodeTtlOption): string {
@@ -200,14 +188,16 @@ export function CreateJoinCodeCredenza({
                           aria-invalid={error ? true : undefined}
                         >
                           <SelectValue placeholder={t("inviteRolePlaceholder")}>
-                            {selectedRole ? t(roleLabelKey(selectedRole)) : null}
+                            {selectedRole ? (
+                              <ClassRoleSelectLabel role={selectedRole} colored />
+                            ) : null}
                           </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
                             {assignableRoles.map((role) => (
                               <SelectItem key={role} value={role}>
-                                {t(roleLabelKey(role))}
+                                <ClassRoleSelectLabel role={role} />
                               </SelectItem>
                             ))}
                           </SelectGroup>

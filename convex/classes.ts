@@ -21,6 +21,7 @@ import {
   entitledQuery,
 } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
+import { clearLinksForClass } from "./lib/guardianLinks.js";
 import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
 
 const MIN_YEAR = 1900;
@@ -296,6 +297,7 @@ export const remove = classMutation({
     }
     await revokeAllClassMembership(ctx, ctx.classDoc._id);
     await deleteJoinCodesForClass(ctx, ctx.classDoc._id);
+    await clearLinksForClass(ctx, ctx.classDoc._id);
     await ctx.db.delete("classes", ctx.classDoc._id);
     return null;
   },

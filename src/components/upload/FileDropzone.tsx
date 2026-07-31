@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UploadCloud } from "lucide-react";
 
+import type { Id } from "../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,12 +22,15 @@ export type FileDropzoneVariant = "default" | "compact";
 type FileDropzoneProps = {
   presetKey?: UploadPresetKey;
   variant?: FileDropzoneVariant;
+  /** When set, finalized uploads attach to this class library. */
+  classId?: Id<"classes">;
   className?: string;
 };
 
 export function FileDropzone({
   presetKey = "images",
   variant = "default",
+  classId,
   className,
 }: FileDropzoneProps) {
   const { t } = useTranslation("upload");
@@ -34,7 +38,7 @@ export function FileDropzone({
   const preset = useMemo(() => getUploadPreset(presetKey), [presetKey]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { items, uploadFiles, abortFile, retryFile } = useUploadFiles(presetKey);
+  const { items, uploadFiles, abortFile, retryFile } = useUploadFiles(presetKey, { classId });
 
   const [dragDepth, setDragDepth] = useState(0);
   const isDragging = dragDepth > 0;

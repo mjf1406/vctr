@@ -2,7 +2,8 @@ import { ConvexError, v } from "convex/values";
 
 import { api, internal } from "./_generated/api.js";
 import { action } from "./_generated/server.js";
-import { entitledMutation } from "./lib/customFunctions.js";
+import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
+import { requireFileOwner } from "./lib/fileAccess.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import {
   detectContentType,
@@ -16,6 +17,20 @@ const uploadPresetKeyValidator = v.union(
   v.literal("documents"),
   v.literal("audio"),
 );
+
+const classFilePublicValidator = v.object({
+  _id: v.id("files"),
+  userId: v.id("users"),
+  classId: v.id("classes"),
+  name: v.string(),
+  contentType: v.string(),
+  size: v.number(),
+  preset: v.string(),
+  createdAt: v.number(),
+});
+
+/** Classroom-sized library cap for a single list response. */
+const CLASS_FILES_LIST_LIMIT = 200;
 
 /**
  * Create a short-lived upload URL for Convex storage.
@@ -37,12 +52,14 @@ export const generateUploadUrl = entitledMutation({
 /**
  * Validate (magic bytes + size + quota) and register an uploaded blob.
  * Runs as an action so it can read blob bytes for content sniffing.
+ * Optional `classId` attaches the file to a class library (`files:create` required).
  */
 export const finalizeUpload = action({
   args: {
     storageId: v.id("_storage"),
     name: v.string(),
     preset: uploadPresetKeyValidator,
+    classId: v.optional(v.id("classes")),
   },
   returns: v.id("files"),
   handler: async (ctx, args) => {
@@ -104,13 +121,14 @@ export const finalizeUpload = action({
       preset: args.preset,
       contentType: detected,
       size,
+      classId: args.classId,
     });
   },
 });
 
 /**
- * Return file bytes for a file the caller owns.
- * Ownership is re-checked on every call via `getOwnedFile`.
+ * Return file bytes for a file the caller may access (owner or class `files:read`).
+ * Access is re-checked on every call via `getAccessibleFile`.
  */
 export const getFileBytes = action({
   args: {
@@ -125,7 +143,7 @@ export const getFileBytes = action({
     v.null(),
   ),
   handler: async (ctx, args) => {
-    const file = await ctx.runQuery(internal.filesInternal.getOwnedFile, {
+    const file = await ctx.runQuery(internal.filesInternal.getAccessibleFile, {
       fileId: args.fileId,
     });
     if (!file) {
@@ -145,6 +163,55 @@ export const getFileBytes = action({
 });
 
 /**
+ * List metadata for files in a class library (no bytes).
+ * Requires `files:read`. Classroom-sized lists are intentionally bounded.
+ */
+export const listClassFiles = entitledClassQuery({
+  args: {},
+  returns: v.array(classFilePublicValidator),
+  handler: async (ctx) => {
+    await ctx.require("files:read");
+    const classId = ctx.classDoc._id;
+    const files = await ctx.db
+      .query("files")
+      .withIndex("by_classId", (q) => q.eq("classId", classId))
+      .order("desc")
+      .take(CLASS_FILES_LIST_LIMIT);
+    return files.map((file) => ({
+      _id: file._id,
+      userId: file.userId,
+      classId,
+      name: file.name,
+      contentType: file.contentType,
+      size: file.size,
+      preset: file.preset,
+      createdAt: file.createdAt,
+    }));
+  },
+});
+
+/**
+ * Rename a file the caller owns (metadata only).
+ */
+export const renameFile = entitledMutation({
+  args: {
+    fileId: v.id("files"),
+    name: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "fileRename", { key: ctx.userId, throws: true });
+    const file = await requireFileOwner(ctx, args.fileId, ctx.userId);
+    const name = args.name.trim().slice(0, 255) || "file";
+    if (name === file.name) {
+      return null;
+    }
+    await ctx.db.patch("files", args.fileId, { name });
+    return null;
+  },
+});
+
+/**
  * Delete a file the caller owns (row + storage blob).
  */
 export const deleteFile = entitledMutation({
@@ -154,13 +221,7 @@ export const deleteFile = entitledMutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     await rateLimiter.limit(ctx, "fileDelete", { key: ctx.userId, throws: true });
-    const file = await ctx.db.get("files", args.fileId);
-    if (!file || file.userId !== ctx.userId) {
-      throw new ConvexError({
-        code: "UPLOAD_FORBIDDEN",
-        message: "File not found or access denied",
-      });
-    }
+    const file = await requireFileOwner(ctx, args.fileId, ctx.userId);
     await ctx.storage.delete(file.storageId);
     await ctx.db.delete("files", args.fileId);
     return null;

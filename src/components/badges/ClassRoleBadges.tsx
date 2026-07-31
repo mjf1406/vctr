@@ -13,6 +13,7 @@ import {
   TeacherBadge,
   TeacherIcon,
 } from "@/components/icons/role-icons";
+import { CLASS_ROLE_ICONS } from "@/components/icons/role-icon-maps";
 import { cn } from "@/lib/utils";
 
 const ROLE_LABEL_KEYS = {
@@ -33,6 +34,33 @@ type ClassRoleBadgeProps = {
 function roleLabel(role: string, t: (key: string) => string): string {
   const labelKey = role in ROLE_LABEL_KEYS ? ROLE_LABEL_KEYS[role as KnownRole] : null;
   return labelKey ? t(labelKey) : role;
+}
+
+type ClassRoleSelectLabelProps = {
+  role: string;
+  /** Role color on the icon. Use for the closed trigger; omit in the menu. */
+  colored?: boolean;
+  className?: string;
+};
+
+/** Icon + translated role label for role `<Select>` triggers and items. */
+export function ClassRoleSelectLabel({
+  role,
+  colored = false,
+  className,
+}: ClassRoleSelectLabelProps) {
+  const { t } = useTranslation("classes");
+  const label = roleLabel(role, t);
+  const Icon = role in CLASS_ROLE_ICONS ? CLASS_ROLE_ICONS[role as KnownRole] : null;
+
+  return (
+    <span className={cn("inline-flex items-center gap-1.5", className)}>
+      {Icon ? (
+        <Icon className={cn("size-4", !colored && "text-current dark:text-current")} aria-hidden />
+      ) : null}
+      {label}
+    </span>
+  );
 }
 
 /** Icon + translated role label (home class cards, etc.). */

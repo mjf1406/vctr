@@ -22,8 +22,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useClassMembersByRole } from "@/hooks/members/useClassMembersByRole";
 import { useMemberSearch } from "@/hooks/members/useMemberSearch";
 import { useRemoveClassMember } from "@/hooks/members/useRemoveClassMember";
+import { useSetGuardianStudentLinks } from "@/hooks/members/useSetGuardianStudentLinks";
+import { useSetMemberRole } from "@/hooks/members/useSetMemberRole";
 import { useCurrentUser } from "@/hooks/user/useCurrentUser";
-import type { ClassMemberPublic, MemberListRole } from "@/lib/members/members";
+import type {
+  ClassMemberPublic,
+  JoinCodeRole,
+  LinkedStudentPublic,
+  MemberListRole,
+} from "@/lib/members/members";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type MembersPageProps = {
@@ -49,6 +56,8 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
   const { data: currentUser } = useCurrentUser();
   const { data, isPending, isError, refetch, isAuthLoading } = useClassMembersByRole(classId, role);
   const removeMutation = useRemoveClassMember(role);
+  const setRoleMutation = useSetMemberRole();
+  const setLinksMutation = useSetGuardianStudentLinks();
   const [searchQuery, setSearchQuery] = useState("");
   const members = data ?? [];
   const { filtered } = useMemberSearch({ members: data, query: searchQuery });
@@ -61,6 +70,30 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
       });
     },
     [classId, removeMutation],
+  );
+
+  const handleChangeRole = useCallback(
+    (member: ClassMemberPublic, nextRole: JoinCodeRole) => {
+      void setRoleMutation.mutateAsync({
+        classId,
+        userId: member.userId,
+        role: nextRole,
+        fromRole: member.role,
+      });
+    },
+    [classId, setRoleMutation],
+  );
+
+  const handleSetLinkedStudents = useCallback(
+    (member: ClassMemberPublic, linkedStudents: LinkedStudentPublic[]) => {
+      void setLinksMutation.mutateAsync({
+        classId,
+        guardianUserId: member.userId,
+        studentUserIds: linkedStudents.map((student) => student.userId),
+        linkedStudents,
+      });
+    },
+    [classId, setLinksMutation],
   );
 
   const showLoaded = !isPending && !isAuthLoading && !isError;
@@ -145,8 +178,11 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
             <MemberRow
               key={member.userId}
               member={member}
+              classId={classId}
               isSelf={currentUser?._id === member.userId}
               onRemove={handleRemove}
+              onChangeRole={handleChangeRole}
+              onSetLinkedStudents={role === "guardian" ? handleSetLinkedStudents : undefined}
             />
           ))}
         </div>

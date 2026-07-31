@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as JoinDisplayRouteImport } from './routes/join-display'
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/_app/route'
 import { Route as AuthenticatedClassRouteRouteImport } from './routes/_authenticated/_class/route'
 import { Route as PublicSplatRouteImport } from './routes/_public/$'
@@ -38,6 +39,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 } as any)
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinDisplayRoute = JoinDisplayRouteImport.update({
+  id: '/join-display',
+  path: '/join-display',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRouteRoute = AuthenticatedAppRouteRouteImport.update({
@@ -151,6 +157,7 @@ const AuthenticatedClassClassClassIdTeachersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedAppIndexRoute
+  '/join-display': typeof JoinDisplayRoute
   '/$': typeof PublicSplatRoute
   '/login': typeof PublicLoginRoute
   '/unauthorized': typeof PublicUnauthorizedRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedAppIndexRoute
+  '/join-display': typeof JoinDisplayRoute
   '/$': typeof PublicSplatRoute
   '/login': typeof PublicLoginRoute
   '/unauthorized': typeof PublicUnauthorizedRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
+  '/join-display': typeof JoinDisplayRoute
   '/_authenticated/_app': typeof AuthenticatedAppRouteRouteWithChildren
   '/_authenticated/_class': typeof AuthenticatedClassRouteRouteWithChildren
   '/_public/$': typeof PublicSplatRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/join-display'
     | '/$'
     | '/login'
     | '/unauthorized'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/join-display'
     | '/$'
     | '/login'
     | '/unauthorized'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/_public'
+    | '/join-display'
     | '/_authenticated/_app'
     | '/_authenticated/_class'
     | '/_public/$'
@@ -282,6 +294,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
+  JoinDisplayRoute: typeof JoinDisplayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join-display': {
+      id: '/join-display'
+      path: '/join-display'
+      fullPath: '/join-display'
+      preLoaderRoute: typeof JoinDisplayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/_app': {
@@ -549,6 +569,7 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
+  JoinDisplayRoute: JoinDisplayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

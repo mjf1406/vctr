@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useConvexMutation } from "@convex-dev/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAction } from "convex/react";
 
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { classFilesListQueryKey } from "@/hooks/files/useClassFiles";
 import type { UploadPresetKey, UploadPreset } from "@/lib/upload/acceptPresets";
 import { getUploadPreset } from "@/lib/upload/acceptPresets";
 import { codeFromError } from "@/lib/errors/convexError";
@@ -57,6 +59,9 @@ function finalizeErrorCode(error: unknown): UploadErrorCode {
   if (code === "INVALID_UPLOAD_CONTENT") return "invalid_content";
   if (code === "QUOTA_EXCEEDED") return "quota_exceeded";
   if (code === "INVALID_UPLOAD" || code === "UPLOAD_NOT_FOUND" || code === "UPLOAD_FORBIDDEN") {
+    return "finalize_failed";
+  }
+  if (code === "CLASS_UNAVAILABLE") {
     return "finalize_failed";
   }
   return "finalize_failed";
@@ -123,8 +128,12 @@ async function uploadViaXhr(opts: {
   });
 }
 
-export function useUploadFiles(presetKey: UploadPresetKey = "images") {
+export function useUploadFiles(
+  presetKey: UploadPresetKey = "images",
+  options?: { classId?: Id<"classes"> },
+) {
   const preset = useMemo<UploadPreset>(() => getUploadPreset(presetKey), [presetKey]);
+  const classId = options?.classId;
 
   const [items, setItems] = useState<UploadFileItem[]>([]);
   const itemsRef = useRef(items);
@@ -142,6 +151,7 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
 
   const generateUploadUrlMutation = useConvexMutation(api.files.generateUploadUrl);
   const finalizeUploadAction = useAction(api.files.finalizeUpload);
+  const queryClient = useQueryClient();
 
   const xhrByIdRef = useRef<Map<string, () => void>>(new Map());
   const processingRef = useRef(false);
@@ -180,7 +190,12 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
           storageId: result.storageId,
           name: item.file.name,
           preset: presetKey,
+          ...(classId !== undefined ? { classId } : {}),
         });
+
+        if (classId !== undefined) {
+          void queryClient.invalidateQueries({ queryKey: classFilesListQueryKey(classId) });
+        }
 
         setItemsSync((prev) =>
           prev.map((it) =>
@@ -220,7 +235,14 @@ export function useUploadFiles(presetKey: UploadPresetKey = "images") {
         xhrByIdRef.current.delete(item.id);
       }
     },
-    [finalizeUploadAction, generateUploadUrlMutation, presetKey, setItemsSync],
+    [
+      classId,
+      finalizeUploadAction,
+      generateUploadUrlMutation,
+      presetKey,
+      queryClient,
+      setItemsSync,
+    ],
   );
 
   const processQueue = useCallback(async () => {
