@@ -351,7 +351,7 @@ Keep the rest of the runbook (ports, `PUBLIC_HOST`, prune/rebuild, instance secr
 | File                                           | Change                                                                      |
 | ---------------------------------------------- | --------------------------------------------------------------------------- |
 | [`docker-compose.yml`](./docker-compose.yml)   | Top-level `name:` (currently `vctr`) — local Compose project name           |
-| [`.env.docker.example`](./.env.docker.example) | `INSTANCE_NAME` (and document a new `INSTANCE_SECRET` for non-toy installs) |
+| [`example.env`](./example.env)                 | `PUBLIC_HOST`, `INSTANCE_NAME` (new `INSTANCE_SECRET` for non-toy installs) |
 | [`convex/appConfig.ts`](./convex/appConfig.ts) | `selfHostUrl` / `downloadUrl` / `github` → your repo or docs                |
 
 - [ ] `docs/SELF_HOSTING.md` Portainer URL + branch updated for this remote

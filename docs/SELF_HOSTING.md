@@ -31,7 +31,7 @@ Requires Docker Compose v2 and enough RAM to build (see below).
 ```bash
 git clone <your-fork-or-repo-url>
 cd <repo>
-cp .env.docker.example .env   # set PUBLIC_HOST if needed
+cp example.env .env   # set PUBLIC_HOST if needed
 docker compose up -d --build
 ```
 
@@ -48,7 +48,7 @@ docker compose down -v          # stop and wipe data
 2. Repository URL: `https://github.com/mjf1406/vctr`
 3. Repository Reference: `refs/heads/master`
 4. Compose path: `docker-compose.yml`
-5. Environment variables — at least `PUBLIC_HOST` if not using localhost only (see [`.env.docker.example`](../.env.docker.example))
+5. Environment variables → **Load variables from .env file** → upload [`example.env`](../example.env) (edit `PUBLIC_HOST` first if needed)
 6. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
 7. Open `http://<PUBLIC_HOST>:8088` and create an email/password account
 

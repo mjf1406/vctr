@@ -9,7 +9,7 @@ dist
 *.local
 .env
 .env.*
-!.env.docker.example
+!example.env
 agent-transcripts
 coverage
 **/__screenshots__
