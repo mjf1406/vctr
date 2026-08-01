@@ -1,5 +1,7 @@
 # vctr
 
+[![AI Level 3](https://ai-level.dev/badge/standard/3.svg)](https://ai-level.dev/level-3)
+
 Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 **ClassClarus** (classroom CRUD, members, join codes, teacher/student roles) is a **worked example**, not the product. Keep the platform patterns; replace the nouns when cloning for another domain.
