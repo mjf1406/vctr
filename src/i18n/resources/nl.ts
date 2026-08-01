@@ -58,6 +58,18 @@ const nl = {
     classroomCopyUrl: "Klas-URL kopiëren",
     classroomTrustedLanWarning:
       "Alleen vertrouwde school-/thuisnetwerken. Iedereen op deze wifi kan de app bereiken.",
+    iconPickerPlaceholder: "Kies een icoon",
+    iconSearchPlaceholder: "Iconen zoeken…",
+    iconSearchClear: "Zoekopdracht wissen",
+    iconSearchSelectCategory: "Selecteer een categorie om iconen te bekijken",
+    iconSearchSelectCategoryAbove: "Selecteer hierboven een categorie om iconen te tonen",
+    iconSearchResults: "{{count}} resultaten",
+    iconSearchNoMatch: "Geen iconen komen overeen met je zoekopdracht.",
+    iconCategoryEmpty: "Geen iconen in deze categorie.",
+    iconInitializing: "Initialiseren…",
+    iconCountShown: "{{count}} icoon getoond",
+    iconCountShown_other: "{{count}} iconen getoond",
+    iconCategoryCount: "{{name}} ({{count}} iconen)",
   },
   auth: {
     welcomeTitle: "Welkom",
@@ -174,6 +186,8 @@ const nl = {
     selfHostUpdateTitle: "Update beschikbaar",
     selfHostUpdateDescription: "Versie {{version}} is beschikbaar voor deze self-host-instantie.",
     selfHostUpdateAction: "Upgradehandleiding",
+    selfHostVersionLabel: "App-versie",
+    selfHostVersionDescription: "De versie die in deze self-hosted installatie draait.",
   },
   account: {
     title: "Account",

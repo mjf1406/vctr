@@ -60,6 +60,18 @@ const fr = {
     classroomCopyUrl: "Copier l'URL de la classe",
     classroomTrustedLanWarning:
       "Réseaux scolaires/domiciles de confiance uniquement. Toute personne sur ce Wi‑Fi peut accéder à l'app.",
+    iconPickerPlaceholder: "Choisir une icône",
+    iconSearchPlaceholder: "Rechercher des icônes…",
+    iconSearchClear: "Effacer la recherche",
+    iconSearchSelectCategory: "Sélectionnez une catégorie pour parcourir les icônes",
+    iconSearchSelectCategoryAbove: "Sélectionnez une catégorie ci-dessus pour voir les icônes",
+    iconSearchResults: "{{count}} résultats",
+    iconSearchNoMatch: "Aucune icône ne correspond à votre recherche.",
+    iconCategoryEmpty: "Aucune icône dans cette catégorie.",
+    iconInitializing: "Initialisation…",
+    iconCountShown: "{{count}} icône affichée",
+    iconCountShown_other: "{{count}} icônes affichées",
+    iconCategoryCount: "{{name}} ({{count}} icônes)",
   },
   auth: {
     welcomeTitle: "Bienvenue",
@@ -179,6 +191,8 @@ const fr = {
     selfHostUpdateDescription:
       "La version {{version}} est disponible pour cette instance auto-hébergée.",
     selfHostUpdateAction: "Guide de mise à jour",
+    selfHostVersionLabel: "Version de l'app",
+    selfHostVersionDescription: "La version exécutée sur cette installation auto-hébergée.",
   },
   account: {
     title: "Compte",

@@ -58,6 +58,18 @@ const uk = {
     classroomCopyUrl: "Копіювати URL класу",
     classroomTrustedLanWarning:
       "Лише довірені шкільні/домашні мережі. Будь-хто в цій Wi‑Fi мережі може відкрити застосунок.",
+    iconPickerPlaceholder: "Обрати піктограму",
+    iconSearchPlaceholder: "Пошук піктограм…",
+    iconSearchClear: "Очистити пошук",
+    iconSearchSelectCategory: "Виберіть категорію, щоб переглянути піктограми",
+    iconSearchSelectCategoryAbove: "Виберіть категорію вище, щоб побачити піктограми",
+    iconSearchResults: "{{count}} результатів",
+    iconSearchNoMatch: "Немає піктограм, що відповідають пошуку.",
+    iconCategoryEmpty: "У цій категорії немає піктограм.",
+    iconInitializing: "Ініціалізація…",
+    iconCountShown: "Показано {{count}} піктограму",
+    iconCountShown_other: "Показано піктограм: {{count}}",
+    iconCategoryCount: "{{name}} ({{count}} піктограм)",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",
@@ -174,6 +186,8 @@ const uk = {
     selfHostUpdateTitle: "Доступне оновлення",
     selfHostUpdateDescription: "Версія {{version}} доступна для цього self-host екземпляра.",
     selfHostUpdateAction: "Інструкція з оновлення",
+    selfHostVersionLabel: "Версія застосунку",
+    selfHostVersionDescription: "Версія, що працює в цій самостійній установці.",
   },
   account: {
     title: "Обліковий запис",

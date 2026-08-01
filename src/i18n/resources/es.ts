@@ -57,6 +57,18 @@ const es = {
     classroomCopyUrl: "Copiar URL del aula",
     classroomTrustedLanWarning:
       "Solo redes escolares o domésticas de confianza. Cualquiera en este Wi‑Fi puede acceder a la app.",
+    iconPickerPlaceholder: "Elegir icono",
+    iconSearchPlaceholder: "Buscar iconos…",
+    iconSearchClear: "Borrar búsqueda",
+    iconSearchSelectCategory: "Selecciona una categoría para explorar iconos",
+    iconSearchSelectCategoryAbove: "Selecciona una categoría arriba para ver iconos",
+    iconSearchResults: "{{count}} resultados",
+    iconSearchNoMatch: "Ningún icono coincide con la búsqueda.",
+    iconCategoryEmpty: "No hay iconos en esta categoría.",
+    iconInitializing: "Inicializando…",
+    iconCountShown: "{{count}} icono mostrado",
+    iconCountShown_other: "{{count}} iconos mostrados",
+    iconCategoryCount: "{{name}} ({{count}} iconos)",
   },
   auth: {
     welcomeTitle: "Bienvenido",
@@ -174,6 +186,8 @@ const es = {
     selfHostUpdateDescription:
       "La versión {{version}} está disponible para esta instancia autoalojada.",
     selfHostUpdateAction: "Guía de actualización",
+    selfHostVersionLabel: "Versión de la app",
+    selfHostVersionDescription: "La versión que se ejecuta en esta instalación autohospedada.",
   },
   account: {
     title: "Cuenta",

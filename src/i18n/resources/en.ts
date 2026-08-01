@@ -57,6 +57,18 @@ const en = {
     classroomCopyUrl: "Copy classroom URL",
     classroomTrustedLanWarning:
       "Trusted school/home networks only. Anyone on this Wi‑Fi can reach the app.",
+    iconPickerPlaceholder: "Pick an icon",
+    iconSearchPlaceholder: "Search icons…",
+    iconSearchClear: "Clear search",
+    iconSearchSelectCategory: "Select a category to browse icons",
+    iconSearchSelectCategoryAbove: "Select a category above to view icons",
+    iconSearchResults: "{{count}} results",
+    iconSearchNoMatch: "No icons match your search.",
+    iconCategoryEmpty: "No icons in this category.",
+    iconInitializing: "Initializing…",
+    iconCountShown: "{{count}} icon shown",
+    iconCountShown_other: "{{count}} icons shown",
+    iconCategoryCount: "{{name}} ({{count}} icons)",
   },
   auth: {
     welcomeTitle: "Welcome",
@@ -172,6 +184,8 @@ const en = {
     selfHostUpdateTitle: "Update available",
     selfHostUpdateDescription: "Version {{version}} is available for this self-hosted instance.",
     selfHostUpdateAction: "Upgrade guide",
+    selfHostVersionLabel: "App version",
+    selfHostVersionDescription: "The version running in this self-hosted install.",
   },
   account: {
     title: "Account",

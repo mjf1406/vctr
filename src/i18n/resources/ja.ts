@@ -57,6 +57,18 @@ const ja = {
     classroomCopyUrl: "教室URLをコピー",
     classroomTrustedLanWarning:
       "信頼できる学校・自宅ネットワークのみで使用してください。同じWi‑Fi上の誰でもアプリにアクセスできます。",
+    iconPickerPlaceholder: "アイコンを選択",
+    iconSearchPlaceholder: "アイコンを検索…",
+    iconSearchClear: "検索をクリア",
+    iconSearchSelectCategory: "カテゴリを選んでアイコンを閲覧",
+    iconSearchSelectCategoryAbove: "上のカテゴリを選んでアイコンを表示",
+    iconSearchResults: "{{count}} 件",
+    iconSearchNoMatch: "検索に一致するアイコンがありません。",
+    iconCategoryEmpty: "このカテゴリにアイコンがありません。",
+    iconInitializing: "初期化中…",
+    iconCountShown: "{{count}} 個のアイコンを表示",
+    iconCountShown_other: "{{count}} 個のアイコンを表示",
+    iconCategoryCount: "{{name}}（{{count}} 個）",
   },
   auth: {
     welcomeTitle: "ようこそ",
@@ -173,6 +185,8 @@ const ja = {
     selfHostUpdateTitle: "アップデートがあります",
     selfHostUpdateDescription: "このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
     selfHostUpdateAction: "アップグレード手順",
+    selfHostVersionLabel: "アプリバージョン",
+    selfHostVersionDescription: "このセルフホスト環境で動作しているバージョンです。",
   },
   account: {
     title: "アカウント",

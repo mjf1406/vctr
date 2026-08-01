@@ -57,6 +57,18 @@ const zht = {
     classroomCopyUrl: "複製教室網址",
     classroomTrustedLanWarning:
       "僅限受信任的學校/家庭網路。同一 Wi‑Fi 上的任何人都可以存取此應用程式。",
+    iconPickerPlaceholder: "選擇圖示",
+    iconSearchPlaceholder: "搜尋圖示…",
+    iconSearchClear: "清除搜尋",
+    iconSearchSelectCategory: "選擇分類以瀏覽圖示",
+    iconSearchSelectCategoryAbove: "在上方選擇分類以查看圖示",
+    iconSearchResults: "{{count}} 個結果",
+    iconSearchNoMatch: "沒有符合的圖示。",
+    iconCategoryEmpty: "此分類沒有圖示。",
+    iconInitializing: "初始化中…",
+    iconCountShown: "顯示 {{count}} 個圖示",
+    iconCountShown_other: "顯示 {{count}} 個圖示",
+    iconCategoryCount: "{{name}}（{{count}} 個）",
   },
   auth: {
     welcomeTitle: "歡迎",
@@ -171,6 +183,8 @@ const zht = {
     selfHostUpdateTitle: "有可用更新",
     selfHostUpdateDescription: "此自託管實例可升級到版本 {{version}}。",
     selfHostUpdateAction: "升級指南",
+    selfHostVersionLabel: "應用程式版本",
+    selfHostVersionDescription: "此自架安裝正在執行的版本。",
   },
   account: {
     title: "帳戶",

@@ -59,6 +59,18 @@ const de = {
     classroomCopyUrl: "Klassen-URL kopieren",
     classroomTrustedLanWarning:
       "Nur vertrauenswürdige Schul-/Heimnetzwerke. Jeder in diesem WLAN kann die App erreichen.",
+    iconPickerPlaceholder: "Symbol wählen",
+    iconSearchPlaceholder: "Symbole suchen…",
+    iconSearchClear: "Suche löschen",
+    iconSearchSelectCategory: "Kategorie wählen, um Symbole zu durchsuchen",
+    iconSearchSelectCategoryAbove: "Oben eine Kategorie wählen, um Symbole anzuzeigen",
+    iconSearchResults: "{{count}} Ergebnisse",
+    iconSearchNoMatch: "Keine Symbole entsprechen der Suche.",
+    iconCategoryEmpty: "Keine Symbole in dieser Kategorie.",
+    iconInitializing: "Wird initialisiert…",
+    iconCountShown: "{{count}} Symbol angezeigt",
+    iconCountShown_other: "{{count}} Symbole angezeigt",
+    iconCategoryCount: "{{name}} ({{count}} Symbole)",
   },
   auth: {
     welcomeTitle: "Willkommen",
@@ -176,6 +188,8 @@ const de = {
     selfHostUpdateTitle: "Update verfügbar",
     selfHostUpdateDescription: "Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
     selfHostUpdateAction: "Upgrade-Anleitung",
+    selfHostVersionLabel: "App-Version",
+    selfHostVersionDescription: "Die Version dieser selbst gehosteten Installation.",
   },
   account: {
     title: "Konto",

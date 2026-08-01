@@ -57,6 +57,18 @@ const pt = {
     classroomCopyUrl: "Copiar URL da sala",
     classroomTrustedLanWarning:
       "Apenas redes escolares/domésticas de confiança. Qualquer pessoa neste Wi‑Fi pode aceder à app.",
+    iconPickerPlaceholder: "Escolher ícone",
+    iconSearchPlaceholder: "Pesquisar ícones…",
+    iconSearchClear: "Limpar pesquisa",
+    iconSearchSelectCategory: "Selecione uma categoria para explorar ícones",
+    iconSearchSelectCategoryAbove: "Selecione uma categoria acima para ver ícones",
+    iconSearchResults: "{{count}} resultados",
+    iconSearchNoMatch: "Nenhum ícone corresponde à pesquisa.",
+    iconCategoryEmpty: "Nenhum ícone nesta categoria.",
+    iconInitializing: "A inicializar…",
+    iconCountShown: "{{count}} ícone mostrado",
+    iconCountShown_other: "{{count}} ícones mostrados",
+    iconCategoryCount: "{{name}} ({{count}} ícones)",
   },
   auth: {
     welcomeTitle: "Bem-vindo",
@@ -173,6 +185,8 @@ const pt = {
     selfHostUpdateDescription:
       "A versão {{version}} está disponível para esta instância self-hosted.",
     selfHostUpdateAction: "Guia de atualização",
+    selfHostVersionLabel: "Versão da app",
+    selfHostVersionDescription: "A versão em execução nesta instalação self-hosted.",
   },
   account: {
     title: "Conta",

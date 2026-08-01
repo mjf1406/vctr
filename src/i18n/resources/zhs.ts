@@ -57,6 +57,18 @@ const zhs = {
     classroomCopyUrl: "复制教室网址",
     classroomTrustedLanWarning:
       "仅限受信任的学校/家庭网络。同一 Wi‑Fi 上的任何人都可以访问该应用。",
+    iconPickerPlaceholder: "选择图标",
+    iconSearchPlaceholder: "搜索图标…",
+    iconSearchClear: "清除搜索",
+    iconSearchSelectCategory: "选择分类以浏览图标",
+    iconSearchSelectCategoryAbove: "在上方选择分类以查看图标",
+    iconSearchResults: "{{count}} 个结果",
+    iconSearchNoMatch: "没有匹配的图标。",
+    iconCategoryEmpty: "此分类没有图标。",
+    iconInitializing: "正在初始化…",
+    iconCountShown: "显示 {{count}} 个图标",
+    iconCountShown_other: "显示 {{count}} 个图标",
+    iconCategoryCount: "{{name}}（{{count}} 个）",
   },
   auth: {
     welcomeTitle: "欢迎",
@@ -171,6 +183,8 @@ const zhs = {
     selfHostUpdateTitle: "有可用更新",
     selfHostUpdateDescription: "此自托管实例可升级到版本 {{version}}。",
     selfHostUpdateAction: "升级指南",
+    selfHostVersionLabel: "应用版本",
+    selfHostVersionDescription: "此自托管安装正在运行的版本。",
   },
   account: {
     title: "账户",

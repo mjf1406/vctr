@@ -58,6 +58,18 @@ const ru = {
     classroomCopyUrl: "Копировать URL класса",
     classroomTrustedLanWarning:
       "Только доверенные школьные/домашние сети. Любой в этой Wi‑Fi сети может открыть приложение.",
+    iconPickerPlaceholder: "Выбрать значок",
+    iconSearchPlaceholder: "Поиск значков…",
+    iconSearchClear: "Очистить поиск",
+    iconSearchSelectCategory: "Выберите категорию, чтобы просмотреть значки",
+    iconSearchSelectCategoryAbove: "Выберите категорию выше, чтобы увидеть значки",
+    iconSearchResults: "{{count}} результатов",
+    iconSearchNoMatch: "Нет значков, соответствующих поиску.",
+    iconCategoryEmpty: "В этой категории нет значков.",
+    iconInitializing: "Инициализация…",
+    iconCountShown: "Показан {{count}} значок",
+    iconCountShown_other: "Показано значков: {{count}}",
+    iconCategoryCount: "{{name}} ({{count}} значков)",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",
@@ -174,6 +186,8 @@ const ru = {
     selfHostUpdateTitle: "Доступно обновление",
     selfHostUpdateDescription: "Версия {{version}} доступна для этого self-host экземпляра.",
     selfHostUpdateAction: "Инструкция по обновлению",
+    selfHostVersionLabel: "Версия приложения",
+    selfHostVersionDescription: "Версия, запущенная в этой самостоятельной установке.",
   },
   account: {
     title: "Аккаунт",

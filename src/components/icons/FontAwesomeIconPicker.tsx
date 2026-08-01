@@ -5,6 +5,8 @@ import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons/faImage";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { SearchIcon, XIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { resolveIconId } from "./fontawesome-icon-catalog";
 import { UI_CATEGORIES } from "./fa-icon-categories";
@@ -13,7 +15,13 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type IconCategoriesData = {
@@ -144,6 +152,7 @@ type LazyIconCellProps = {
 };
 
 function LazyIconCell({ parsedIcon, isSelected, onSelect }: LazyIconCellProps) {
+  const { t } = useTranslation("common");
   const [loadState, setLoadState] = React.useState<IconLoadState>({
     status: "idle",
     icon: null,
@@ -204,7 +213,7 @@ function LazyIconCell({ parsedIcon, isSelected, onSelect }: LazyIconCellProps) {
             className="text-muted-foreground animate-pulse text-2xl"
             fixedWidth
           />
-          <span className="text-[8px] text-muted-foreground leading-none">Loading...</span>
+          <span className="text-[8px] text-muted-foreground leading-none">{t("loading")}</span>
         </>
       ) : loadState.status === "error" ? (
         <>
@@ -244,14 +253,16 @@ function LazyIconCell({ parsedIcon, isSelected, onSelect }: LazyIconCellProps) {
 export function FontAwesomeIconPicker({
   value = null,
   onChange,
-  placeholder = "Pick an icon",
+  placeholder,
   disabled,
   className,
 }: FontAwesomeIconPickerProps) {
+  const { t } = useTranslation("common");
   const [open, setOpen] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
   const [query, setQuery] = React.useState("");
   const deferredQuery = React.useDeferredValue(query.trim().toLowerCase());
+  const triggerLabel = placeholder ?? t("iconPickerPlaceholder");
 
   // Load ALL icons from all categories (for search)
   const allIcons = React.useMemo(() => {
@@ -440,36 +451,54 @@ export function FontAwesomeIconPicker({
             <span className="truncate">{value.iconName}</span>
           </>
         ) : (
-          <span className="text-muted-foreground">{placeholder}</span>
+          <span className="text-muted-foreground">{triggerLabel}</span>
         )}
       </DialogTrigger>
 
       <DialogContent className="w-[600px] h-[600px] p-3 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search icons…"
-            autoComplete="off"
-            spellCheck={false}
-            className="flex-1"
-          />
-          <Button type="button" variant="secondary" onClick={() => setQuery("")} disabled={!query}>
-            Clear
-          </Button>
+        {/* pr leaves room for the dialog close button */}
+        <div className="pr-10">
+          <InputGroup>
+            <InputGroupInput
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("iconSearchPlaceholder")}
+              aria-label={t("iconSearchPlaceholder")}
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <InputGroupAddon>
+              <SearchIcon aria-hidden="true" />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">
+              {query || selectedCategory ? (
+                <InputGroupText>
+                  {t("iconSearchResults", { count: filteredIcons.length })}
+                </InputGroupText>
+              ) : null}
+              {query ? (
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label={t("iconSearchClear")}
+                  onClick={() => setQuery("")}
+                >
+                  <XIcon />
+                </InputGroupButton>
+              ) : null}
+            </InputGroupAddon>
+          </InputGroup>
         </div>
 
-        <div className="text-xs text-muted-foreground">
-          {deferredQuery
-            ? `Searching all icons (${filteredIcons.length} results)`
-            : "Select a category to browse icons"}
-        </div>
+        {deferredQuery ? null : (
+          <div className="text-xs text-muted-foreground">{t("iconSearchSelectCategory")}</div>
+        )}
 
         <ScrollArea ref={catScrollAreaRootRef} className="w-full rounded-md border">
           <div className="flex w-max gap-2 p-2">
             {categories.map((categoryId) => {
               const active = selectedCategory === categoryId;
               const count = categoriesData.categories[categoryId].length;
+              const name = formatCategoryName(categoryId);
 
               return (
                 <Button
@@ -479,9 +508,9 @@ export function FontAwesomeIconPicker({
                   variant={active ? "default" : "secondary"}
                   className="shrink-0 gap-2"
                   onClick={() => handleCategorySelect(categoryId)}
-                  title={`${formatCategoryName(categoryId)} (${count} icons)`}
+                  title={t("iconCategoryCount", { name, count })}
                 >
-                  <span>{formatCategoryName(categoryId)}</span>
+                  <span>{name}</span>
                   <span className="text-xs opacity-70">{count}</span>
                 </Button>
               );
@@ -502,14 +531,16 @@ export function FontAwesomeIconPicker({
             <div className="relative p-2">
               {!deferredQuery && !selectedCategory ? (
                 <div className="p-4 text-sm text-muted-foreground text-center">
-                  Select a category above to view icons
+                  {t("iconSearchSelectCategoryAbove")}
                 </div>
               ) : filteredIcons.length === 0 ? (
                 <div className="p-4 text-sm text-muted-foreground text-center">
-                  {deferredQuery ? "No icons match your search." : "No icons in this category."}
+                  {deferredQuery ? t("iconSearchNoMatch") : t("iconCategoryEmpty")}
                 </div>
               ) : !gridViewportEl ? (
-                <div className="p-4 text-sm text-muted-foreground text-center">Initializing…</div>
+                <div className="p-4 text-sm text-muted-foreground text-center">
+                  {t("iconInitializing")}
+                </div>
               ) : (
                 <div className="relative" style={{ height: rowVirtualizer.getTotalSize() }}>
                   {rowVirtualizer.getVirtualItems().map((row) => {
@@ -555,8 +586,8 @@ export function FontAwesomeIconPicker({
 
         <div className="flex items-center justify-between border-t px-3 py-2 text-xs text-muted-foreground">
           <span>
-            {selectedCategory
-              ? `${filteredIcons.length.toLocaleString()} ${filteredIcons.length === 1 ? "icon" : "icons"} shown`
+            {selectedCategory || deferredQuery
+              ? t("iconCountShown", { count: filteredIcons.length })
               : "—"}
           </span>
           <span>{selectedCategory ? formatCategoryName(selectedCategory) : ""}</span>
