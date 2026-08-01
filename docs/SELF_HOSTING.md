@@ -8,7 +8,7 @@ Clone-and-run and Portainer both use the same root [`docker-compose.yml`](../doc
 
 | Service             | URL                         |
 | ------------------- | --------------------------- |
-| App                 | http://`<PUBLIC_HOST>`:8080 |
+| App                 | http://`<PUBLIC_HOST>`:8088 |
 | Convex API          | http://`<PUBLIC_HOST>`:3210 |
 | Convex HTTP actions | http://`<PUBLIC_HOST>`:3211 |
 | Convex dashboard    | http://`<PUBLIC_HOST>`:6791 |
@@ -49,7 +49,9 @@ docker compose down -v          # stop and wipe data
 3. Compose path: `docker-compose.yml`
 4. Environment variables — at least `PUBLIC_HOST` if not using localhost only (see [`.env.docker.example`](../.env.docker.example))
 5. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
-6. Open `http://<PUBLIC_HOST>:8080` and create an email/password account
+6. Open `http://<PUBLIC_HOST>:8088` and create an email/password account
+
+Default app port is **8088** (8080 is often used by qBittorrent and similar). Override with `WEB_PORT` if needed.
 
 ### Clean rebuild after compose/Dockerfile changes
 

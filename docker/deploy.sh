@@ -6,7 +6,7 @@ AUTH_KEYS_FILE="/convex/data/auth_keys.json"
 MARKER_FILE="/convex/data/.deploy_complete"
 
 PUBLIC_HOST="${PUBLIC_HOST:-localhost}"
-WEB_PORT="${WEB_PORT:-8080}"
+WEB_PORT="${WEB_PORT:-8088}"
 SITE_URL="http://${PUBLIC_HOST}:${WEB_PORT}"
 
 if [ ! -s "${ADMIN_KEY_FILE}" ]; then

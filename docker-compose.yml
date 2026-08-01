@@ -2,7 +2,7 @@
 # Builds web/deploy on the machine. Docs: docs/SELF_HOSTING.md
 #
 #   PUBLIC_HOST=<lan-ip-or-localhost> docker compose up -d --build
-#   open http://$PUBLIC_HOST:8080
+#   open http://$PUBLIC_HOST:8088
 
 name: vctr
 
@@ -66,7 +66,7 @@ services:
     environment:
       CONVEX_SELF_HOSTED_URL: http://backend:3210
       PUBLIC_HOST: "${PUBLIC_HOST:-localhost}"
-      WEB_PORT: "${WEB_PORT:-8080}"
+      WEB_PORT: "${WEB_PORT:-8088}"
     depends_on:
       backend:
         condition: service_healthy
@@ -85,7 +85,7 @@ services:
         VITE_SELF_HOSTED: "true"
     pull_policy: build
     ports:
-      - "${WEB_PORT:-8080}:80"
+      - "${WEB_PORT:-8088}:80"
     environment:
       PUBLIC_HOST: "${PUBLIC_HOST:-localhost}"
       PORT: "${PORT:-3210}"
