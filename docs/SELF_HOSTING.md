@@ -55,7 +55,13 @@ If a previous deploy failed mid-build, remove the stack (keep the volume if you 
 
 ### Build fails with exit code 134
 
-That is usually the Docker host running out of memory while bundling the SPA. Give Docker Desktop (or your engine) at least **6–8 GB RAM**, then redeploy. The image build already disables React Compiler and raises the Node heap to reduce peak usage.
+Not an `.env` problem. Exit 134 means the SPA build was killed (usually low Docker RAM). Defaults in compose are enough for localhost.
+
+1. Confirm Portainer **Repository reference** is the branch that has these Docker files (e.g. `refs/heads/docker`), not `main`/`master` if the stack only lives on a feature branch.
+2. Push the latest commit, then redeploy so Portainer rebuilds (not a cached failed layer).
+3. Give Docker Desktop (or the engine) at least **6–8 GB RAM**, then redeploy.
+
+The image build disables React Compiler and runs Vite+ under Node with an 8 GB heap cap.
 
 ## Changing host or ports
 

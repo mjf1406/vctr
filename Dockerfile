@@ -16,8 +16,8 @@ RUN chmod +x /app/docker/deploy.sh
 
 ENTRYPOINT ["/app/docker/deploy.sh"]
 
-# --- Web: build SPA then serve with nginx ------------------------------
-FROM oven/bun:1.3.14 AS web-build
+# --- Web deps (bun lockfile) -------------------------------------------
+FROM oven/bun:1.3.14 AS web-deps
 
 WORKDIR /app
 
@@ -25,6 +25,15 @@ COPY package.json bun.lock ./
 COPY patches ./patches
 RUN bun install --frozen-lockfile --ignore-scripts
 
+# --- Web build under real Node so --max-old-space-size applies ---------
+# bunx in the bun image often runs the Vite+ CLI via Bun, which ignores
+# NODE_OPTIONS and aborts with exit 134 (SIGABRT) under low Docker RAM.
+FROM node:22-bookworm-slim AS web-build
+
+WORKDIR /app
+
+COPY --from=web-deps /app/node_modules ./node_modules
+COPY package.json bun.lock ./
 COPY . .
 
 ARG VITE_CONVEX_URL=http://localhost:3210
@@ -38,10 +47,10 @@ ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
     VITE_SELF_HOSTED=$VITE_SELF_HOSTED \
     NODE_ENV=production \
     DISABLE_REACT_COMPILER=true \
-    NODE_OPTIONS=--max-old-space-size=4096
+    NODE_OPTIONS=--max-old-space-size=8192 \
+    UV_THREADPOOL_SIZE=2
 
-# Skip `tsc -b` (separate from SPA emit). Avoid React Compiler in-image (OOM → exit 134).
-RUN bunx vp build
+RUN node node_modules/vite-plus/bin/vp build
 
 FROM nginx:1.27-alpine AS web
 

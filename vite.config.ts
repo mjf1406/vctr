@@ -73,5 +73,6 @@ export default defineConfig({
   build: {
     // Slightly lower peak RAM during Docker image builds.
     reportCompressedSize: false,
+    sourcemap: false,
   },
 });
