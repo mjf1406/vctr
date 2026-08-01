@@ -138,6 +138,8 @@ export default [
   },
 
   // Electron main/preload + shared types (Node, tsconfig.node.json).
+  // Do not list these paths in allowDefaultProject — they are already in
+  // tsconfig.node.json; dual membership makes typed lint fail to parse.
   {
     files: ["electron/*.ts", "shared/*.ts"],
     languageOptions: {
@@ -145,9 +147,6 @@ export default [
       parserOptions: {
         projectService: {
           defaultProject: "./tsconfig.node.json",
-          // Keep globs shallow (no `**`) — same pattern as the Convex block.
-          allowDefaultProject: ["electron/*.ts", "shared/*.ts", "eslint.config.js"],
-          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 50,
         },
         tsconfigRootDir,
       },
