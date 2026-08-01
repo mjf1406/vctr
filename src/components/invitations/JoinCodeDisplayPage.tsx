@@ -2,7 +2,13 @@ import { useEffect, useState, type ReactNode } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
 
-import { formatJoinCodeDisplay, joinCodeShareUrl, joinPageUrl } from "@/lib/invitations/joinCodes";
+import { useClassroomSession } from "@/hooks/classroom/useClassroomSession";
+import {
+  formatJoinCodeDisplay,
+  joinCodeShareUrl,
+  joinPageUrl,
+  syncJoinOriginFromClassroom,
+} from "@/lib/invitations/joinCodes";
 import { isCompleteJoinCode, normalizeJoinCodeInput } from "@/lib/invitations/joinCodeFormSchema";
 
 type JoinCodeDisplayPageProps = {
@@ -34,12 +40,18 @@ function StepItem({ index, children }: { index: number; children: ReactNode }) {
 
 export function JoinCodeDisplayPage({ codeFromSearch }: JoinCodeDisplayPageProps) {
   const { t, i18n } = useTranslation("classes");
+  const classroomSession = useClassroomSession();
   const normalized = codeFromSearch ? normalizeJoinCodeInput(codeFromSearch) : "";
   const valid = isCompleteJoinCode(normalized);
   const displayCode = valid ? formatJoinCodeDisplay(normalized) : "";
+  const [qrSize, setQrSize] = useState(280);
+
+  useEffect(() => {
+    syncJoinOriginFromClassroom(classroomSession);
+  }, [classroomSession]);
+
   const shareUrl = valid ? joinCodeShareUrl(normalized) : "";
   const joinUrl = joinPageUrl();
-  const [qrSize, setQrSize] = useState(280);
 
   useEffect(() => {
     document.title = t("inviteDisplayTitle");

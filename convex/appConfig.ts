@@ -17,9 +17,9 @@ export const APP_CONFIG = {
   cookieUrl: "https://www.classclarus.com/cookie-policy",
   changeLog: "https://change-log.pages.dev/classclarus",
   roadMap: "https://change-log.pages.dev/classclarus/board",
-  github: "https://github.com/mjf1406/classclarus-app",
-  /** Electron / desktop download landing (billing Free card). */
-  downloadUrl: "https://github.com/mjf1406/classclarus-app",
+  github: "https://github.com/mjf1406/vctr",
+  /** Electron / desktop download landing (billing Free card). Stable “latest” Release. */
+  downloadUrl: "https://github.com/mjf1406/vctr/releases/latest",
   /** Self-hosting docs (billing Free card). Change when cloning. */
   selfHostUrl: "https://github.com/mjf1406/vctr/blob/master/docs/SELF_HOSTING.md",
   /** Tip / gift links (billing page; replace placeholders). */

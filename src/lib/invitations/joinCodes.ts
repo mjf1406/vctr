@@ -1,9 +1,21 @@
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
+import { classroomJoinOrigin, type ClassroomSession } from "@/lib/classroom/classroomSession";
 import { randomClientId } from "@/lib/optimistic";
 
 export type JoinCodePublic = Omit<Doc<"joinCodes">, "expirationJobId"> & {
   _pending?: boolean;
 };
+
+/** Optional Electron LAN origin override for share / display URLs. */
+let joinOriginOverride: string | null = null;
+
+export function setJoinOriginOverride(origin: string | null): void {
+  joinOriginOverride = origin;
+}
+
+export function syncJoinOriginFromClassroom(session: ClassroomSession | null): void {
+  setJoinOriginOverride(classroomJoinOrigin(session));
+}
 
 export function isPendingJoinCode(code: JoinCodePublic): boolean {
   return code._pending === true || String(code._id).startsWith("optimistic:");
@@ -35,7 +47,8 @@ function joinAppBaseUrl(): string {
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
-  return `${window.location.origin}${base}`;
+  const origin = joinOriginOverride ?? window.location.origin;
+  return `${origin.replace(/\/$/, "")}${base.startsWith("/") ? base : `/${base}`}`;
 }
 
 /** Absolute join page URL: `{origin}{BASE_URL}join` */

@@ -2,7 +2,10 @@
   "name": "vctr",
   "version": "0.0.0",
   "private": true,
+  "description": "ClassClarus — classroom app (web, self-host, Electron)",
+  "author": "ClassClarus",
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vp dev",
     "build": "tsc -b && vp build",
@@ -12,7 +15,12 @@
     "typecheck": "tsc --noEmit",
     "audit": "bun audit",
     "preview": "vp preview",
-    "prepare": "vp config"
+    "prepare": "vp config",
+    "electron:download-backend": "bun scripts/download-convex-backend.mjs",
+    "electron:build-main": "bun scripts/build-electron.mjs",
+    "electron:dev": "bun scripts/electron-dev.mjs",
+    "electron:pack": "bun scripts/electron-pack.mjs --dir",
+    "electron:dist": "bun scripts/electron-pack.mjs"
   },
   "dependencies": {
     "@auth/core": "0.41.3",
@@ -71,6 +79,8 @@
     "@typescript-eslint/parser": "^8.65.0",
     "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",

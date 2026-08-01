@@ -1,3 +1,4 @@
+import { ClassroomServerBanner } from "@/components/classroom/ClassroomServerBanner";
 import { Navbar } from "@/components/navigation/NavBar";
 import { AppFooter } from "@/components/navigation/AppFooter";
 import { TrialBanner } from "@/components/billing/TrialBanner";
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_authenticated/_app")({
       <div>
         <div className="flex min-h-svh flex-col">
           <Navbar />
+          <ClassroomServerBanner />
           <TrialBanner />
           <div className="flex flex-1 flex-col">
             <Outlet />

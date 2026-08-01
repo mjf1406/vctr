@@ -10,6 +10,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-electron
+release
+resources/convex-backend
+resources/convex-backend-bundle
+resources/deploy-project
+tmp-convex-backend
+tmp-convex-backend.zip
 *.local
 
 # Editor directories and files
