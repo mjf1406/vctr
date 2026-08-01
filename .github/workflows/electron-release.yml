@@ -67,6 +67,18 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Verify VERSION file matches release
+        shell: bash
+        run: |
+          FILE_VERSION="$(tr -d '[:space:]' < VERSION)"
+          if [ "$FILE_VERSION" != "$VERSION" ]; then
+            echo "VERSION file ($FILE_VERSION) must match release ($VERSION) before tagging."
+            echo "Update ./VERSION in the commit you tag."
+            exit 1
+          fi
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+
       - name: Set package.json version
         shell: bash
         run: |

@@ -52,16 +52,33 @@ ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
     NODE_OPTIONS=--max-old-space-size=8192 \
     UV_THREADPOOL_SIZE=2
 
+# Resolve version without requiring users to set APP_VERSION:
+# 1) explicit build-arg, 2) git tag (fetch tags for Portainer shallow clones),
+# 3) committed VERSION file (works even when .git has no tags).
 RUN set -eux; \
   VER="${VITE_APP_VERSION:-}"; \
   if [ -z "$VER" ] || [ "$VER" = "0.0.0" ]; then \
-    TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"; \
-    if [ -n "$TAG" ]; then \
-      VER="${TAG#v}"; \
+    if [ -d .git ]; then \
+      git fetch --tags --force 2>/dev/null || true; \
+      TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"; \
+      if [ -z "$TAG" ]; then \
+        TAG="$(git tag -l 'v*.*.*' --sort=-v:refname | head -n1 || true)"; \
+      fi; \
+      if [ -n "$TAG" ]; then \
+        VER="${TAG#v}"; \
+      fi; \
+    fi; \
+  fi; \
+  if [ -z "$VER" ] || [ "$VER" = "0.0.0" ]; then \
+    if [ -f VERSION ]; then \
+      VER="$(tr -d '[:space:]' < VERSION)"; \
     fi; \
   fi; \
   export VITE_APP_VERSION="${VER:-0.0.0}"; \
   echo "Building with VITE_APP_VERSION=${VITE_APP_VERSION}"; \
+  if [ "$VITE_APP_VERSION" = "0.0.0" ]; then \
+    echo "WARNING: Could not resolve app version (no git tags / VERSION file). Self-host update banner will stay off." >&2; \
+  fi; \
   node node_modules/vite-plus/bin/vp build
 
 FROM nginx:1.27-alpine AS web
