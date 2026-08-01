@@ -27,5 +27,18 @@
   },
   "search.exclude": {
     "**/routeTree.gen.ts": true
+  },
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#1D63ED",
+    "statusBar.noFolderBackground": "#1D63ED",
+    "statusBar.foreground": "#ffffff",
+    "statusBar.noFolderForeground": "#ffffff",
+    "titleBar.activeBackground": "#1D63ED",
+    "titleBar.inactiveBackground": "#1D63ED",
+    "titleBar.activeForeground": "#ffffff",
+    "titleBar.inactiveForeground": "#ffffffB3",
+    "activityBar.background": "#1D63ED",
+    "activityBar.foreground": "#ffffff",
+    "activityBar.inactiveForeground": "#ffffffB3"
   }
 }
