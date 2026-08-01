@@ -78,7 +78,7 @@ The web image stamps its version at build time automatically — you do **not** 
 
 1. Explicit `APP_VERSION` / `VITE_APP_VERSION` (optional override)
 2. Nearest git tag (`git describe`, after fetching tags — covers Portainer shallow clones)
-3. Committed [`VERSION`](../VERSION) file in the repo
+3. Committed [`VERSION`](../VERSION) file (auto-updated by the Electron release workflow when you push a `v*` tag)
 
 Optional: set `APP_VERSION` (semver **without** a leading `v`) only to override. The banner stays off only when no version can be resolved (build log will warn and show `VITE_APP_VERSION=0.0.0`).
 

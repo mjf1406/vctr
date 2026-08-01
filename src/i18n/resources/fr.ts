@@ -72,6 +72,8 @@ const fr = {
     iconCountShown: "{{count}} icône affichée",
     iconCountShown_other: "{{count}} icônes affichées",
     iconCategoryCount: "{{name}} ({{count}} icônes)",
+    logoSelfHosted: "Auto-hébergé",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Bienvenue",
@@ -189,11 +191,15 @@ const fr = {
     updateRestartLater: "Plus tard",
     selfHostUpdateTitle: "Mise à jour disponible",
     selfHostUpdateDescription:
-      "La version {{version}} est disponible pour cette instance auto-hébergée.",
+      "Vous êtes en {{current}} ; la version {{version}} est disponible pour cette instance auto-hébergée.",
     selfHostUpdateAction: "Guide de mise à jour",
+    selfHostUpdateReleaseNotes: "Notes de version",
+    selfHostUpdateRemindLater: "Me le rappeler plus tard",
     selfHostUpdateDismiss: "Fermer",
     selfHostVersionLabel: "Version de l'app",
     selfHostVersionDescription: "La version exécutée sur cette installation auto-hébergée.",
+    selfHostVersionUpToDate: "Vous êtes sur la dernière version.",
+    selfHostVersionUpdateAvailable: "Mise à jour disponible : {{version}}",
   },
   account: {
     title: "Compte",

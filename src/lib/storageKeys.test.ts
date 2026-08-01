@@ -24,5 +24,8 @@ describe("storageKeys", () => {
     expect(STORAGE_KEYS.selfHostUpdateDismissed).toBe(
       `${APP_CONFIG.slug}-self-host-update-dismissed`,
     );
+    expect(STORAGE_KEYS.selfHostUpdateRemindLater).toBe(
+      `${APP_CONFIG.slug}-self-host-update-remind-later`,
+    );
   });
 });

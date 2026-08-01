@@ -70,6 +70,8 @@ const ru = {
     iconCountShown: "Показан {{count}} значок",
     iconCountShown_other: "Показано значков: {{count}}",
     iconCategoryCount: "{{name}} ({{count}} значков)",
+    logoSelfHosted: "Самостоятельный хостинг",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",
@@ -184,11 +186,16 @@ const ru = {
     updateRestartNow: "Перезапустить сейчас",
     updateRestartLater: "Позже",
     selfHostUpdateTitle: "Доступно обновление",
-    selfHostUpdateDescription: "Версия {{version}} доступна для этого self-host экземпляра.",
+    selfHostUpdateDescription:
+      "Сейчас установлена {{current}}; версия {{version}} доступна для этого self-host экземпляра.",
     selfHostUpdateAction: "Инструкция по обновлению",
+    selfHostUpdateReleaseNotes: "Заметки о выпуске",
+    selfHostUpdateRemindLater: "Напомнить позже",
     selfHostUpdateDismiss: "Закрыть",
     selfHostVersionLabel: "Версия приложения",
     selfHostVersionDescription: "Версия, запущенная в этой самостоятельной установке.",
+    selfHostVersionUpToDate: "У вас последняя версия.",
+    selfHostVersionUpdateAvailable: "Доступно обновление: {{version}}",
   },
   account: {
     title: "Аккаунт",

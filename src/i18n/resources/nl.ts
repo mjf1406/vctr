@@ -70,6 +70,8 @@ const nl = {
     iconCountShown: "{{count}} icoon getoond",
     iconCountShown_other: "{{count}} iconen getoond",
     iconCategoryCount: "{{name}} ({{count}} iconen)",
+    logoSelfHosted: "Zelf gehost",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Welkom",
@@ -184,11 +186,16 @@ const nl = {
     updateRestartNow: "Nu herstarten",
     updateRestartLater: "Later",
     selfHostUpdateTitle: "Update beschikbaar",
-    selfHostUpdateDescription: "Versie {{version}} is beschikbaar voor deze self-host-instantie.",
+    selfHostUpdateDescription:
+      "Je gebruikt {{current}}; versie {{version}} is beschikbaar voor deze self-host-instantie.",
     selfHostUpdateAction: "Upgradehandleiding",
+    selfHostUpdateReleaseNotes: "Release-opmerkingen",
+    selfHostUpdateRemindLater: "Later herinneren",
     selfHostUpdateDismiss: "Sluiten",
     selfHostVersionLabel: "App-versie",
     selfHostVersionDescription: "De versie die in deze self-hosted installatie draait.",
+    selfHostVersionUpToDate: "Je gebruikt de nieuwste versie.",
+    selfHostVersionUpdateAvailable: "Update beschikbaar: {{version}}",
   },
   account: {
     title: "Account",

@@ -11,4 +11,6 @@ export const STORAGE_KEYS = {
   pendingJoinCode: appStorageKey("pendingJoinCode"),
   trialBannerDismissed: appStorageKey("trial-banner-dismissed"),
   selfHostUpdateDismissed: appStorageKey("self-host-update-dismissed"),
+  /** sessionStorage: hide banner for this version until the tab session ends. */
+  selfHostUpdateRemindLater: appStorageKey("self-host-update-remind-later"),
 } as const;

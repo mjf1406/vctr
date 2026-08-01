@@ -69,6 +69,8 @@ const pt = {
     iconCountShown: "{{count}} ícone mostrado",
     iconCountShown_other: "{{count}} ícones mostrados",
     iconCategoryCount: "{{name}} ({{count}} ícones)",
+    logoSelfHosted: "Hospedagem própria",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Bem-vindo",
@@ -183,11 +185,15 @@ const pt = {
     updateRestartLater: "Mais tarde",
     selfHostUpdateTitle: "Atualização disponível",
     selfHostUpdateDescription:
-      "A versão {{version}} está disponível para esta instância self-hosted.",
+      "Está na {{current}}; a versão {{version}} está disponível para esta instância self-hosted.",
     selfHostUpdateAction: "Guia de atualização",
+    selfHostUpdateReleaseNotes: "Notas de lançamento",
+    selfHostUpdateRemindLater: "Lembrar mais tarde",
     selfHostUpdateDismiss: "Fechar",
     selfHostVersionLabel: "Versão da app",
     selfHostVersionDescription: "A versão em execução nesta instalação self-hosted.",
+    selfHostVersionUpToDate: "Está na versão mais recente.",
+    selfHostVersionUpdateAvailable: "Atualização disponível: {{version}}",
   },
   account: {
     title: "Conta",

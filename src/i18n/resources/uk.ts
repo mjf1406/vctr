@@ -70,6 +70,8 @@ const uk = {
     iconCountShown: "Показано {{count}} піктограму",
     iconCountShown_other: "Показано піктограм: {{count}}",
     iconCategoryCount: "{{name}} ({{count}} піктограм)",
+    logoSelfHosted: "Самостійний хостинг",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",
@@ -184,11 +186,16 @@ const uk = {
     updateRestartNow: "Перезапустити зараз",
     updateRestartLater: "Пізніше",
     selfHostUpdateTitle: "Доступне оновлення",
-    selfHostUpdateDescription: "Версія {{version}} доступна для цього self-host екземпляра.",
+    selfHostUpdateDescription:
+      "Зараз установлено {{current}}; версія {{version}} доступна для цього self-host екземпляра.",
     selfHostUpdateAction: "Інструкція з оновлення",
+    selfHostUpdateReleaseNotes: "Нотатки до випуску",
+    selfHostUpdateRemindLater: "Нагадати пізніше",
     selfHostUpdateDismiss: "Закрити",
     selfHostVersionLabel: "Версія застосунку",
     selfHostVersionDescription: "Версія, що працює в цій самостійній установці.",
+    selfHostVersionUpToDate: "У вас остання версія.",
+    selfHostVersionUpdateAvailable: "Доступне оновлення: {{version}}",
   },
   account: {
     title: "Обліковий запис",

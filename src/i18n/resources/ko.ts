@@ -69,6 +69,8 @@ const ko = {
     iconCountShown: "아이콘 {{count}}개 표시",
     iconCountShown_other: "아이콘 {{count}}개 표시",
     iconCategoryCount: "{{name}} ({{count}}개)",
+    logoSelfHosted: "직접 호스팅",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "환영합니다",
@@ -182,11 +184,15 @@ const ko = {
     updateRestartLater: "나중에",
     selfHostUpdateTitle: "업데이트 가능",
     selfHostUpdateDescription:
-      "이 셀프호스트 인스턴스에 버전 {{version}}을(를) 사용할 수 있습니다.",
+      "현재 버전은 {{current}}입니다. 이 셀프호스트 인스턴스에 {{version}}을(를) 사용할 수 있습니다.",
     selfHostUpdateAction: "업그레이드 안내",
+    selfHostUpdateReleaseNotes: "릴리스 노트",
+    selfHostUpdateRemindLater: "나중에 알림",
     selfHostUpdateDismiss: "닫기",
     selfHostVersionLabel: "앱 버전",
     selfHostVersionDescription: "이 셀프호스트 설치에서 실행 중인 버전입니다.",
+    selfHostVersionUpToDate: "최신 버전입니다.",
+    selfHostVersionUpdateAvailable: "업데이트 가능: {{version}}",
   },
   account: {
     title: "계정",

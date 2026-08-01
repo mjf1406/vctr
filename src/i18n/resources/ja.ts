@@ -69,6 +69,8 @@ const ja = {
     iconCountShown: "{{count}} 個のアイコンを表示",
     iconCountShown_other: "{{count}} 個のアイコンを表示",
     iconCategoryCount: "{{name}}（{{count}} 個）",
+    logoSelfHosted: "セルフホスト",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "ようこそ",
@@ -183,11 +185,16 @@ const ja = {
     updateRestartNow: "今すぐ再起動",
     updateRestartLater: "後で",
     selfHostUpdateTitle: "アップデートがあります",
-    selfHostUpdateDescription: "このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
+    selfHostUpdateDescription:
+      "現在は {{current}} です。このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
     selfHostUpdateAction: "アップグレード手順",
+    selfHostUpdateReleaseNotes: "リリースノート",
+    selfHostUpdateRemindLater: "あとで",
     selfHostUpdateDismiss: "閉じる",
     selfHostVersionLabel: "アプリバージョン",
     selfHostVersionDescription: "このセルフホスト環境で動作しているバージョンです。",
+    selfHostVersionUpToDate: "最新バージョンです。",
+    selfHostVersionUpdateAvailable: "アップデートあり: {{version}}",
   },
   account: {
     title: "アカウント",

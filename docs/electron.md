@@ -74,4 +74,6 @@ git push origin v0.1.0 --force
 
 Or Actions → **Electron Release** → Run workflow → version `0.1.0` (no leading `v`). That builds Windows, macOS (Apple Silicon), and Linux, then attaches the installers to the release.
 
+After a successful release, CI commits an updated [`VERSION`](../VERSION) on the default branch so Docker/Portainer self-host builds stamp the new semver without a manual bump.
+
 macOS builds are unsigned unless you add Apple notarization secrets (`CSC_*`); users may need to bypass Gatekeeper once. Auto-update on macOS also requires those signing secrets.

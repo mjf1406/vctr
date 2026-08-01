@@ -71,6 +71,8 @@ const de = {
     iconCountShown: "{{count}} Symbol angezeigt",
     iconCountShown_other: "{{count}} Symbole angezeigt",
     iconCategoryCount: "{{name}} ({{count}} Symbole)",
+    logoSelfHosted: "Selbst gehostet",
+    logoElectron: "Electron",
   },
   auth: {
     welcomeTitle: "Willkommen",
@@ -186,11 +188,16 @@ const de = {
     updateRestartNow: "Jetzt neu starten",
     updateRestartLater: "Später",
     selfHostUpdateTitle: "Update verfügbar",
-    selfHostUpdateDescription: "Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
+    selfHostUpdateDescription:
+      "Sie nutzen {{current}}; Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
     selfHostUpdateAction: "Upgrade-Anleitung",
+    selfHostUpdateReleaseNotes: "Versionshinweise",
+    selfHostUpdateRemindLater: "Später erinnern",
     selfHostUpdateDismiss: "Schließen",
     selfHostVersionLabel: "App-Version",
     selfHostVersionDescription: "Die Version dieser selbst gehosteten Installation.",
+    selfHostVersionUpToDate: "Sie nutzen die neueste Version.",
+    selfHostVersionUpdateAvailable: "Update verfügbar: {{version}}",
   },
   account: {
     title: "Konto",
