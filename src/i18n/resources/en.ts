@@ -461,6 +461,10 @@ const en = {
     membersSearchNoResultsTitle: "No matching people",
     membersSearchNoResults: "Try a different name or email.",
     removeMember: "Remove",
+    removeMemberConfirmTitle: "Remove {{name}}?",
+    removeMemberConfirmDescription: "Confirm removing {{name}} from this class.",
+    removeMemberConfirmBody:
+      "{{name}} will lose access to this class. You can invite them again later.",
     removeMemberFailed: "Could not remove this person.",
     changeRole: "Role",
     changeRoleFailed: "Could not change this person's role.",

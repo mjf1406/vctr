@@ -464,6 +464,10 @@ const uk = {
     membersSearchNoResultsTitle: "Немає відповідних людей",
     membersSearchNoResults: "Спробуйте інше ім’я або email.",
     removeMember: "Видалити",
+    removeMemberConfirmTitle: "Видалити {{name}}?",
+    removeMemberConfirmDescription: "Підтвердіть видалення {{name}} з цього класу.",
+    removeMemberConfirmBody:
+      "{{name}} втратить доступ до цього класу. Ви зможете запросити цю людину знову пізніше.",
     removeMemberFailed: "Не вдалося видалити цю людину.",
     changeRole: "Роль",
     changeRoleFailed: "Не вдалося змінити роль цієї людини.",

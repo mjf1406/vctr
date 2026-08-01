@@ -1,4 +1,12 @@
-import { ArchiveIcon, LayoutGridIcon, ListIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  ArchiveXIcon,
+  LayoutGridIcon,
+  ListIcon,
+  PlusIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +19,8 @@ import {
 } from "@/components/ui/input-group";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ClassSortDirection, ClassSortKey, ClassViewMode } from "@/lib/classes/classSort";
+
+type ArchiveVisibility = "hide" | "show";
 
 type ClassesToolbarProps = {
   sortKey: ClassSortKey;
@@ -61,6 +71,8 @@ export function ClassesToolbar({
     updated: t("sortUpdated"),
   };
 
+  const archiveVisibility: ArchiveVisibility = showArchived ? "show" : "hide";
+
   const viewToggle = (
     <ToggleGroup
       variant="outline"
@@ -80,33 +92,38 @@ export function ClassesToolbar({
     </ToggleGroup>
   );
 
-  const archiveButton = (className?: string) => (
-    <Button
-      type="button"
-      variant={showArchived ? "secondary" : "outline"}
-      size="sm"
-      className={className}
-      onClick={onToggleArchived}
+  const archiveToggle = (
+    <ToggleGroup
+      variant="outline"
+      spacing={0}
+      value={[archiveVisibility]}
+      onValueChange={(values) => {
+        const next = values[0] as ArchiveVisibility | undefined;
+        if (!next) return;
+        if ((next === "show") !== showArchived) onToggleArchived();
+      }}
     >
-      <ArchiveIcon data-icon="inline-start" />
-      {showArchived ? t("hideArchived") : t("showArchived")}
-    </Button>
+      <ToggleGroupItem value="hide" aria-label={t("hideArchived")}>
+        <ArchiveXIcon />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="show" aria-label={t("showArchived")}>
+        <ArchiveIcon />
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t("pageTitle")}</h1>
           <p className="hidden text-muted-foreground sm:block">{t("pageDescription")}</p>
         </div>
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="hidden sm:block">
           <Button type="button" onClick={onCreate}>
             <PlusIcon data-icon="inline-start" />
             {t("createClass")}
           </Button>
-          {viewToggle}
-          {archiveButton()}
         </div>
       </div>
 
@@ -153,15 +170,17 @@ export function ClassesToolbar({
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
-        <div className="ms-auto sm:hidden">{viewToggle}</div>
+        <div className="flex items-center gap-2">
+          {viewToggle}
+          {archiveToggle}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2 sm:hidden">
+      <div className="sm:hidden">
         <Button type="button" className="w-full" onClick={onCreate}>
           <PlusIcon data-icon="inline-start" />
           {t("createClass")}
         </Button>
-        {archiveButton("w-full")}
       </div>
     </div>
   );

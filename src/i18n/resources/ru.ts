@@ -465,6 +465,10 @@ const ru = {
     membersSearchNoResultsTitle: "Нет подходящих людей",
     membersSearchNoResults: "Попробуйте другое имя или email.",
     removeMember: "Удалить",
+    removeMemberConfirmTitle: "Удалить {{name}}?",
+    removeMemberConfirmDescription: "Подтвердите удаление {{name}} из этого класса.",
+    removeMemberConfirmBody:
+      "{{name}} потеряет доступ к этому классу. Вы сможете пригласить этого человека снова позже.",
     removeMemberFailed: "Не удалось удалить этого человека.",
     changeRole: "Роль",
     changeRoleFailed: "Не удалось изменить роль этого человека.",

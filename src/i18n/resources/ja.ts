@@ -464,6 +464,10 @@ const ja = {
     membersSearchNoResultsTitle: "一致するメンバーがいません",
     membersSearchNoResults: "別の名前またはメールで試してください。",
     removeMember: "削除",
+    removeMemberConfirmTitle: "{{name}} を削除しますか？",
+    removeMemberConfirmDescription: "{{name}} をこのクラスから削除することを確認してください。",
+    removeMemberConfirmBody:
+      "{{name}} はこのクラスにアクセスできなくなります。後から再度招待できます。",
     removeMemberFailed: "この人を削除できませんでした。",
     changeRole: "役割",
     changeRoleFailed: "この人の役割を変更できませんでした。",

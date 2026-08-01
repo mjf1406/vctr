@@ -470,6 +470,10 @@ const it = {
     membersSearchNoResultsTitle: "Nessuna persona corrispondente",
     membersSearchNoResults: "Prova un altro nome o email.",
     removeMember: "Rimuovi",
+    removeMemberConfirmTitle: "Rimuovere {{name}}?",
+    removeMemberConfirmDescription: "Conferma la rimozione di {{name}} da questa classe.",
+    removeMemberConfirmBody:
+      "{{name}} perderà l'accesso a questa classe. Potrai invitarlo di nuovo più tardi.",
     removeMemberFailed: "Impossibile rimuovere questa persona.",
     changeRole: "Ruolo",
     changeRoleFailed: "Impossibile modificare il ruolo di questa persona.",

@@ -465,6 +465,10 @@ const pt = {
     membersSearchNoResultsTitle: "Nenhuma pessoa correspondente",
     membersSearchNoResults: "Tente um nome ou e-mail diferente.",
     removeMember: "Remover",
+    removeMemberConfirmTitle: "Remover {{name}}?",
+    removeMemberConfirmDescription: "Confirme a remoção de {{name}} desta turma.",
+    removeMemberConfirmBody:
+      "{{name}} perderá o acesso a esta turma. Você poderá convidá-lo novamente depois.",
     removeMemberFailed: "Não foi possível remover esta pessoa.",
     changeRole: "Função",
     changeRoleFailed: "Não foi possível alterar a função desta pessoa.",

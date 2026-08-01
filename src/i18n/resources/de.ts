@@ -471,6 +471,10 @@ const de = {
     membersSearchNoResultsTitle: "Keine passenden Personen",
     membersSearchNoResults: "Versuche einen anderen Namen oder eine andere E-Mail.",
     removeMember: "Entfernen",
+    removeMemberConfirmTitle: "{{name}} entfernen?",
+    removeMemberConfirmDescription: "Bestätige das Entfernen von {{name}} aus dieser Klasse.",
+    removeMemberConfirmBody:
+      "{{name}} verliert den Zugang zu dieser Klasse. Du kannst die Person später erneut einladen.",
     removeMemberFailed: "Diese Person konnte nicht entfernt werden.",
     changeRole: "Rolle",
     changeRoleFailed: "Die Rolle dieser Person konnte nicht geändert werden.",

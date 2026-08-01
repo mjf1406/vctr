@@ -5,6 +5,9 @@ export const surfaceVariants = cva("", {
     tier: {
       // Borderless float: edge comes from wash + shadow against --page-wash.
       card: "rounded-2xl bg-[image:var(--surface-wash)] bg-card text-card-foreground",
+      // People: radial wash pattern, rounder silhouette, soft ring — distinct from class cards.
+      member:
+        "rounded-3xl bg-[image:var(--member-surface-wash)] bg-card text-card-foreground shadow-(--shadow-member) ring-1 ring-foreground/10",
       elevated:
         "rounded-2xl bg-popover text-popover-foreground shadow-(--shadow-elevated) ring-1 ring-foreground/5",
     },

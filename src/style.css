@@ -125,6 +125,19 @@
     color-mix(in oklab, var(--primary) 6%, var(--card)) 0%,
     color-mix(in oklab, var(--muted) 22%, var(--card)) 100%
   );
+  /* Member cards: same tokens as class cards, radial spotlight pattern instead of diagonal. */
+  --member-surface-wash: radial-gradient(
+    ellipse 130% 90% at 50% 0%,
+    color-mix(in oklab, var(--primary) 7%, var(--card)) 0%,
+    var(--card) 52%,
+    color-mix(in oklab, var(--primary) 4%, color-mix(in oklab, var(--muted) 36%, var(--card))) 100%
+  );
+  --shadow-member: var(--shadow-surface);
+  --member-avatar-ring: linear-gradient(
+    145deg,
+    color-mix(in oklab, var(--primary) 22%, var(--card)) 0%,
+    color-mix(in oklab, var(--muted) 45%, var(--card)) 100%
+  );
   /* Atmospheric pairing: cooler page behind warmer tinted cards. */
   --page-wash: linear-gradient(
     180deg,
@@ -132,6 +145,64 @@
     color-mix(in oklab, var(--muted) 22%, var(--background)) 40%,
     var(--background) 74%
   );
+  /* Buttons: shorter stacks than cards. */
+  --shadow-button:
+    inset 0 1px 0 oklch(1 0 0 / 35%), 0 1px 2px oklch(0.145 0 0 / 8%),
+    0 3px 8px oklch(0.145 0 0 / 10%);
+  --shadow-button-hover:
+    inset 0 1px 0 oklch(1 0 0 / 42%), 0 2px 4px oklch(0.145 0 0 / 10%),
+    0 6px 14px oklch(0.145 0 0 / 14%);
+  --button-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, white 18%, var(--primary)) 0%,
+    var(--primary) 48%,
+    color-mix(in oklab, black 10%, var(--primary)) 100%
+  );
+  --button-wash-hover: linear-gradient(
+    165deg,
+    color-mix(in oklab, white 24%, var(--primary)) 0%,
+    color-mix(in oklab, white 6%, var(--primary)) 48%,
+    color-mix(in oklab, black 8%, var(--primary)) 100%
+  );
+  --button-secondary-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, white 40%, var(--secondary)) 0%,
+    var(--secondary) 55%,
+    color-mix(in oklab, var(--muted) 30%, var(--secondary)) 100%
+  );
+  --button-destructive-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--destructive) 18%, var(--card)) 0%,
+    color-mix(in oklab, var(--destructive) 12%, var(--card)) 100%
+  );
+  /* Sidebar panel + active item. */
+  --sidebar-wash: linear-gradient(
+    168deg,
+    color-mix(in oklab, var(--sidebar-primary) 6%, var(--sidebar)) 0%,
+    var(--sidebar) 46%,
+    color-mix(
+        in oklab,
+        var(--sidebar-primary) 4%,
+        color-mix(in oklab, var(--muted) 20%, var(--sidebar))
+      )
+      100%
+  );
+  --shadow-sidebar:
+    inset 0 1px 0 oklch(1 0 0 / 70%), 0 2px 6px oklch(0.145 0 0 / 5%),
+    0 12px 28px oklch(0.145 0 0 / 9%), 0 24px 48px oklch(0.145 0 0 / 8%);
+  /* Flush sidebar: cast only to the right (no outer margin/radius). */
+  --shadow-sidebar-flush:
+    inset 0 1px 0 oklch(1 0 0 / 55%), 4px 0 12px -2px oklch(0.145 0 0 / 6%),
+    10px 0 28px -6px oklch(0.145 0 0 / 8%);
+  --sidebar-item-active-wash: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--sidebar-primary) 14%, var(--sidebar-accent)) 0%,
+    color-mix(in oklab, var(--sidebar-primary) 6%, var(--sidebar-accent)) 100%
+  );
+  --shadow-sidebar-item-active:
+    inset 0 1px 0 color-mix(in oklab, var(--sidebar-primary) 18%, white),
+    0 1px 2px oklch(0.145 0 0 / 4%),
+    0 4px 12px color-mix(in oklab, var(--sidebar-primary) 12%, transparent);
 }
 
 .dark {
@@ -203,12 +274,72 @@
     color-mix(in oklab, var(--primary) 10%, color-mix(in oklab, var(--muted) 40%, var(--card))) 0%,
     color-mix(in oklab, var(--muted) 30%, var(--card)) 100%
   );
+  --member-surface-wash: radial-gradient(
+    ellipse 130% 90% at 50% 0%,
+    color-mix(in oklab, var(--primary) 12%, color-mix(in oklab, var(--muted) 50%, var(--card))) 0%,
+    var(--card) 52%,
+    color-mix(in oklab, var(--primary) 6%, var(--card)) 100%
+  );
+  --shadow-member: var(--shadow-surface);
+  --member-avatar-ring: linear-gradient(
+    145deg,
+    color-mix(in oklab, var(--primary) 28%, var(--muted)) 0%,
+    color-mix(in oklab, var(--muted) 40%, var(--card)) 100%
+  );
   --page-wash: linear-gradient(
     180deg,
     color-mix(in oklab, oklch(0.18 0.02 250) 50%, var(--background)) 0%,
     color-mix(in oklab, var(--muted) 28%, var(--background)) 44%,
     var(--background) 78%
   );
+  --shadow-button:
+    inset 0 1px 0 oklch(1 0 0 / 14%), 0 1px 2px oklch(0 0 0 / 32%), 0 4px 10px oklch(0 0 0 / 36%);
+  --shadow-button-hover:
+    inset 0 1px 0 oklch(1 0 0 / 18%), 0 2px 4px oklch(0 0 0 / 36%), 0 8px 18px oklch(0 0 0 / 42%);
+  --button-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, white 14%, var(--primary)) 0%,
+    var(--primary) 50%,
+    color-mix(in oklab, black 16%, var(--primary)) 100%
+  );
+  --button-wash-hover: linear-gradient(
+    165deg,
+    color-mix(in oklab, white 20%, var(--primary)) 0%,
+    color-mix(in oklab, white 8%, var(--primary)) 50%,
+    color-mix(in oklab, black 12%, var(--primary)) 100%
+  );
+  --button-secondary-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--muted) 40%, var(--secondary)) 0%,
+    var(--secondary) 55%,
+    color-mix(in oklab, black 8%, var(--secondary)) 100%
+  );
+  --button-destructive-wash: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--destructive) 28%, var(--card)) 0%,
+    color-mix(in oklab, var(--destructive) 18%, var(--card)) 100%
+  );
+  --sidebar-wash: linear-gradient(
+    168deg,
+    color-mix(in oklab, var(--sidebar-primary) 10%, var(--sidebar)) 0%,
+    var(--sidebar) 48%,
+    color-mix(in oklab, var(--sidebar-primary) 6%, var(--sidebar)) 100%
+  );
+  --shadow-sidebar:
+    inset 0 1px 0 oklch(1 0 0 / 8%), 0 4px 12px oklch(0 0 0 / 36%), 0 20px 40px oklch(0 0 0 / 45%),
+    0 28px 56px oklch(0 0 0 / 40%);
+  --shadow-sidebar-flush:
+    inset 0 1px 0 oklch(1 0 0 / 7%), 4px 0 14px -2px oklch(0 0 0 / 36%),
+    12px 0 32px -6px oklch(0 0 0 / 42%);
+  --sidebar-item-active-wash: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--sidebar-primary) 22%, var(--sidebar-accent)) 0%,
+    color-mix(in oklab, var(--sidebar-primary) 10%, var(--sidebar-accent)) 100%
+  );
+  --shadow-sidebar-item-active:
+    inset 0 1px 0 color-mix(in oklab, var(--sidebar-primary) 30%, white),
+    0 1px 2px oklch(0 0 0 / 30%),
+    0 6px 16px color-mix(in oklab, var(--sidebar-primary) 20%, transparent);
 }
 
 @layer base {

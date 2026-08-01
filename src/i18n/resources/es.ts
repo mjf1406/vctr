@@ -466,6 +466,10 @@ const es = {
     membersSearchNoResultsTitle: "No hay personas coincidentes",
     membersSearchNoResults: "Prueba con otro nombre o correo.",
     removeMember: "Eliminar",
+    removeMemberConfirmTitle: "¿Eliminar a {{name}}?",
+    removeMemberConfirmDescription: "Confirma la eliminación de {{name}} de esta clase.",
+    removeMemberConfirmBody:
+      "{{name}} perderá el acceso a esta clase. Puedes invitarle de nuevo más tarde.",
     removeMemberFailed: "No se pudo eliminar a esta persona.",
     changeRole: "Rol",
     changeRoleFailed: "No se pudo cambiar el rol de esta persona.",

@@ -475,6 +475,10 @@ const fr = {
     membersSearchNoResultsTitle: "Aucune personne correspondante",
     membersSearchNoResults: "Essayez un autre nom ou e-mail.",
     removeMember: "Retirer",
+    removeMemberConfirmTitle: "Retirer {{name}} ?",
+    removeMemberConfirmDescription: "Confirmez le retrait de {{name}} de cette classe.",
+    removeMemberConfirmBody:
+      "{{name}} perdra l'accès à cette classe. Vous pourrez l'inviter à nouveau plus tard.",
     removeMemberFailed: "Impossible de retirer cette personne.",
     changeRole: "Rôle",
     changeRoleFailed: "Impossible de modifier le rôle de cette personne.",

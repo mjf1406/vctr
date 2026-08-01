@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { MemberRow } from "@/components/members/MemberRow";
+import { RemoveMemberCredenza } from "@/components/members/RemoveMemberCredenza";
 import {
   Empty,
   EmptyDescription,
@@ -19,6 +20,8 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
+import { surfaceVariants } from "@/components/ui/surface-variants";
+import { cn } from "@/lib/utils";
 import { useClassMembersByRole } from "@/hooks/members/useClassMembersByRole";
 import { useMemberSearch } from "@/hooks/members/useMemberSearch";
 import { useRemoveClassMember } from "@/hooks/members/useRemoveClassMember";
@@ -31,6 +34,7 @@ import type {
   LinkedStudentPublic,
   MemberListRole,
 } from "@/lib/members/members";
+import { getDisplayName } from "@/lib/user/userDisplay";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type MembersPageProps = {
@@ -45,7 +49,18 @@ function MembersSkeleton() {
   return (
     <div className={MEMBERS_GRID_CLASS}>
       {Array.from({ length: 8 }, (_, index) => (
-        <Skeleton key={index} className="h-40 w-full rounded-2xl" />
+        <div
+          key={index}
+          className={cn(
+            "flex h-40 flex-col items-center gap-3 p-4",
+            surfaceVariants({ tier: "member" }),
+          )}
+        >
+          <Skeleton className="size-14 rounded-full" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-32" />
+          <Skeleton className="mt-auto h-8 w-full rounded-xl" />
+        </div>
       ))}
     </div>
   );
@@ -59,18 +74,34 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
   const setRoleMutation = useSetMemberRole();
   const setLinksMutation = useSetGuardianStudentLinks();
   const [searchQuery, setSearchQuery] = useState("");
+  const [memberToRemove, setMemberToRemove] = useState<ClassMemberPublic | null>(null);
+  const [removeOpen, setRemoveOpen] = useState(false);
   const members = data ?? [];
   const { filtered } = useMemberSearch({ members: data, query: searchQuery });
 
-  const handleRemove = useCallback(
-    (member: ClassMemberPublic) => {
-      void removeMutation.mutateAsync({
-        classId,
-        userId: member.userId,
-      });
-    },
-    [classId, removeMutation],
-  );
+  const handleRemoveRequest = useCallback((member: ClassMemberPublic) => {
+    setMemberToRemove(member);
+    setRemoveOpen(true);
+  }, []);
+
+  const handleRemoveConfirm = useCallback(async () => {
+    if (!memberToRemove) return;
+    await removeMutation.mutateAsync({
+      classId,
+      userId: memberToRemove.userId,
+    });
+  }, [classId, memberToRemove, removeMutation]);
+
+  const removeMemberName = memberToRemove
+    ? getDisplayName(
+        {
+          _id: memberToRemove.userId,
+          name: memberToRemove.name,
+          email: memberToRemove.email,
+        },
+        t("unnamedMember"),
+      )
+    : "";
 
   const handleChangeRole = useCallback(
     (member: ClassMemberPublic, nextRole: JoinCodeRole) => {
@@ -110,31 +141,35 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
       </div>
 
       {showSearch ? (
-        <InputGroup className="max-w-md">
-          <InputGroupInput
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder={t("membersSearchPlaceholder")}
-            aria-label={t("membersSearchLabel")}
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <InputGroupAddon>
-            <SearchIcon aria-hidden="true" />
-          </InputGroupAddon>
-          <InputGroupAddon align="inline-end">
-            <InputGroupText>{t("membersSearchResults", { count: filtered.length })}</InputGroupText>
-            {searchQuery ? (
-              <InputGroupButton
-                size="icon-xs"
-                aria-label={t("membersSearchClear")}
-                onClick={() => setSearchQuery("")}
-              >
-                <XIcon />
-              </InputGroupButton>
-            ) : null}
-          </InputGroupAddon>
-        </InputGroup>
+        <div className={cn("max-w-md p-2", surfaceVariants({ tier: "card" }))}>
+          <InputGroup>
+            <InputGroupInput
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder={t("membersSearchPlaceholder")}
+              aria-label={t("membersSearchLabel")}
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <InputGroupAddon>
+              <SearchIcon aria-hidden="true" />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">
+              <InputGroupText>
+                {t("membersSearchResults", { count: filtered.length })}
+              </InputGroupText>
+              {searchQuery ? (
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label={t("membersSearchClear")}
+                  onClick={() => setSearchQuery("")}
+                >
+                  <XIcon />
+                </InputGroupButton>
+              ) : null}
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
       ) : null}
 
       {isPending || isAuthLoading ? <MembersSkeleton /> : null}
@@ -180,13 +215,21 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
               member={member}
               classId={classId}
               isSelf={currentUser?._id === member.userId}
-              onRemove={handleRemove}
+              onRemove={handleRemoveRequest}
               onChangeRole={handleChangeRole}
               onSetLinkedStudents={role === "guardian" ? handleSetLinkedStudents : undefined}
             />
           ))}
         </div>
       ) : null}
+
+      <RemoveMemberCredenza
+        key={memberToRemove ? `remove:${memberToRemove.userId}` : "remove"}
+        open={removeOpen}
+        onOpenChange={setRemoveOpen}
+        memberName={removeMemberName}
+        onConfirm={handleRemoveConfirm}
+      />
     </div>
   );
 }

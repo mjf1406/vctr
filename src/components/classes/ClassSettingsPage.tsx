@@ -8,7 +8,14 @@ import {
 } from "@/components/classes/ClassFormCredenza";
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardPocket,
+  CardTitle,
+} from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileDropzone } from "@/components/upload/FileDropzone";
@@ -117,7 +124,9 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
           <Card className="max-w-2xl">
             <CardHeader className="flex flex-row items-start justify-between gap-3">
               <div className="flex min-w-0 items-start gap-3">
-                <ClassIconDisplay icon={classDoc.icon} />
+                <CardPocket tone="primary" className="shrink-0 p-2">
+                  <ClassIconDisplay icon={classDoc.icon} />
+                </CardPocket>
                 <div className="min-w-0">
                   <CardTitle className="text-lg font-semibold">{classDoc.name}</CardTitle>
                   <CardDescription>{classDoc.year}</CardDescription>
@@ -137,7 +146,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
               <p className="text-sm text-muted-foreground">
                 {classDoc.description?.trim() || t("noDescription")}
               </p>
-              <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+              <CardPocket tone="secondary" className="flex flex-col gap-0.5 text-xs">
                 <span>
                   {t("createdAt", {
                     date: formatTimestamp(classDoc._creationTime, i18n.language),
@@ -148,7 +157,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
                     date: formatTimestamp(classDoc.updatedAt, i18n.language),
                   })}
                 </span>
-              </div>
+              </CardPocket>
             </CardContent>
           </Card>
 

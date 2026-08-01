@@ -469,6 +469,10 @@ const nl = {
     membersSearchNoResultsTitle: "Geen overeenkomende personen",
     membersSearchNoResults: "Probeer een andere naam of e-mail.",
     removeMember: "Verwijderen",
+    removeMemberConfirmTitle: "{{name}} verwijderen?",
+    removeMemberConfirmDescription: "Bevestig dat je {{name}} uit deze klas wilt verwijderen.",
+    removeMemberConfirmBody:
+      "{{name}} verliest toegang tot deze klas. Je kunt die persoon later opnieuw uitnodigen.",
     removeMemberFailed: "Kon deze persoon niet verwijderen.",
     changeRole: "Rol",
     changeRoleFailed: "Kon de rol van deze persoon niet wijzigen.",

@@ -38,15 +38,19 @@ export function ClassBreadcrumb({ classDoc }: ClassBreadcrumbProps) {
   const pageKey = pageLabelKey(pathname, classDoc._id);
 
   return (
-    <Breadcrumb aria-label={t("breadcrumb")}>
-      <BreadcrumbList>
+    <Breadcrumb aria-label={t("breadcrumb")} className="min-w-0">
+      <BreadcrumbList className="text-muted-foreground/80">
         <BreadcrumbItem>
-          <BreadcrumbLink render={<Link to="/" />} aria-label={tCommon("goHome")}>
+          <BreadcrumbLink
+            render={<Link to="/" />}
+            aria-label={tCommon("goHome")}
+            className="text-muted-foreground hover:text-foreground"
+          >
             <Home className="size-4" />
             <span className="sr-only">{tCommon("goHome")}</span>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbSeparator className="text-muted-foreground/50" />
         <BreadcrumbItem>
           <BreadcrumbLink
             render={
@@ -56,13 +60,14 @@ export function ClassBreadcrumb({ classDoc }: ClassBreadcrumbProps) {
                 className="max-w-40 truncate"
               />
             }
+            className="text-muted-foreground hover:text-foreground"
           >
             {classDoc.name}
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbSeparator className="text-muted-foreground/50" />
         <BreadcrumbItem>
-          <BreadcrumbPage>{t(pageKey)}</BreadcrumbPage>
+          <BreadcrumbPage className="font-medium text-foreground">{t(pageKey)}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

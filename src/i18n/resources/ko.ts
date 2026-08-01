@@ -457,6 +457,10 @@ const ko = {
     membersSearchNoResultsTitle: "일치하는 구성원 없음",
     membersSearchNoResults: "다른 이름이나 이메일로 시도해 보세요.",
     removeMember: "제거",
+    removeMemberConfirmTitle: "{{name}}님을 제거할까요?",
+    removeMemberConfirmDescription: "{{name}}님을 이 클래스에서 제거할지 확인합니다.",
+    removeMemberConfirmBody:
+      "{{name}}님은 이 클래스에 접근할 수 없게 됩니다. 나중에 다시 초대할 수 있습니다.",
     removeMemberFailed: "이 사람을 제거하지 못했습니다.",
     changeRole: "역할",
     changeRoleFailed: "이 사람의 역할을 변경하지 못했습니다.",

@@ -439,6 +439,13 @@ export function UiPlayground() {
 
       <section className="space-y-4">
         <h2 className="text-lg font-medium">Surfaces</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="default">Default</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="destructive">Destructive</Button>
+          <Button variant="ghost">Ghost</Button>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Card size="sm">
             <CardHeader>
