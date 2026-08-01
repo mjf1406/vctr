@@ -184,6 +184,7 @@ const ko = {
     selfHostUpdateDescription:
       "이 셀프호스트 인스턴스에 버전 {{version}}을(를) 사용할 수 있습니다.",
     selfHostUpdateAction: "업그레이드 안내",
+    selfHostUpdateDismiss: "닫기",
     selfHostVersionLabel: "앱 버전",
     selfHostVersionDescription: "이 셀프호스트 설치에서 실행 중인 버전입니다.",
   },

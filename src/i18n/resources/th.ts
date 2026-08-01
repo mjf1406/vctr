@@ -182,6 +182,7 @@ const th = {
     selfHostUpdateTitle: "มีอัปเดตใหม่",
     selfHostUpdateDescription: "มีเวอร์ชัน {{version}} สำหรับอินสแตนซ์ self-host นี้",
     selfHostUpdateAction: "คู่มืออัปเกรด",
+    selfHostUpdateDismiss: "ปิด",
     selfHostVersionLabel: "เวอร์ชันแอป",
     selfHostVersionDescription: "เวอร์ชันที่ทำงานในการติดตั้งแบบโฮสต์เองนี้",
   },

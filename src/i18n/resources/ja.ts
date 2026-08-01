@@ -185,6 +185,7 @@ const ja = {
     selfHostUpdateTitle: "アップデートがあります",
     selfHostUpdateDescription: "このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
     selfHostUpdateAction: "アップグレード手順",
+    selfHostUpdateDismiss: "閉じる",
     selfHostVersionLabel: "アプリバージョン",
     selfHostVersionDescription: "このセルフホスト環境で動作しているバージョンです。",
   },

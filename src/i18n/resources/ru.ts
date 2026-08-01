@@ -186,6 +186,7 @@ const ru = {
     selfHostUpdateTitle: "Доступно обновление",
     selfHostUpdateDescription: "Версия {{version}} доступна для этого self-host экземпляра.",
     selfHostUpdateAction: "Инструкция по обновлению",
+    selfHostUpdateDismiss: "Закрыть",
     selfHostVersionLabel: "Версия приложения",
     selfHostVersionDescription: "Версия, запущенная в этой самостоятельной установке.",
   },

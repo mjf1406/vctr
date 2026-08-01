@@ -183,6 +183,7 @@ const zhs = {
     selfHostUpdateTitle: "有可用更新",
     selfHostUpdateDescription: "此自托管实例可升级到版本 {{version}}。",
     selfHostUpdateAction: "升级指南",
+    selfHostUpdateDismiss: "关闭",
     selfHostVersionLabel: "应用版本",
     selfHostVersionDescription: "此自托管安装正在运行的版本。",
   },

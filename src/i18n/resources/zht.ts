@@ -183,6 +183,7 @@ const zht = {
     selfHostUpdateTitle: "有可用更新",
     selfHostUpdateDescription: "此自託管實例可升級到版本 {{version}}。",
     selfHostUpdateAction: "升級指南",
+    selfHostUpdateDismiss: "關閉",
     selfHostVersionLabel: "應用程式版本",
     selfHostVersionDescription: "此自架安裝正在執行的版本。",
   },

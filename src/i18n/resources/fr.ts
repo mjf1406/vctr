@@ -191,6 +191,7 @@ const fr = {
     selfHostUpdateDescription:
       "La version {{version}} est disponible pour cette instance auto-hébergée.",
     selfHostUpdateAction: "Guide de mise à jour",
+    selfHostUpdateDismiss: "Fermer",
     selfHostVersionLabel: "Version de l'app",
     selfHostVersionDescription: "La version exécutée sur cette installation auto-hébergée.",
   },

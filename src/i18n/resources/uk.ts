@@ -186,6 +186,7 @@ const uk = {
     selfHostUpdateTitle: "Доступне оновлення",
     selfHostUpdateDescription: "Версія {{version}} доступна для цього self-host екземпляра.",
     selfHostUpdateAction: "Інструкція з оновлення",
+    selfHostUpdateDismiss: "Закрити",
     selfHostVersionLabel: "Версія застосунку",
     selfHostVersionDescription: "Версія, що працює в цій самостійній установці.",
   },

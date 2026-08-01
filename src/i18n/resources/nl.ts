@@ -186,6 +186,7 @@ const nl = {
     selfHostUpdateTitle: "Update beschikbaar",
     selfHostUpdateDescription: "Versie {{version}} is beschikbaar voor deze self-host-instantie.",
     selfHostUpdateAction: "Upgradehandleiding",
+    selfHostUpdateDismiss: "Sluiten",
     selfHostVersionLabel: "App-versie",
     selfHostVersionDescription: "De versie die in deze self-hosted installatie draait.",
   },

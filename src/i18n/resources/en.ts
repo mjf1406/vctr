@@ -184,6 +184,7 @@ const en = {
     selfHostUpdateTitle: "Update available",
     selfHostUpdateDescription: "Version {{version}} is available for this self-hosted instance.",
     selfHostUpdateAction: "Upgrade guide",
+    selfHostUpdateDismiss: "Dismiss",
     selfHostVersionLabel: "App version",
     selfHostVersionDescription: "The version running in this self-hosted install.",
   },

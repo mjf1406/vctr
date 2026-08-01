@@ -185,6 +185,7 @@ const pt = {
     selfHostUpdateDescription:
       "A versão {{version}} está disponível para esta instância self-hosted.",
     selfHostUpdateAction: "Guia de atualização",
+    selfHostUpdateDismiss: "Fechar",
     selfHostVersionLabel: "Versão da app",
     selfHostVersionDescription: "A versão em execução nesta instalação self-hosted.",
   },

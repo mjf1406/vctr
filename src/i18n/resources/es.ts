@@ -186,6 +186,7 @@ const es = {
     selfHostUpdateDescription:
       "La versión {{version}} está disponible para esta instancia autoalojada.",
     selfHostUpdateAction: "Guía de actualización",
+    selfHostUpdateDismiss: "Descartar",
     selfHostVersionLabel: "Versión de la app",
     selfHostVersionDescription: "La versión que se ejecuta en esta instalación autohospedada.",
   },

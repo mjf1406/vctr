@@ -188,6 +188,7 @@ const de = {
     selfHostUpdateTitle: "Update verfügbar",
     selfHostUpdateDescription: "Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
     selfHostUpdateAction: "Upgrade-Anleitung",
+    selfHostUpdateDismiss: "Schließen",
     selfHostVersionLabel: "App-Version",
     selfHostVersionDescription: "Die Version dieser selbst gehosteten Installation.",
   },

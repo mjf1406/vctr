@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
+import { TrialBanner } from "@/components/billing/TrialBanner";
 import { ClassPresenceFacepile } from "@/components/classes/ClassPresenceFacepile";
+import { SelfHostUpdateBanner } from "@/components/classroom/SelfHostUpdateBanner";
 import { AppFooter } from "@/components/navigation/AppFooter";
 import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
 import {
@@ -88,6 +90,8 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
                   </div>
                   {classDoc ? <ClassPresenceFacepile /> : null}
                 </header>
+                <SelfHostUpdateBanner />
+                <TrialBanner />
                 <div className="flex flex-1 flex-col">
                   <ClassContent classPending={isPending || !classDoc} />
                 </div>
