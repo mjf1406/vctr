@@ -2,7 +2,8 @@ type VitePublicEnvKey =
   | "VITE_CONVEX_URL"
   | "VITE_CONVEX_SITE_URL"
   | "VITE_AUTH_PASSWORD_ENABLED"
-  | "VITE_SELF_HOSTED";
+  | "VITE_SELF_HOSTED"
+  | "VITE_APP_VERSION";
 
 type SelfHostRuntimeEnv = Partial<Record<VitePublicEnvKey, string>>;
 

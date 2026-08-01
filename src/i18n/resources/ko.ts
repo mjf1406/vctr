@@ -168,6 +168,10 @@ const ko = {
     updateRestartDescription: "버전 {{version}}을(를) 다운로드했습니다. 다시 시작하여 설치하세요.",
     updateRestartNow: "지금 다시 시작",
     updateRestartLater: "나중에",
+    selfHostUpdateTitle: "업데이트 가능",
+    selfHostUpdateDescription:
+      "이 셀프호스트 인스턴스에 버전 {{version}}을(를) 사용할 수 있습니다.",
+    selfHostUpdateAction: "업그레이드 안내",
   },
   account: {
     title: "계정",

@@ -173,6 +173,9 @@ const de = {
       "Version {{version}} wurde heruntergeladen. Zum Installieren neu starten.",
     updateRestartNow: "Jetzt neu starten",
     updateRestartLater: "Später",
+    selfHostUpdateTitle: "Update verfügbar",
+    selfHostUpdateDescription: "Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
+    selfHostUpdateAction: "Upgrade-Anleitung",
   },
   account: {
     title: "Konto",

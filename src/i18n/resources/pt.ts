@@ -169,6 +169,10 @@ const pt = {
     updateRestartDescription: "A versão {{version}} foi baixada. Reinicie para instalá-la.",
     updateRestartNow: "Reiniciar agora",
     updateRestartLater: "Mais tarde",
+    selfHostUpdateTitle: "Atualização disponível",
+    selfHostUpdateDescription:
+      "A versão {{version}} está disponível para esta instância self-hosted.",
+    selfHostUpdateAction: "Guia de atualização",
   },
   account: {
     title: "Conta",

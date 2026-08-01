@@ -21,5 +21,8 @@ describe("storageKeys", () => {
     expect(STORAGE_KEYS.theme).toBe(`${APP_CONFIG.slug}-ui-theme`);
     expect(STORAGE_KEYS.pendingJoinCode).toBe(`${APP_CONFIG.slug}-pendingJoinCode`);
     expect(STORAGE_KEYS.trialBannerDismissed).toBe(`${APP_CONFIG.slug}-trial-banner-dismissed`);
+    expect(STORAGE_KEYS.selfHostUpdateDismissed).toBe(
+      `${APP_CONFIG.slug}-self-host-update-dismissed`,
+    );
   });
 });

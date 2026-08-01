@@ -171,6 +171,9 @@ const uk = {
     updateRestartDescription: "Версію {{version}} завантажено. Перезапустіть, щоб встановити.",
     updateRestartNow: "Перезапустити зараз",
     updateRestartLater: "Пізніше",
+    selfHostUpdateTitle: "Доступне оновлення",
+    selfHostUpdateDescription: "Версія {{version}} доступна для цього self-host екземпляра.",
+    selfHostUpdateAction: "Інструкція з оновлення",
   },
   account: {
     title: "Обліковий запис",

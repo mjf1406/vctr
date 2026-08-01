@@ -70,6 +70,37 @@ Portainer often reuses old layers/images. If a deploy fails or you pulled new gi
 
 Deleting unused images frees **disk** and forces a clean rebuild — do that after Dockerfile changes.
 
+## Upgrading
+
+When a new GitHub Release is published, self-hosted instances that baked an `APP_VERSION` into the web image show an in-app toast linking here. Set `APP_VERSION` to the release semver **without** a leading `v` (e.g. `0.1.0` for tag `v0.1.0`). Leave it at `0.0.0` to disable the check.
+
+Data lives in the `convex-data` volume — keep that volume when rebuilding.
+
+### Docker Compose
+
+```bash
+cd <repo>
+git fetch --tags
+git checkout v0.1.0   # or: git pull on the branch you track
+```
+
+Edit `.env` so `APP_VERSION` matches that release (e.g. `APP_VERSION=0.1.0`), then:
+
+```bash
+docker compose up -d --build
+```
+
+Confirm the stack is healthy (`docker compose logs -f deploy` / `web`) and open the app. You should no longer see an update toast for that version.
+
+### Portainer
+
+1. Stacks → your stack → **Editor** (or recreate from **Repository**).
+2. Pull the latest compose from the repo, or set **Repository Reference** to the release tag (e.g. `refs/tags/v0.1.0`).
+3. Environment variables → set `APP_VERSION` to the same semver (no `v`).
+4. **Update the stack** so `web` / `deploy` rebuild.
+
+If Portainer reuses stale layers after a Dockerfile or dependency change, follow [Clean rebuild after compose/Dockerfile changes](#clean-rebuild-after-composedockerfile-changes) (remove stack keeping the volume, prune build cache/images, redeploy).
+
 ## Instance secret
 
 `INSTANCE_NAME` and `INSTANCE_SECRET` identify the Convex instance. Changing them after the first start invalidates the admin key and can strand data. The compose default secret is for **local-only** use. For any shared or exposed host, set a fresh secret (`openssl rand -hex 32`) before the first start.

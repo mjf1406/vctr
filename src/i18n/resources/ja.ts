@@ -170,6 +170,9 @@ const ja = {
       "バージョン {{version}} をダウンロードしました。再起動してインストールします。",
     updateRestartNow: "今すぐ再起動",
     updateRestartLater: "後で",
+    selfHostUpdateTitle: "アップデートがあります",
+    selfHostUpdateDescription: "このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
+    selfHostUpdateAction: "アップグレード手順",
   },
   account: {
     title: "アカウント",

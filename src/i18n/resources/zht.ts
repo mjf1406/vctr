@@ -168,6 +168,9 @@ const zht = {
     updateRestartDescription: "已下載版本 {{version}}。重新啟動以安裝。",
     updateRestartNow: "立即重新啟動",
     updateRestartLater: "稍後",
+    selfHostUpdateTitle: "有可用更新",
+    selfHostUpdateDescription: "此自託管實例可升級到版本 {{version}}。",
+    selfHostUpdateAction: "升級指南",
   },
   account: {
     title: "帳戶",

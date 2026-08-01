@@ -171,6 +171,9 @@ const nl = {
     updateRestartDescription: "Versie {{version}} is gedownload. Herstart om te installeren.",
     updateRestartNow: "Nu herstarten",
     updateRestartLater: "Later",
+    selfHostUpdateTitle: "Update beschikbaar",
+    selfHostUpdateDescription: "Versie {{version}} is beschikbaar voor deze self-host-instantie.",
+    selfHostUpdateAction: "Upgradehandleiding",
   },
   account: {
     title: "Account",

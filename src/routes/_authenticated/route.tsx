@@ -1,6 +1,7 @@
 import { AppUpdateReadyDialog } from "@/components/classroom/AppUpdateReadyDialog";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { BillingGate } from "@/components/billing/BillingGate";
+import { useSelfHostUpdateToast } from "@/hooks/useSelfHostUpdateToast";
 import { relativeLocationHref, stashPendingJoinCode } from "@/lib/auth/pendingJoinCode";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/_authenticated")({
   },
   component: function AuthenticatedLayout() {
     const { auth } = Route.useRouteContext();
+    useSelfHostUpdateToast();
 
     if (!auth.isLoading && !auth.isAuthenticated) {
       return null;

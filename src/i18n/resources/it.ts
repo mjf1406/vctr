@@ -171,6 +171,10 @@ const it = {
     updateRestartDescription: "La versione {{version}} è stata scaricata. Riavvia per installarla.",
     updateRestartNow: "Riavvia ora",
     updateRestartLater: "Più tardi",
+    selfHostUpdateTitle: "Aggiornamento disponibile",
+    selfHostUpdateDescription:
+      "La versione {{version}} è disponibile per questa istanza self-hosted.",
+    selfHostUpdateAction: "Guida all'aggiornamento",
   },
   account: {
     title: "Account",

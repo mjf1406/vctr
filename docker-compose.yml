@@ -88,6 +88,7 @@ services:
         VITE_CONVEX_SITE_URL: "http://${PUBLIC_HOST:-localhost}:${SITE_PROXY_PORT:-3211}"
         VITE_AUTH_PASSWORD_ENABLED: "true"
         VITE_SELF_HOSTED: "true"
+        VITE_APP_VERSION: "${APP_VERSION:-0.0.0}"
     pull_policy: build
     ports:
       - "${WEB_PORT:-8088}:80"

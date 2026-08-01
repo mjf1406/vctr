@@ -170,6 +170,10 @@ const es = {
     updateRestartDescription: "Se descargó la versión {{version}}. Reinicia para instalarla.",
     updateRestartNow: "Reiniciar ahora",
     updateRestartLater: "Más tarde",
+    selfHostUpdateTitle: "Actualización disponible",
+    selfHostUpdateDescription:
+      "La versión {{version}} está disponible para esta instancia autoalojada.",
+    selfHostUpdateAction: "Guía de actualización",
   },
   account: {
     title: "Cuenta",

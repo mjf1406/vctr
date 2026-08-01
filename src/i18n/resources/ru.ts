@@ -171,6 +171,9 @@ const ru = {
     updateRestartDescription: "Версия {{version}} загружена. Перезапустите, чтобы установить.",
     updateRestartNow: "Перезапустить сейчас",
     updateRestartLater: "Позже",
+    selfHostUpdateTitle: "Доступно обновление",
+    selfHostUpdateDescription: "Версия {{version}} доступна для этого self-host экземпляра.",
+    selfHostUpdateAction: "Инструкция по обновлению",
   },
   account: {
     title: "Аккаунт",

@@ -10,4 +10,5 @@ export const STORAGE_KEYS = {
   theme: appStorageKey("ui-theme"),
   pendingJoinCode: appStorageKey("pendingJoinCode"),
   trialBannerDismissed: appStorageKey("trial-banner-dismissed"),
+  selfHostUpdateDismissed: appStorageKey("self-host-update-dismissed"),
 } as const;

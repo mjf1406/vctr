@@ -167,6 +167,9 @@ const th = {
     updateRestartDescription: "ดาวน์โหลดเวอร์ชัน {{version}} แล้ว รีสตาร์ทเพื่อติดตั้ง",
     updateRestartNow: "รีสตาร์ทเลย",
     updateRestartLater: "ทีหลัง",
+    selfHostUpdateTitle: "มีอัปเดตใหม่",
+    selfHostUpdateDescription: "มีเวอร์ชัน {{version}} สำหรับอินสแตนซ์ self-host นี้",
+    selfHostUpdateAction: "คู่มืออัปเกรด",
   },
   account: {
     title: "บัญชี",

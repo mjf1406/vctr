@@ -169,6 +169,9 @@ const en = {
     updateRestartDescription: "Version {{version}} has been downloaded. Restart to install it.",
     updateRestartNow: "Restart now",
     updateRestartLater: "Later",
+    selfHostUpdateTitle: "Update available",
+    selfHostUpdateDescription: "Version {{version}} is available for this self-hosted instance.",
+    selfHostUpdateAction: "Upgrade guide",
   },
   account: {
     title: "Account",

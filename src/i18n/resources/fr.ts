@@ -175,6 +175,10 @@ const fr = {
       "La version {{version}} a été téléchargée. Redémarrez pour l’installer.",
     updateRestartNow: "Redémarrer maintenant",
     updateRestartLater: "Plus tard",
+    selfHostUpdateTitle: "Mise à jour disponible",
+    selfHostUpdateDescription:
+      "La version {{version}} est disponible pour cette instance auto-hébergée.",
+    selfHostUpdateAction: "Guide de mise à jour",
   },
   account: {
     title: "Compte",
