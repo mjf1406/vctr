@@ -1,18 +1,22 @@
 import Google from "@auth/core/providers/google";
+import Password from "@convex-dev/auth/providers/Password";
 import { convexAuth } from "@convex-dev/auth/server";
 
 import { sanitizeAvatarUrl } from "./lib/avatarUrl.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 import { claimTrialGrant } from "./lib/trial.js";
 
+const providers = [Password, ...(process.env.AUTH_GOOGLE_ID ? [Google] : [])];
+
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Google],
+  providers,
   callbacks: {
     afterUserCreatedOrUpdated: async (ctx, { userId }) => {
       const user = await ctx.db.get("users", userId);
       if (!user) {
         return;
       }
-      if (user.email) {
+      if (user.email && !isSelfHosted()) {
         await claimTrialGrant(ctx, userId, user.email);
       }
       const safeImage = sanitizeAvatarUrl(user.image);

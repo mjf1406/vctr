@@ -6,7 +6,17 @@ import { api, internal } from "./_generated/api.js";
 import { action } from "./_generated/server.js";
 import { assertConfiguredProduct, resolveAppOrigin, resolveAppUrl } from "./lib/billingGuards.js";
 import { isAlreadyCanceledError, throwBillingError } from "./lib/polarErrors.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 import { polar } from "./polar.js";
+
+function assertCloudBilling(): void {
+  if (isSelfHosted()) {
+    throw new ConvexError({
+      code: "SELF_HOSTED",
+      message: "Billing is disabled in self-hosted mode.",
+    });
+  }
+}
 
 const orderItemValidator = v.object({
   id: v.string(),
@@ -90,6 +100,7 @@ export const cancelSubscription = action({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    assertCloudBilling();
     const { userId } = await requireBillingUser(ctx);
     await consumeBillingLimit(ctx, "billingCancel", userId);
 
@@ -126,6 +137,7 @@ export const changeSubscription = action({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    assertCloudBilling();
     const { userId } = await requireBillingUser(ctx);
     await consumeBillingLimit(ctx, "billingChange", userId);
     assertConfiguredProduct(args.productId);
@@ -149,6 +161,7 @@ export const listOrders = action({
   },
   returns: orderHistoryValidator,
   handler: async (ctx, args) => {
+    assertCloudBilling();
     const { userId } = await requireBillingUser(ctx);
     await consumeBillingLimit(ctx, "billingOrders", userId);
     const page = Math.max(1, args.page ?? 1);
@@ -205,6 +218,7 @@ export const generateCustomerPortalUrl = action({
   args: {},
   returns: v.object({ url: v.string() }),
   handler: async (ctx) => {
+    assertCloudBilling();
     const { userId } = await requireBillingUser(ctx);
     await consumeBillingLimit(ctx, "billingPortal", userId);
 
@@ -233,6 +247,7 @@ export const createCheckoutLink = action({
   },
   returns: v.object({ url: v.string() }),
   handler: async (ctx, args) => {
+    assertCloudBilling();
     const { userId, email } = await requireBillingUser(ctx);
     await consumeBillingLimit(ctx, "billingCheckout", userId);
     assertConfiguredProduct(args.productId);

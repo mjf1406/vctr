@@ -4,9 +4,9 @@ import { z } from "zod";
  * Must be set to `true` only when a Password provider is registered in
  * `convex/auth.ts`. The Vite env flag alone must never enable the UI.
  */
-export const PASSWORD_PROVIDER_REGISTERED = false;
+export const PASSWORD_PROVIDER_REGISTERED = true;
 
-/** Build-time flag baked into the SPA (self-host Docker sets from AUTH_PASSWORD_ENABLED). */
+/** Build-time flag baked into the SPA (self-host Docker sets `VITE_AUTH_PASSWORD_ENABLED`). */
 export function isPasswordAuthEnabled(): boolean {
   return PASSWORD_PROVIDER_REGISTERED && import.meta.env.VITE_AUTH_PASSWORD_ENABLED === "true";
 }

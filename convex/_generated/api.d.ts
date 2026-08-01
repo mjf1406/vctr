@@ -40,6 +40,7 @@ import type * as lib_polarErrors from "../lib/polarErrors.js";
 import type * as lib_polarSubscription from "../lib/polarSubscription.js";
 import type * as lib_rateLimitActions from "../lib/rateLimitActions.js";
 import type * as lib_rateLimiter from "../lib/rateLimiter.js";
+import type * as lib_selfHosted from "../lib/selfHosted.js";
 import type * as lib_trial from "../lib/trial.js";
 import type * as lib_uploadPresets from "../lib/uploadPresets.js";
 import type * as members from "../members.js";
@@ -50,11 +51,7 @@ import type * as trial from "../trial.js";
 import type * as trialBackfill from "../trialBackfill.js";
 import type * as users from "../users.js";
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
+import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
   account: typeof account;
@@ -89,6 +86,7 @@ declare const fullApi: ApiFromModules<{
   "lib/polarSubscription": typeof lib_polarSubscription;
   "lib/rateLimitActions": typeof lib_rateLimitActions;
   "lib/rateLimiter": typeof lib_rateLimiter;
+  "lib/selfHosted": typeof lib_selfHosted;
   "lib/trial": typeof lib_trial;
   "lib/uploadPresets": typeof lib_uploadPresets;
   members: typeof members;
@@ -108,10 +106,7 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "public">
->;
+export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "public">>;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -121,10 +116,7 @@ export declare const api: FilterApi<
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "internal">
->;
+export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, "internal">>;
 
 export declare const components: {
   authz: import("@djpanda/convex-authz/_generated/component.js").ComponentApi<"authz">;

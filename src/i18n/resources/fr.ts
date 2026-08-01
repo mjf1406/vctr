@@ -207,6 +207,10 @@ const fr = {
     freePeriod: "/mois",
     freeDownload: "Télécharger",
     freeSelfHost: "Auto-héberger",
+    selfHostedTitle: "Auto-hébergé",
+    selfHostedSubtitle: "Cette installation locale est gratuite — aucun abonnement requis.",
+    selfHostedBody:
+      "La facturation Polar et le paiement cloud sont désactivés en mode auto-hébergé.",
     monthlyTitle: "Mensuel",
     monthlyPrice: "$3",
     monthlyPeriod: "/mois",

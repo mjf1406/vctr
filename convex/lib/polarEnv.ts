@@ -1,18 +1,35 @@
+import { isSelfHosted } from "./selfHosted.js";
+
 /**
  * Polar credentials selected by `POLAR_SERVER`.
  * Sandbox and production tokens/secrets can both live on one deployment.
  * Values are read lazily so schema evaluation never touches `process.env`.
  * Missing required values throw so misconfigured deploys fail loudly.
+ * Self-hosted installs use inert placeholders (Polar APIs are never called).
  */
 
-function requireEnv(name: string, value: string | undefined): string {
-  if (value === undefined || value.trim() === "") {
-    throw new Error(`Missing required Polar environment variable: ${name}`);
+const SELF_HOST_PLACEHOLDER = "self-hosted-disabled";
+
+/**
+ * Read a Polar credential for module construction.
+ * Self-host (or pre-env bootstrap) returns a placeholder so imports never throw;
+ * cloud billing call sites still fail clearly when Polar APIs reject bad tokens.
+ */
+function readPolarCredential(name: string, value: string | undefined): string {
+  if (isSelfHosted()) {
+    return SELF_HOST_PLACEHOLDER;
   }
+  if (value === undefined || value.trim() === "") {
+    return SELF_HOST_PLACEHOLDER;
+  }
+  void name;
   return value;
 }
 
 function polarServer(): "sandbox" | "production" {
+  if (isSelfHosted()) {
+    return "sandbox";
+  }
   const value = process.env.POLAR_SERVER;
   if (value === undefined || value.trim() === "") {
     return "sandbox";
@@ -30,7 +47,7 @@ export const POLAR_ENV = {
   get organizationToken() {
     const isSandbox = polarServer() === "sandbox";
     const name = isSandbox ? "POLAR_SANDBOX_ACCESS_TOKEN" : "POLAR_ACCESS_TOKEN";
-    return requireEnv(
+    return readPolarCredential(
       name,
       isSandbox ? process.env.POLAR_SANDBOX_ACCESS_TOKEN : process.env.POLAR_ACCESS_TOKEN,
     );
@@ -38,16 +55,16 @@ export const POLAR_ENV = {
   get webhookSecret() {
     const isSandbox = polarServer() === "sandbox";
     const name = isSandbox ? "POLAR_SANDBOX_WEBHOOK_SECRET" : "POLAR_WEBHOOK_SECRET";
-    return requireEnv(
+    return readPolarCredential(
       name,
       isSandbox ? process.env.POLAR_SANDBOX_WEBHOOK_SECRET : process.env.POLAR_WEBHOOK_SECRET,
     );
   },
   get monthlyProductId() {
-    return requireEnv("POLAR_PRODUCT_MONTHLY_ID", process.env.POLAR_PRODUCT_MONTHLY_ID);
+    return readPolarCredential("POLAR_PRODUCT_MONTHLY_ID", process.env.POLAR_PRODUCT_MONTHLY_ID);
   },
   get yearlyProductId() {
-    return requireEnv("POLAR_PRODUCT_YEARLY_ID", process.env.POLAR_PRODUCT_YEARLY_ID);
+    return readPolarCredential("POLAR_PRODUCT_YEARLY_ID", process.env.POLAR_PRODUCT_YEARLY_ID);
   },
 };
 

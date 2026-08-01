@@ -203,6 +203,10 @@ const es = {
     freePeriod: "/mes",
     freeDownload: "Descargar",
     freeSelfHost: "Alojamiento propio",
+    selfHostedTitle: "Alojamiento propio",
+    selfHostedSubtitle: "Esta instalación local es gratuita: no se requiere suscripción.",
+    selfHostedBody:
+      "La facturación de Polar y el checkout en la nube están desactivados en modo autoalojado.",
     monthlyTitle: "Mensual",
     monthlyPrice: "$3",
     monthlyPeriod: "/mes",

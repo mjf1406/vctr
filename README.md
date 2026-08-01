@@ -20,6 +20,8 @@ Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 Toolchain notes also live in [`AGENTS.md`](./AGENTS.md) (`vp install`, `vp check`, `vp test`).
 
+**Self-host (local Docker, no cloud):** see [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md) — one `docker compose up -d --build` (same file for Portainer).
+
 ---
 
 ## Prerequisites
@@ -136,13 +138,13 @@ UI entry points:
 - Assets: [`public/google/light_sign_in.png`](./public/google/light_sign_in.png), [`public/google/dark_sign_in.png`](./public/google/dark_sign_in.png) (Google brand buttons — usually leave as-is)
 - Login route: [`src/routes/_public/login.tsx`](./src/routes/_public/login.tsx)
 
-#### Optional: password auth
+#### Optional: password auth (cloud)
 
-All three are required — the env flag alone never shows the password UI:
+Password is registered in [`convex/auth.ts`](./convex/auth.ts). To show the UI in cloud/dev:
 
-- [ ] Add a Password provider to [`convex/auth.ts`](./convex/auth.ts) (today only `Google` is configured).
-- [ ] Set `PASSWORD_PROVIDER_REGISTERED = true` in [`src/lib/auth/authPassword.ts`](./src/lib/auth/authPassword.ts).
 - [ ] Set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env.local`.
+
+Self-host Docker enables password auth automatically (Google/Polar off). See [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md).
 
 ### 6. Billing (Polar)
 
@@ -412,7 +414,9 @@ See [`.env.example`](./.env.example). Summary:
 | `SITE_URL`                              | Convex env                       | Yes (SPA origin)                           |
 | `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                        |
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                        |
-| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional                                   |
+| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional (password UI; on for self-host)   |
+| `VITE_SELF_HOSTED`                      | SPA build / Docker               | Self-host builds only                      |
+| `SELF_HOSTED`                           | Convex env                       | Self-host Docker (`true`)                  |
 | `POLAR_SERVER`                          | Convex env                       | Yes for billing (`sandbox` / `production`) |
 | `POLAR_SANDBOX_ACCESS_TOKEN`            | Convex env                       | Yes when `POLAR_SERVER=sandbox`            |
 | `POLAR_ACCESS_TOKEN`                    | Convex env                       | Yes when `POLAR_SERVER=production`         |

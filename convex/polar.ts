@@ -6,6 +6,7 @@ import type { DataModel } from "./_generated/dataModel.js";
 import { action } from "./_generated/server.js";
 import { requireAdmin } from "./lib/admin.js";
 import { POLAR_ENV, polarEnvPresence } from "./lib/polarEnv.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 
 export const polar = new Polar<DataModel, { proMonthly: string; proYearly: string }>(
   components.polar,
@@ -39,6 +40,9 @@ export const syncProducts = action({
   returns: v.null(),
   handler: async (ctx) => {
     await requireAdmin(ctx);
+    if (isSelfHosted()) {
+      return null;
+    }
     await polar.syncProducts(ctx);
     return null;
   },
