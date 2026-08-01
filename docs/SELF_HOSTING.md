@@ -51,6 +51,8 @@ Wait until the `deploy` service finishes successfully, then open http://localhos
 
 `pull_policy: build` is set on buildable services so Portainer rebuilds images when the stack updates.
 
+If a previous deploy failed mid-build, remove the stack (keep the volume if you want data) and redeploy so `web`/`deploy` rebuild cleanly.
+
 ## Changing host or ports
 
 Vite bakes Convex URLs at **image build** time. After changing `PUBLIC_HOST` or ports in `.env` / Portainer:

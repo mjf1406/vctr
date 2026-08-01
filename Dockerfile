@@ -37,7 +37,8 @@ ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
     VITE_AUTH_PASSWORD_ENABLED=$VITE_AUTH_PASSWORD_ENABLED \
     VITE_SELF_HOSTED=$VITE_SELF_HOSTED
 
-RUN bunx tsc -b && bunx vite build
+# Skip `tsc -b` here — project typecheck is separate; Vite+ emits the SPA.
+RUN bunx vp build
 
 FROM nginx:1.27-alpine AS web
 
