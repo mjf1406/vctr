@@ -12,15 +12,29 @@ Billing Free card → [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → Git
 
 CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers. Artifact names are `${APP_CONFIG.name}-…` via [`electron-builder.config.mjs`](../electron-builder.config.mjs):
 
-| Platform | Artifact (with current `APP_CONFIG.name`) |
-| -------- | ----------------------------------------- |
-| Windows  | `vctr-Setup-Windows.exe`                  |
-| macOS    | `vctr-macOS.dmg`                          |
-| Linux    | `vctr-Linux.AppImage`                     |
+| Platform | Artifact (with current `APP_CONFIG.name`)                   |
+| -------- | ----------------------------------------------------------- |
+| Windows  | `vctr-Setup-Windows.exe`                                    |
+| macOS    | `vctr-macOS.dmg` (install) / `vctr-macOS.zip` (auto-update) |
+| Linux    | `vctr-Linux.AppImage`                                       |
+
+Each release also attaches electron-updater feed files (`latest.yml`, `latest-mac.yml`, `latest-linux.yml`) and `.blockmap` files so installed apps can check for updates.
 
 Direct latest asset URLs (optional):
 
 `https://github.com/mjf1406/vctr/releases/latest/download/<artifact-name>`
+
+## Auto-updates
+
+Packaged builds use `electron-updater` against GitHub Releases:
+
+1. Shortly after the classroom server is running, the app checks for a newer release.
+2. If found, it downloads in the background.
+3. When ready, teachers get a restart dialog (also **Settings → Updates**).
+
+Dev (`electron:dev`) does not check the network for updates.
+
+**macOS:** auto-update requires a **code-signed** build (`CSC_*` secrets). Unsigned mac builds still install from the DMG, but in-app updates will fail until signing is configured. Windows (NSIS) and Linux (AppImage) update from the public release feed without signing.
 
 ## Teacher flow
 
@@ -60,4 +74,4 @@ git push origin v0.1.0 --force
 
 Or Actions → **Electron Release** → Run workflow → version `0.1.0` (no leading `v`). That builds Windows, macOS (Apple Silicon), and Linux, then attaches the installers to the release.
 
-macOS builds are unsigned unless you add Apple notarization secrets (`CSC_*`); users may need to bypass Gatekeeper once.
+macOS builds are unsigned unless you add Apple notarization secrets (`CSC_*`); users may need to bypass Gatekeeper once. Auto-update on macOS also requires those signing secrets.

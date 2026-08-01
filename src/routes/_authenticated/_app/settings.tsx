@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
+import { AppUpdateSettingsCard } from "@/components/classroom/AppUpdateSettingsCard";
 import { LanguageSelect } from "@/components/i18n/LanguageSelect";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import {
@@ -51,6 +52,8 @@ export const Route = createFileRoute("/_authenticated/_app/settings")({
             </CardPocket>
           </CardContent>
         </Card>
+
+        <AppUpdateSettingsCard />
       </div>
     );
   },

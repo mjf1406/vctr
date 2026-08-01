@@ -1,12 +1,18 @@
+import type { AppUpdateStatus } from "../../../shared/appUpdate";
 import type { ClassroomSession } from "../../../shared/classroomSession";
 
 export type { ClassroomSession } from "../../../shared/classroomSession";
+export type { AppUpdateStatus } from "../../../shared/appUpdate";
 
 declare global {
   interface Window {
     classroom?: {
       getSession: () => Promise<ClassroomSession>;
       onSession: (listener: (session: ClassroomSession) => void) => () => void;
+      getUpdateStatus: () => Promise<AppUpdateStatus>;
+      onUpdate: (listener: (status: AppUpdateStatus) => void) => () => void;
+      checkForUpdates: () => Promise<void>;
+      quitAndInstall: () => Promise<void>;
     };
   }
 }

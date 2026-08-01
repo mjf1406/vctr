@@ -25,6 +25,16 @@ const APP_CONFIG = loadAppConfig();
 const productName = APP_CONFIG.name;
 const slug = APP_CONFIG.slug;
 
+function parseGithubRepo(url) {
+  const match = String(url).match(/github\.com\/([^/]+)\/([^/#]+)/i);
+  if (!match) {
+    throw new Error(`APP_CONFIG.github is not a GitHub URL: ${url}`);
+  }
+  return { owner: match[1], repo: match[2].replace(/\.git$/i, "") };
+}
+
+const { owner: githubOwner, repo: githubRepo } = parseGithubRepo(APP_CONFIG.github);
+
 /** @type {import('electron-builder').Configuration} */
 const config = {
   appId: `com.${slug}.app`,
@@ -73,15 +83,21 @@ const config = {
     artifactName: "${productName}-Setup-Windows.${ext}",
   },
   mac: {
+    // zip is required for electron-updater (latest-mac.yml / Squirrel.Mac).
     target: [
       {
         target: "dmg",
+        arch: ["arm64"],
+      },
+      {
+        target: "zip",
         arch: ["arm64"],
       },
     ],
     artifactName: "${productName}-macOS.${ext}",
     category: "public.app-category.education",
     // Unsigned by default; add CSC_* secrets in CI for Gatekeeper-friendly builds.
+    // macOS auto-update requires code signing.
     identity: null,
   },
   linux: {
@@ -95,6 +111,8 @@ const config = {
   },
   publish: {
     provider: "github",
+    owner: githubOwner,
+    repo: githubRepo,
     releaseType: "release",
   },
 };

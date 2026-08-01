@@ -7,6 +7,7 @@ import {
 } from "electron";
 import path from "node:path";
 
+import { createAutoUpdater } from "./autoUpdate.ts";
 import { fingerprintConvexSource } from "./convexFingerprint.ts";
 import { createConvexSupervisor } from "./convexSupervisor.ts";
 import { detectLanIpv4 } from "./lan.ts";
@@ -197,6 +198,7 @@ async function startClassroom(): Promise<void> {
     }, 15_000);
 
     setSession({ status: "running" });
+    appAutoUpdate.start();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("[classroom] failed to start", error);
@@ -221,6 +223,8 @@ async function shutdown(): Promise<void> {
     supervisor = null;
   }
 }
+
+const appAutoUpdate = createAutoUpdater({ shutdown });
 
 app.whenReady().then(() => {
   ipcMain.handle(CLASSROOM_IPC.getSession, () => session);
@@ -249,8 +253,18 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", (event) => {
+  // quitAndInstall already shut down resources; do not app.exit() or the updater cannot relaunch.
+  if (appAutoUpdate.isQuittingForUpdate()) {
+    return;
+  }
   if (supervisor || staticClose) {
     event.preventDefault();
-    void shutdown().finally(() => app.exit(0));
+    void shutdown().finally(() => {
+      if (appAutoUpdate.isUpdateReady()) {
+        appAutoUpdate.quitAndInstall();
+        return;
+      }
+      app.exit(0);
+    });
   }
 });
