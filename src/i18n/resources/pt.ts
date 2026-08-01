@@ -30,6 +30,11 @@ const pt = {
     connectionRestored: "Conexão restabelecida",
     optional: "opcional",
     rateLimited: "Demasiados pedidos. Tente novamente mais tarde.",
+    copy: "Copiar",
+    copyLink: "Copiar link",
+    copied: "Copiado",
+    copyFailed: "Falha ao copiar",
+    copyFailedDescription: "Não foi possível copiar para a área de transferência.",
     privacyPolicy: "Política de Privacidade",
     termsAndConditions: "Termos e Condições",
     cookiePolicy: "Política de Cookies",
@@ -308,6 +313,8 @@ const pt = {
     joinPasteInvalid:
       "A área de transferência não contém um código de convite válido de 6 caracteres.",
     joinPasteFailed: "Não foi possível ler a área de transferência.",
+    joinPasteUseKeyboard:
+      "Colar da área de transferência precisa de HTTPS. Foque a caixa do código e pressione Ctrl+V (⌘V no Mac).",
     invitationsTitle: "Convites",
     invitationsDescription: "Crie e gerencie códigos de entrada ativos para esta turma.",
     invitationsEmptyTitle: "Nenhum código de convite ativo",

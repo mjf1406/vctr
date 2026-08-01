@@ -32,6 +32,11 @@ const fr = {
     connectionRestored: "Connexion rétablie",
     optional: "facultatif",
     rateLimited: "Trop de requêtes. Veuillez réessayer plus tard.",
+    copy: "Copier",
+    copyLink: "Copier le lien",
+    copied: "Copié",
+    copyFailed: "Échec de la copie",
+    copyFailedDescription: "Impossible de copier dans le presse-papiers.",
     privacyPolicy: "Politique de confidentialité",
     termsAndConditions: "Conditions générales",
     cookiePolicy: "Politique relative aux cookies",
@@ -317,6 +322,8 @@ const fr = {
     joinPasteInvalid:
       "Le presse-papiers ne contient pas un code d’invitation valide de 6 caractères.",
     joinPasteFailed: "Impossible de lire le presse-papiers.",
+    joinPasteUseKeyboard:
+      "Coller depuis le presse-papiers nécessite HTTPS. Focalisez le champ du code et appuyez sur Ctrl+V (⌘V sur Mac).",
     invitationsTitle: "Invitations",
     invitationsDescription: "Créez et gérez les codes d’adhésion actifs pour cette classe.",
     invitationsEmptyTitle: "Aucun code d’invitation actif",

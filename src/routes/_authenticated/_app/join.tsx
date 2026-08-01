@@ -27,6 +27,7 @@ import {
   redeemJoinCodeSchema,
 } from "@/lib/invitations/joinCodeFormSchema";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
+import { canReadAsyncClipboard, readClipboardText } from "@/lib/clipboard";
 import { isSubscriptionRequiredError } from "@/lib/billing/errors";
 import { codeFromError, messageFromError } from "@/lib/errors/convexError";
 
@@ -109,8 +110,12 @@ export const Route = createFileRoute("/_authenticated/_app/join")({
 
     const handlePaste = async () => {
       setError(null);
+      if (!canReadAsyncClipboard()) {
+        setError(t("joinPasteUseKeyboard"));
+        return;
+      }
       try {
-        const text = await navigator.clipboard.readText();
+        const text = await readClipboardText();
         const normalized = normalizeJoinCodeInput(text).slice(0, JOIN_CODE_LENGTH);
         if (!isCompleteJoinCode(normalized)) {
           setError(t("joinPasteInvalid"));
