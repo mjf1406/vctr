@@ -18,6 +18,7 @@ await cp("bun.lock", path.join(out, "bun.lock"));
 await cp("tsconfig.json", path.join(out, "tsconfig.json"));
 await cp("tsconfig.app.json", path.join(out, "tsconfig.app.json"));
 await cp("scripts/self-host-bootstrap.mjs", path.join(out, "scripts", "self-host-bootstrap.mjs"));
+await cp("scripts/convexFingerprint.mjs", path.join(out, "scripts", "convexFingerprint.mjs"));
 
 console.log("Installing deploy-project production dependencies...");
 await $`bun install --frozen-lockfile --ignore-scripts --production`.cwd(out);

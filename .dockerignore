@@ -1,6 +1,6 @@
 node_modules
 dist
-.git
+# Keep .git so web-build can resolve VITE_APP_VERSION via git describe.
 .github
 .cursor
 .agents

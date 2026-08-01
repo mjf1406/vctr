@@ -100,6 +100,8 @@ services:
       SITE_PROXY_PORT: "${SITE_PROXY_PORT:-3211}"
       VITE_AUTH_PASSWORD_ENABLED: "true"
       VITE_SELF_HOSTED: "true"
+      # Optional runtime override; 0.0.0/empty keeps the git-stamped build version.
+      APP_VERSION: "${APP_VERSION:-0.0.0}"
       NGINX_ENVSUBST_FILTER: "^(PUBLIC_HOST|PORT|SITE_PROXY_PORT)$"
     depends_on:
       deploy:

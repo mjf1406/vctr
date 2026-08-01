@@ -25,6 +25,18 @@ export function normalizeSemver(version: string | undefined | null): string | nu
   return trimmed;
 }
 
+/**
+ * Resolve the running self-host version the same way Docker does:
+ * prefer an explicit APP_VERSION / build-arg; otherwise use a git tag
+ * (`v1.2.3` or `1.2.3`). Placeholders (`0.0.0`, empty) are ignored.
+ */
+export function resolveSelfHostVersion(
+  explicit: string | null | undefined,
+  gitTag: string | null | undefined,
+): string | null {
+  return normalizeSemver(explicit) ?? normalizeSemver(gitTag);
+}
+
 type SemverParts = {
   major: number;
   minor: number;

@@ -72,11 +72,13 @@ Deleting unused images frees **disk** and forces a clean rebuild — do that aft
 
 ## Upgrading
 
-When a new GitHub Release is published, self-hosted instances that baked an `APP_VERSION` into the web image show an in-app toast linking here. Set `APP_VERSION` to the release semver **without** a leading `v` (e.g. `0.1.0` for tag `v0.1.0`). Leave it at `0.0.0` to disable the check.
+When a new GitHub Release is published, self-hosted instances show an in-app toast linking here if the running version is older than GitHub’s latest release tag.
+
+The web image stamps its version from the **nearest git tag** at build time (same idea as Electron). You do **not** need to set `APP_VERSION` when deploying from a release tag or a branch that has tags fetched. Optional: set `APP_VERSION` (semver **without** a leading `v`) to override. The toast stays off only when no version can be resolved (for example a shallow clone with no tags and `APP_VERSION` left at `0.0.0`).
 
 Data lives in the `convex-data` volume — keep that volume when rebuilding.
 
-The `deploy` service pushes Convex functions when the deploy marker changes. That marker includes a hash of `convex/` source, so backend code updates redeploy even if `APP_VERSION` stays `0.0.0`. If the SPA calls a function the backend does not know (e.g. `Could not find public function for 'presence:heartbeat'`), rebuild/redeploy so `deploy` runs again:
+The `deploy` service pushes Convex functions when the deploy marker changes. That marker includes a hash of `convex/` source, so backend code updates redeploy even when the app version is unchanged. If the SPA calls a function the backend does not know (e.g. `Could not find public function for 'presence:heartbeat'`), rebuild/redeploy so `deploy` runs again:
 
 ```bash
 docker compose up -d --build deploy web
@@ -90,21 +92,16 @@ docker compose run --rm deploy
 cd <repo>
 git fetch --tags
 git checkout v0.1.0   # or: git pull on the branch you track
-```
-
-Edit `.env` so `APP_VERSION` matches that release (e.g. `APP_VERSION=0.1.0`), then:
-
-```bash
 docker compose up -d --build
 ```
 
-Confirm the stack is healthy (`docker compose logs -f deploy` / `web`) and open the app. You should no longer see an update toast for that version.
+Confirm the stack is healthy (`docker compose logs -f deploy` / `web`) and open the app. You should no longer see an update toast for that version. Check the `web` build log for `Building with VITE_APP_VERSION=…` if the toast never appears.
 
 ### Portainer
 
 1. Stacks → your stack → **Editor** (or recreate from **Repository**).
-2. Pull the latest compose from the repo, or set **Repository Reference** to the release tag (e.g. `refs/tags/v0.1.0`).
-3. Environment variables → set `APP_VERSION` to the same semver (no `v`).
+2. Pull the latest compose from the repo, or set **Repository Reference** to the release tag (e.g. `refs/tags/v0.1.0`). Ensure tags are available to the clone (avoid tag-less shallow clones).
+3. `APP_VERSION` is optional — leave unset/`0.0.0` to use the git tag from the checkout; set it only to override.
 4. **Update the stack** so `web` / `deploy` rebuild.
 
 If Portainer reuses stale layers after a Dockerfile or dependency change, follow [Clean rebuild after compose/Dockerfile changes](#clean-rebuild-after-composedockerfile-changes) (remove stack keeping the volume, prune build cache/images, redeploy).

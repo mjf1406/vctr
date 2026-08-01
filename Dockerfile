@@ -22,7 +22,10 @@ ENTRYPOINT ["/app/docker/deploy.sh"]
 # Rolldown/Vite+ native bindings (exit 134) even on hosts with plenty of RAM.
 FROM node:22-bookworm AS web-build
 
-RUN npm install -g bun@1.3.14
+RUN npm install -g bun@1.3.14 \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends git \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -36,6 +39,7 @@ ARG VITE_CONVEX_URL=http://localhost:3210
 ARG VITE_CONVEX_SITE_URL=http://localhost:3211
 ARG VITE_AUTH_PASSWORD_ENABLED=true
 ARG VITE_SELF_HOSTED=true
+# 0.0.0 / empty → resolve from nearest git tag at build (see RUN below).
 ARG VITE_APP_VERSION=0.0.0
 
 ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
@@ -48,7 +52,17 @@ ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
     NODE_OPTIONS=--max-old-space-size=8192 \
     UV_THREADPOOL_SIZE=2
 
-RUN node node_modules/vite-plus/bin/vp build
+RUN set -eux; \
+  VER="${VITE_APP_VERSION:-}"; \
+  if [ -z "$VER" ] || [ "$VER" = "0.0.0" ]; then \
+    TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"; \
+    if [ -n "$TAG" ]; then \
+      VER="${TAG#v}"; \
+    fi; \
+  fi; \
+  export VITE_APP_VERSION="${VER:-0.0.0}"; \
+  echo "Building with VITE_APP_VERSION=${VITE_APP_VERSION}"; \
+  node node_modules/vite-plus/bin/vp build
 
 FROM nginx:1.27-alpine AS web
 
