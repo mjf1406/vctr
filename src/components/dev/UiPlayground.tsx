@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons/faInbox";
 import { useTranslation } from "react-i18next";
 import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
+import { SelfHostUpdateBannerView } from "@/components/classroom/SelfHostUpdateBanner";
 import { LanguageSelect } from "@/components/i18n/LanguageSelect";
 import { FontAwesomeIconPickerLazy } from "@/components/icons/FontAwesomeIconPickerLazy";
 import { iconDefinitionToId } from "@/components/icons/fontawesome-icon-catalog";
@@ -120,6 +121,35 @@ export function UiPlayground() {
           disabled={isSaving}
           triggerClassName="max-w-xs"
         />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-medium">Self-host update banner</h2>
+        <p className="text-sm text-muted-foreground">
+          Preview of the Docker/web update advisory. Resize the window to check the stacked mobile
+          layout.
+        </p>
+        <div className="overflow-hidden rounded-2xl border">
+          <SelfHostUpdateBannerView
+            className="border-b-0"
+            currentVersion="0.1.10"
+            availableVersion="0.1.11"
+            onRemindLater={() =>
+              toast.add({
+                title: "Remind me later",
+                description: "Would hide for this browser session.",
+                type: "info",
+              })
+            }
+            onDismiss={() =>
+              toast.add({
+                title: "Dismissed",
+                description: "Would dismiss version 0.1.11 permanently.",
+                type: "info",
+              })
+            }
+          />
+        </div>
       </section>
 
       <section className="space-y-6">
