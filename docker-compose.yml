@@ -72,6 +72,8 @@ services:
       CONVEX_SELF_HOSTED_URL: http://backend:3210
       PUBLIC_HOST: "${PUBLIC_HOST:-localhost}"
       WEB_PORT: "${WEB_PORT:-8088}"
+      # Label prefix for deploy marker; convex/ content hash always appended.
+      APP_VERSION: "${APP_VERSION:-0.0.0}"
     depends_on:
       backend:
         condition: service_healthy

@@ -18,4 +18,4 @@ exec bun scripts/self-host-bootstrap-cli.mjs \
   --data-dir "${DATA_DIR}" \
   --site-url "${SITE_URL}" \
   --project-dir /app \
-  --app-version "${APP_VERSION:-docker}"
+  --app-version "${APP_VERSION:-0.0.0}"

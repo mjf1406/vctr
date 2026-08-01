@@ -18,6 +18,8 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile, chmod } from "node:fs/promises";
 import path from "node:path";
 
+import { fingerprintConvexSource } from "./convexFingerprint.mjs";
+
 /**
  * @typedef {object} BootstrapOptions
  * @property {string} convexUrl
@@ -27,7 +29,7 @@ import path from "node:path";
  * @property {string} projectDir
  * @property {string} [deployMarkerFile]
  * @property {string} [authKeysFile]
- * @property {string} [appVersion] - when set, redeploy if marker version differs
+ * @property {string} [appVersion] - release/label prefix; combined with convex source hash
  * @property {(cmd: string, args: string[], opts: import('node:child_process').SpawnOptions) => Promise<void>} [runCommand]
  * @property {(msg: string) => void} [log]
  */
@@ -113,6 +115,11 @@ export async function runSelfHostBootstrap(options) {
   const authKeysFile = options.authKeysFile ?? path.join(dataDir, "auth_keys.json");
   const markerFile = options.deployMarkerFile ?? path.join(dataDir, ".deploy_complete");
   const appVersion = options.appVersion ?? "0";
+  // Docker used to mark deploy complete with a sticky label ("docker" / "0.0.0"),
+  // so rebuilt SPAs could call new functions the backend never received. Always
+  // include a convex/ content hash (same idea as Electron).
+  const sourceFp = await fingerprintConvexSource(options.projectDir);
+  const deployKey = `${appVersion}:${sourceFp}`;
 
   await mkdir(dataDir, { recursive: true });
 
@@ -124,9 +131,11 @@ export async function runSelfHostBootstrap(options) {
   let needsDeploy = true;
   if (existsSync(markerFile)) {
     const prev = (await readFile(markerFile, "utf8")).trim();
-    if (prev === appVersion) {
+    if (prev === deployKey) {
       needsDeploy = false;
-      log(`Deploy marker matches version ${appVersion}; skipping deploy.`);
+      log(`Deploy marker matches ${deployKey}; skipping deploy.`);
+    } else {
+      log(`Deploy marker stale (was ${prev || "(empty)"}, want ${deployKey}); redeploying.`);
     }
   }
 
@@ -197,6 +206,6 @@ export async function runSelfHostBootstrap(options) {
   await setEnv("JWT_PRIVATE_KEY", keys.jwtPrivateKey);
   await setEnv("JWKS", keys.jwks);
 
-  await writeFile(markerFile, appVersion, "utf8");
+  await writeFile(markerFile, deployKey, "utf8");
   log(`Self-host bootstrap complete. App: ${options.siteUrl}`);
 }

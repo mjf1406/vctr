@@ -1,17 +1,24 @@
+/**
+ * Content hash of Convex source (excludes `_generated`).
+ * Shared by Docker / Electron self-host bootstrap so code edits redeploy.
+ */
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 /**
- * Content hash of Convex source (excludes `_generated`).
- * Used as the self-host deploy marker so electron:dev picks up code changes.
- * Keep in sync with `scripts/convexFingerprint.mjs` (Docker bootstrap).
+ * @param {string} projectDir
+ * @returns {Promise<string>}
  */
-export async function fingerprintConvexSource(projectDir: string): Promise<string> {
+export async function fingerprintConvexSource(projectDir) {
   const root = path.join(projectDir, "convex");
-  const files: string[] = [];
+  /** @type {string[]} */
+  const files = [];
 
-  async function walk(dir: string): Promise<void> {
+  /**
+   * @param {string} dir
+   */
+  async function walk(dir) {
     let entries;
     try {
       entries = await readdir(dir, { withFileTypes: true });

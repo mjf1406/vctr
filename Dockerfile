@@ -12,7 +12,7 @@ RUN bun install --frozen-lockfile --ignore-scripts
 COPY convex ./convex
 COPY tsconfig.json tsconfig.app.json tsconfig.node.json ./
 COPY docker/deploy.sh docker/generate-auth-keys.mjs ./docker/
-COPY scripts/self-host-bootstrap.mjs scripts/self-host-bootstrap-cli.mjs ./scripts/
+COPY scripts/self-host-bootstrap.mjs scripts/self-host-bootstrap-cli.mjs scripts/convexFingerprint.mjs ./scripts/
 RUN chmod +x /app/docker/deploy.sh
 
 ENTRYPOINT ["/app/docker/deploy.sh"]

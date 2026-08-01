@@ -76,6 +76,14 @@ When a new GitHub Release is published, self-hosted instances that baked an `APP
 
 Data lives in the `convex-data` volume — keep that volume when rebuilding.
 
+The `deploy` service pushes Convex functions when the deploy marker changes. That marker includes a hash of `convex/` source, so backend code updates redeploy even if `APP_VERSION` stays `0.0.0`. If the SPA calls a function the backend does not know (e.g. `Could not find public function for 'presence:heartbeat'`), rebuild/redeploy so `deploy` runs again:
+
+```bash
+docker compose up -d --build deploy web
+# or force one shot:
+docker compose run --rm deploy
+```
+
 ### Docker Compose
 
 ```bash
