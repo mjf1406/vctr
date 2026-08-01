@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { APP_CONFIG } from "@/config/app";
+import { FreeDownloadMenu } from "@/components/billing/FreeDownloadMenu";
 import { OrderHistory } from "@/components/billing/OrderHistory";
 import { PlanActionButton } from "@/components/billing/PlanActionButton";
 import { SubscriptionManagement } from "@/components/billing/SubscriptionManagement";
@@ -138,17 +139,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
               </CardHeader>
               <CardContent />
               <CardFooter className="flex min-w-0 flex-row gap-2">
-                <a
-                  href={APP_CONFIG.downloadUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={cn(
-                    buttonVariants({ variant: "default", size: "sm" }),
-                    "min-w-0 flex-1 justify-center",
-                  )}
-                >
-                  {t("freeDownload")}
-                </a>
+                <FreeDownloadMenu />
                 <a
                   href={APP_CONFIG.selfHostUrl}
                   target="_blank"

@@ -1,7 +1,14 @@
+import { createRequire } from "node:module";
+
 import { app, BrowserWindow, ipcMain } from "electron";
-import { autoUpdater } from "electron-updater";
 
 import { APP_UPDATE_IPC, type AppUpdateStatus } from "../shared/appUpdate.ts";
+
+// electron-updater is CJS and exposes autoUpdater via a getter; named ESM
+// imports fail at runtime under Electron's ESM loader.
+const { autoUpdater } = createRequire(import.meta.url)(
+  "electron-updater",
+) as typeof import("electron-updater");
 
 export type AutoUpdateController = {
   /** True after an update was downloaded and quitAndInstall was requested. */

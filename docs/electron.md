@@ -6,21 +6,21 @@ Students join from a normal browser on the **same Wi‑Fi**. They do not install
 
 ## Downloads
 
-Billing Free card → [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → GitHub **Releases / latest**:
+Billing Free card → **Download** dropdown (Windows / Mac / Ubuntu) → direct GitHub **latest** assets via [`src/lib/desktopDownloads.ts`](../src/lib/desktopDownloads.ts) (derived from `APP_CONFIG.github` + `APP_CONFIG.name`).
 
-`https://github.com/mjf1406/vctr/releases/latest`
+Release landing page (docs / clone checklist): [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → `…/releases/latest`.
 
 CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers. Artifact names are `${APP_CONFIG.name}-…` via [`electron-builder.config.mjs`](../electron-builder.config.mjs):
 
-| Platform | Artifact (with current `APP_CONFIG.name`)                   |
-| -------- | ----------------------------------------------------------- |
-| Windows  | `vctr-Setup-Windows.exe`                                    |
-| macOS    | `vctr-macOS.dmg` (install) / `vctr-macOS.zip` (auto-update) |
-| Linux    | `vctr-Linux.AppImage`                                       |
+| Menu label | Artifact (with current `APP_CONFIG.name`)                   |
+| ---------- | ----------------------------------------------------------- |
+| Windows    | `vctr-Setup-Windows.exe`                                    |
+| Mac        | `vctr-macOS.dmg` (install) / `vctr-macOS.zip` (auto-update) |
+| Ubuntu     | `vctr-Linux.AppImage`                                       |
 
 Each release also attaches electron-updater feed files (`latest.yml`, `latest-mac.yml`, `latest-linux.yml`) and `.blockmap` files so installed apps can check for updates.
 
-Direct latest asset URLs (optional):
+Direct latest asset URL shape:
 
 `https://github.com/mjf1406/vctr/releases/latest/download/<artifact-name>`
 

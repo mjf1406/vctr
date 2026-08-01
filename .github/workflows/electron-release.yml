@@ -99,11 +99,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.platform }}
-          # Installers + electron-updater feed files (latest*.yml) and blockmaps.
+          # Installers + .blockmap (same ${name}-* prefix) + electron-updater feeds.
+          # Do not also glob *.blockmap — that double-matches and races release upload.
           path: |
             release/${{ steps.brand.outputs.name }}-*
             release/latest*.yml
-            release/*.blockmap
           if-no-files-found: error
 
   release:
@@ -133,15 +133,15 @@ jobs:
           path: installers
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        # v3 runs on Node 24 and recovers transient asset-metadata 404s.
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.prepare.outputs.version }}
           name: v${{ needs.prepare.outputs.version }}
           generate_release_notes: true
-          # Include latest*.yml / blockmaps so packaged apps can auto-update.
+          # ${name}-* already includes installers and .blockmap files.
           files: |
             installers/${{ steps.brand.outputs.name }}-*
             installers/latest*.yml
-            installers/*.blockmap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
