@@ -139,6 +139,7 @@ export function FileDropzone({
               </div>
             </div>
             <Button
+              type="button"
               variant="default"
               size="sm"
               onClick={(e) => {
@@ -194,7 +195,7 @@ export function FileDropzone({
           <EmptyDescription className="max-w-xs text-center">{t(descriptionKey)}</EmptyDescription>
 
           <div className="mt-4">
-            <Button variant="default" size="lg" onClick={handleSelectClick}>
+            <Button type="button" variant="default" size="lg" onClick={handleSelectClick}>
               {t(label)}
             </Button>
           </div>

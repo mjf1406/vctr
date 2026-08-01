@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAction } from "convex/react";
@@ -134,17 +134,15 @@ export function useUploadFiles(
   const classId = options?.classId;
 
   const [items, setItems] = useState<UploadFileItem[]>([]);
-  const itemsRef = useRef(items);
-  useEffect(() => {
-    itemsRef.current = items;
-  }, [items]);
+  // Source of truth for the drain loop. Updated synchronously in setItemsSync
+  // (not inside the setState updater) so processQueue never races a deferred
+  // React updater and misses the first queued file.
+  const itemsRef = useRef<UploadFileItem[]>([]);
 
   const setItemsSync = useCallback((updater: (prev: UploadFileItem[]) => UploadFileItem[]) => {
-    setItems((prev) => {
-      const next = updater(prev);
-      itemsRef.current = next;
-      return next;
-    });
+    const next = updater(itemsRef.current);
+    itemsRef.current = next;
+    setItems(next);
   }, []);
 
   const generateUploadUrlMutation = useConvexMutation(api.files.generateUploadUrl);
@@ -154,6 +152,20 @@ export function useUploadFiles(
 
   const xhrByIdRef = useRef<Map<string, () => void>>(new Map());
   const processingRef = useRef(false);
+
+  // Convex hook identities change often; keep the drain closure stable via refs.
+  const generateUploadUrlRef = useRef(generateUploadUrlMutation);
+  const watchPendingUploadRef = useRef(watchPendingUploadMutation);
+  const finalizeUploadRef = useRef(finalizeUploadAction);
+  const classIdRef = useRef(classId);
+  const presetKeyRef = useRef(presetKey);
+  const queryClientRef = useRef(queryClient);
+  generateUploadUrlRef.current = generateUploadUrlMutation;
+  watchPendingUploadRef.current = watchPendingUploadMutation;
+  finalizeUploadRef.current = finalizeUploadAction;
+  classIdRef.current = classId;
+  presetKeyRef.current = presetKey;
+  queryClientRef.current = queryClient;
 
   const getNextQueuedItem = () => {
     return itemsRef.current.find((item) => item.status === "queued") ?? null;
@@ -169,9 +181,8 @@ export function useUploadFiles(
         ),
       );
 
-      const uploadUrl = await generateUploadUrlMutation({});
-
       try {
+        const uploadUrl = await generateUploadUrlRef.current({});
         const result = await uploadViaXhr({
           uploadUrl,
           file: item.file,
@@ -185,17 +196,20 @@ export function useUploadFiles(
           },
         });
 
-        await watchPendingUploadMutation({ storageId: result.storageId });
+        await watchPendingUploadRef.current({ storageId: result.storageId });
 
-        const fileId = await finalizeUploadAction({
+        const activeClassId = classIdRef.current;
+        const fileId = await finalizeUploadRef.current({
           storageId: result.storageId,
           name: item.file.name,
-          preset: presetKey,
-          ...(classId !== undefined ? { classId } : {}),
+          preset: presetKeyRef.current,
+          ...(activeClassId !== undefined ? { classId: activeClassId } : {}),
         });
 
-        if (classId !== undefined) {
-          void queryClient.invalidateQueries({ queryKey: classFilesListQueryKey(classId) });
+        if (activeClassId !== undefined) {
+          void queryClientRef.current.invalidateQueries({
+            queryKey: classFilesListQueryKey(activeClassId),
+          });
         }
 
         setItemsSync((prev) =>
@@ -236,16 +250,11 @@ export function useUploadFiles(
         xhrByIdRef.current.delete(item.id);
       }
     },
-    [
-      classId,
-      finalizeUploadAction,
-      generateUploadUrlMutation,
-      presetKey,
-      queryClient,
-      setItemsSync,
-      watchPendingUploadMutation,
-    ],
+    [setItemsSync],
   );
+
+  const uploadOneRef = useRef(uploadOne);
+  uploadOneRef.current = uploadOne;
 
   const processQueue = useCallback(async () => {
     if (processingRef.current) {
@@ -258,12 +267,18 @@ export function useUploadFiles(
         if (!next) {
           break;
         }
-        await uploadOne(next);
+        await uploadOneRef.current(next);
       }
     } finally {
       processingRef.current = false;
     }
-  }, [uploadOne]);
+    // Enqueues that arrived while processingRef was true early-returned.
+    // Re-check only after releasing the lock so the first file never stalls
+    // until a second enqueue "kicks" the drain.
+    if (getNextQueuedItem()) {
+      void processQueue();
+    }
+  }, []);
 
   const validateFile = useCallback(
     (file: File): UploadErrorCode | null => {

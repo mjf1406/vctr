@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "@/components/ui/toast-manager";
+import { fileBytesQueryKey } from "@/hooks/files/useFileBytes";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import { currentUserQueryKey } from "@/hooks/user/useCurrentUser";
 import { messageFromError } from "@/lib/errors/convexError";
@@ -31,9 +32,15 @@ export function useUpdateAvatar() {
     mutationFn: (args: UpdateAvatarArgs) => mutationFn(args),
     queryKeys: [queryKey],
     applyOptimisticUpdate: (queryClient, { fileId }) => {
+      const previous = queryClient.getQueryData<CurrentUser | null>(queryKey);
+      const previousAvatarId = previous?.avatarFileId;
+      if (previousAvatarId !== undefined && previousAvatarId !== fileId) {
+        void queryClient.removeQueries({ queryKey: fileBytesQueryKey(previousAvatarId) });
+      }
       queryClient.setQueryData<CurrentUser | null>(queryKey, (old) => {
         if (!old) return old;
-        return { ...old, avatarFileId: fileId };
+        // Clear provider URL; ProfileCard loads the new file via useFileBytes.
+        return { ...old, avatarFileId: fileId, image: undefined };
       });
     },
     onError: (error) => {

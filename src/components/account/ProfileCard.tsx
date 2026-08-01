@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -9,13 +9,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UploadQueue } from "@/components/upload/UploadQueue";
+import { FileDropzone } from "@/components/upload/FileDropzone";
+import { useFileBytes } from "@/hooks/files/useFileBytes";
 import { useClearAvatar } from "@/hooks/user/useClearAvatar";
 import { useUpdateAvatar } from "@/hooks/user/useUpdateAvatar";
 import { useUpdateDisplayName } from "@/hooks/user/useUpdateDisplayName";
-import { useUploadFiles } from "@/hooks/files/useUploadFiles";
 import { isSelfHosted } from "@/lib/selfHosted";
-import { getUploadPreset } from "@/lib/upload/acceptPresets";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
 import { splitFullName } from "@/lib/user/userName";
 import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
@@ -39,10 +38,6 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
   const updateName = useUpdateDisplayName();
   const updateAvatar = useUpdateAvatar();
   const clearAvatar = useClearAvatar();
-  const { items, uploadFiles, abortFile, retryFile, isUploading } = useUploadFiles("images");
-  const imagePreset = getUploadPreset("images");
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const notifiedUploadsRef = useRef(new Set<string>());
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -50,7 +45,11 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     firstName?: string;
     lastName?: string;
   }>({});
-  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
+
+  const avatarFileId = user?.avatarFileId ?? undefined;
+  const { url: avatarBytesUrl, isPending: avatarBytesPending } = useFileBytes(
+    avatarFileId ?? undefined,
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -59,27 +58,12 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     setLastName(parts.lastName);
   }, [user]);
 
-  useEffect(() => {
-    return () => {
-      if (localPreviewUrl) {
-        URL.revokeObjectURL(localPreviewUrl);
-      }
-    };
-  }, [localPreviewUrl]);
-
-  useEffect(() => {
-    for (const item of items) {
-      if (item.status !== "done" || item.fileId === undefined) continue;
-      if (notifiedUploadsRef.current.has(item.id)) continue;
-      notifiedUploadsRef.current.add(item.id);
-      void updateAvatar.mutateAsync({ fileId: item.fileId }).then(() => {
-        setLocalPreviewUrl((prev) => {
-          if (prev) URL.revokeObjectURL(prev);
-          return null;
-        });
-      });
-    }
-  }, [items, updateAvatar]);
+  const handleAvatarUploaded = useCallback(
+    (fileId: Id<"files">) => {
+      updateAvatar.mutate({ fileId });
+    },
+    [updateAvatar],
+  );
 
   if (isPending) {
     return (
@@ -106,10 +90,13 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
   const displayName = getDisplayName(user);
   const initials = getInitials(user);
   const remoteImage = sanitizeAvatarUrl(user.image);
-  const displayImage = localPreviewUrl ?? remoteImage;
+  const displayImage =
+    avatarFileId !== undefined
+      ? (avatarBytesUrl ?? (avatarBytesPending ? null : remoteImage))
+      : remoteImage;
   const isSavingName = updateName.isPending;
-  const isAvatarBusy = isUploading || updateAvatar.isPending || clearAvatar.isPending;
-  const hasCustomAvatar = user.avatarFileId != null || localPreviewUrl != null;
+  const isAvatarBusy = updateAvatar.isPending || clearAvatar.isPending;
+  const hasCustomAvatar = avatarFileId != null;
 
   const handleSave = (event: FormEvent) => {
     event.preventDefault();
@@ -124,23 +111,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     void updateName.mutateAsync({ firstName: first, lastName: last });
   };
 
-  const handleAvatarSelected = (fileList: FileList | null) => {
-    if (!fileList || fileList.length === 0) return;
-    const file = fileList[0];
-    if (!file) return;
-    const preview = URL.createObjectURL(file);
-    setLocalPreviewUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return preview;
-    });
-    uploadFiles([file]);
-  };
-
   const handleClearAvatar = () => {
-    setLocalPreviewUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return null;
-    });
     void clearAvatar.mutateAsync({});
   };
 
@@ -160,40 +131,17 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
             ) : null}
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
-          {editable ? (
-            <div className="flex flex-col items-center gap-1">
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                accept={imagePreset.accept}
-                onChange={(e) => {
-                  handleAvatarSelected(e.currentTarget.files);
-                  e.currentTarget.value = "";
-                }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={isAvatarBusy}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {isAvatarBusy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
-                {t("changeAvatar")}
-              </Button>
-              {hasCustomAvatar ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  disabled={isAvatarBusy}
-                  onClick={handleClearAvatar}
-                >
-                  {t("removeAvatar")}
-                </Button>
-              ) : null}
-            </div>
+          {editable && hasCustomAvatar ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={isAvatarBusy}
+              onClick={handleClearAvatar}
+            >
+              {isAvatarBusy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+              {t("removeAvatar")}
+            </Button>
           ) : null}
         </div>
 
@@ -239,9 +187,13 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
                 </span>
               </div>
             </FieldGroup>
-            {items.length > 0 ? (
-              <UploadQueue items={items} onAbort={abortFile} onRetry={retryFile} />
-            ) : null}
+            <FileDropzone
+              title={t("changeAvatar")}
+              variant="compact"
+              presetKey="images"
+              multiple={false}
+              onUploaded={handleAvatarUploaded}
+            />
             <div>
               <Button type="submit" size="sm" disabled={isSavingName}>
                 {isSavingName ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
