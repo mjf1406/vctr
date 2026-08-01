@@ -1,4 +1,5 @@
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
+import { randomClientId } from "@/lib/optimistic";
 
 export type JoinCodePublic = Omit<Doc<"joinCodes">, "expirationJobId"> & {
   _pending?: boolean;
@@ -21,7 +22,7 @@ export function formatJoinCodeDisplay(code: string): string {
 }
 
 export function createOptimisticJoinCodeId(): Id<"joinCodes"> {
-  return `optimistic:${crypto.randomUUID()}` as Id<"joinCodes">;
+  return `optimistic:${randomClientId()}` as Id<"joinCodes">;
 }
 
 /**

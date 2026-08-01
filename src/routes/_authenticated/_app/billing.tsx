@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isSelfHosted } from "@/lib/selfHosted";
 import { cn } from "@/lib/utils";
 
 function checkoutTheme(theme: "dark" | "light" | "system"): "dark" | "light" {
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
   component: function BillingPage() {
     const { t } = useTranslation("billing");
     const { theme } = useTheme();
+    const selfHosted = isSelfHosted();
     const {
       data: products,
       isPending: productsPending,
@@ -53,6 +55,23 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
     const yearly = products?.proYearly;
     const polarTheme = checkoutTheme(theme);
     const currentProductKey = raw?.productKey ?? null;
+
+    if (selfHosted) {
+      return (
+        <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8">
+          <div className="flex flex-col gap-2 text-center">
+            <h1 className="text-2xl font-semibold tracking-tight">{t("selfHostedTitle")}</h1>
+            <p className="text-sm text-muted-foreground">{t("selfHostedSubtitle")}</p>
+          </div>
+          <Card className="mx-auto w-full max-w-lg">
+            <CardHeader>
+              <CardTitle>{t("freeTitle")}</CardTitle>
+              <CardDescription>{t("selfHostedBody")}</CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      );
+    }
 
     return (
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8">

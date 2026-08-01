@@ -20,6 +20,8 @@ Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 Toolchain notes also live in [`AGENTS.md`](./AGENTS.md) (`vp install`, `vp check`, `vp test`).
 
+**Self-host (local Docker, no cloud):** end-user runbook is [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md). When cloning this template, rewrite the VCTR-specific bits there — see clone checklist **step 10**.
+
 ---
 
 ## Prerequisites
@@ -136,13 +138,13 @@ UI entry points:
 - Assets: [`public/google/light_sign_in.png`](./public/google/light_sign_in.png), [`public/google/dark_sign_in.png`](./public/google/dark_sign_in.png) (Google brand buttons — usually leave as-is)
 - Login route: [`src/routes/_public/login.tsx`](./src/routes/_public/login.tsx)
 
-#### Optional: password auth
+#### Optional: password auth (cloud)
 
-All three are required — the env flag alone never shows the password UI:
+Password is registered in [`convex/auth.ts`](./convex/auth.ts). To show the UI in cloud/dev:
 
-- [ ] Add a Password provider to [`convex/auth.ts`](./convex/auth.ts) (today only `Google` is configured).
-- [ ] Set `PASSWORD_PROVIDER_REGISTERED = true` in [`src/lib/auth/authPassword.ts`](./src/lib/auth/authPassword.ts).
 - [ ] Set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env.local`.
+
+Self-host Docker enables password auth automatically (Google/Polar off). See [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md).
 
 ### 6. Billing (Polar)
 
@@ -215,20 +217,20 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 
 **Edit every field in [`convex/appConfig.ts`](./convex/appConfig.ts):**
 
-| Field                                   | Used for                                                                                                                                                                           |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                 |
-| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check |
-| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                      |
-| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                          |
-| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                   |
-| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                      |
-| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                      |
-| `downloadUrl` / `selfHostUrl`           | Links on the billing Free card ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx))                                                      |
-| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                             |
-| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                            |
-| `trial`                                 | App-managed card-less trial: `days`, `warnWithinDays`, `forceWithinDays` (banner timing; not a Polar product trial)                                                                |
-| `uploads`                               | Per-user `quotaBytes` and per-preset `maxSizeBytes` (images / documents / audio)                                                                                                   |
+| Field                                   | Used for                                                                                                                                                                                      |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                            |
+| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check            |
+| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                                 |
+| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                                     |
+| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                              |
+| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                                 |
+| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                                 |
+| `downloadUrl` / `selfHostUrl`           | Links on the billing Free card ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx)) — point `selfHostUrl` at your repo’s self-host docs or releases |
+| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                                        |
+| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                                       |
+| `trial`                                 | App-managed card-less trial: `days`, `warnWithinDays`, `forceWithinDays` (banner timing; not a Polar product trial)                                                                           |
+| `uploads`                               | Per-user `quotaBytes` and per-preset `maxSizeBytes` (images / documents / audio)                                                                                                              |
 
 - [ ] All `APP_CONFIG` fields updated for the new product (including `downloadUrl`, `selfHostUrl`, `trial`, `uploads`)
 - [ ] `authzTenantId` is a stable new id (not `classclarus`)
@@ -291,7 +293,7 @@ Adding components later: `bunx --bun shadcn@latest add <component>` (aliases alr
 
 Do this **after** auth + branding. Recommended order:
 
-1. Finish steps 3–8 and smoke-test Google sign-in on the **ClassClarus example** UI (step 10 checklist for login/brand/theme).
+1. Finish steps 3–8 and smoke-test Google sign-in on the **ClassClarus example** UI (step 11 checklist for login/brand/theme).
 2. Only then reshape or remove the classroom domain for a different product.
 3. ClassClarus-style clones can **keep** most of this step and only retarget brand/URLs/prices.
 
@@ -330,7 +332,34 @@ Checklist:
 - [ ] Trimmed or rewrote feature i18n keys in **all** locales + `REQUIRED_KEYS` coverage via tests
 - [ ] Removed ClassClarus-specific footer/legal URLs if not applicable
 
-### 10. Run and verify
+### 10. Self-hosting docs (update when cloning)
+
+Operators follow [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md). That file currently names **this** template’s GitHub remote and uses **ClassClarus**-style Portainer examples — change them for your product so forks are not pointed at `mjf1406/vctr`.
+
+**In [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md), replace:**
+
+| What                                         | Template today                            | Your clone                                                                  |
+| -------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------- |
+| Portainer **Repository URL**                 | `https://github.com/mjf1406/vctr`         | Your fork/remote HTTPS URL                                                  |
+| Portainer **Repository reference**           | `refs/heads/master`                       | Your default branch (e.g. `refs/heads/main`)                                |
+| Admin-key examples (`docker exec …`, `-p …`) | `classclarus-backend-1`, `-p classclarus` | Names from **your** Portainer stack (stack name → project/container prefix) |
+
+Keep the rest of the runbook (ports, `PUBLIC_HOST`, prune/rebuild, instance secret) unless you change compose defaults.
+
+**Related files (not in that doc, but match your brand/repo):**
+
+| File                                           | Change                                                                      |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
+| [`docker-compose.yml`](./docker-compose.yml)   | Top-level `name:` (currently `vctr`) — local Compose project name           |
+| [`example.env`](./example.env)                 | `PUBLIC_HOST`, `INSTANCE_NAME` (new `INSTANCE_SECRET` for non-toy installs) |
+| [`convex/appConfig.ts`](./convex/appConfig.ts) | `selfHostUrl` / `downloadUrl` / `github` → your repo or docs                |
+
+- [ ] `docs/SELF_HOSTING.md` Portainer URL + branch updated for this remote
+- [ ] Admin-key examples use your stack/project name (or a clear `<stack>` placeholder)
+- [ ] Compose `name:` / `INSTANCE_NAME` match the new product (or left intentional)
+- [ ] `APP_CONFIG.selfHostUrl` points at the clone’s self-host entry (repo README section or `docs/SELF_HOSTING.md` on GitHub)
+
+### 11. Run and verify
 
 Prefer verifying login/brand/theme on the example app **before** a large step-9 domain rewrite.
 
@@ -356,7 +385,7 @@ vp check
 vp test
 ```
 
-### 11. Production (when ready)
+### 12. Production (when ready)
 
 - [ ] Deploy Convex prod (`bunx convex deploy` — **production only**, never for day-to-day template work)
 - [ ] `bunx @convex-dev/auth --prod`
@@ -412,7 +441,9 @@ See [`.env.example`](./.env.example). Summary:
 | `SITE_URL`                              | Convex env                       | Yes (SPA origin)                           |
 | `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                        |
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                        |
-| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional                                   |
+| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional (password UI; on for self-host)   |
+| `VITE_SELF_HOSTED`                      | SPA build / Docker               | Self-host builds only                      |
+| `SELF_HOSTED`                           | Convex env                       | Self-host Docker (`true`)                  |
 | `POLAR_SERVER`                          | Convex env                       | Yes for billing (`sandbox` / `production`) |
 | `POLAR_SANDBOX_ACCESS_TOKEN`            | Convex env                       | Yes when `POLAR_SERVER=sandbox`            |
 | `POLAR_ACCESS_TOKEN`                    | Convex env                       | Yes when `POLAR_SERVER=production`         |

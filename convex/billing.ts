@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { polar } from "./polar.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 import { claimTrialGrant } from "./lib/trial.js";
 
 const subscriptionSummaryValidator = v.object({
@@ -36,6 +37,16 @@ export const getEntitlement = authedQuery({
   args: {},
   returns: entitlementValidator,
   handler: async (ctx) => {
+    if (isSelfHosted()) {
+      return {
+        trialEndsAt: null,
+        subscriptionStatus: "active",
+        currentPeriodEnd: null,
+        productKey: "selfHosted",
+        subscription: null,
+      };
+    }
+
     const grant = await ctx.db
       .query("trialGrants")
       .withIndex("by_userId", (q) => q.eq("userId", ctx.userId))
@@ -81,6 +92,9 @@ export const ensureTrialGrant = authedMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
+    if (isSelfHosted()) {
+      return null;
+    }
     await rateLimiter.limit(ctx, "ensureTrialGrant", { key: ctx.userId, throws: true });
     const user = await ctx.db.get("users", ctx.userId);
     if (user?.email) {

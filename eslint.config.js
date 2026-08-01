@@ -16,6 +16,7 @@ export default [
       "node_modules",
       "dist",
       "public/**",
+      "docker/**",
       "convex/_generated/**",
       "src/routeTree.gen.ts",
       "convex/**/*.test.ts",

@@ -5,6 +5,7 @@ import { v } from "convex/values";
 import { components, internal } from "./_generated/api.js";
 import { internalAction } from "./_generated/server.js";
 import { toPolarComponentSubscription } from "./lib/polarSubscription.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 import { polar } from "./polar.js";
 
 /**
@@ -18,6 +19,10 @@ export const reconcileSubscriptions = internalAction({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    if (isSelfHosted()) {
+      return null;
+    }
+
     const page = args.page ?? 1;
     let repaired = args.repaired ?? 0;
     const limit = 50;

@@ -6,6 +6,7 @@ import { authz } from "../authz.js";
 import { polar } from "../polar.js";
 import { deleteJoinCodeById } from "./joinCodesCleanup.js";
 import { clearBannerIfReferencesFile } from "./filesCleanup.js";
+import { isSelfHosted } from "./selfHosted.js";
 
 const ACTIVE_SUBSCRIPTION_STATUSES = new Set(["active", "trialing"]);
 
@@ -51,9 +52,11 @@ export async function getAccountDeletionBlockers(
     blockers.push("owns_classes");
   }
 
-  const subscription = await polar.getCurrentSubscription(ctx, { userId });
-  if (subscription && ACTIVE_SUBSCRIPTION_STATUSES.has(subscription.status)) {
-    blockers.push("active_subscription");
+  if (!isSelfHosted()) {
+    const subscription = await polar.getCurrentSubscription(ctx, { userId });
+    if (subscription && ACTIVE_SUBSCRIPTION_STATUSES.has(subscription.status)) {
+      blockers.push("active_subscription");
+    }
   }
 
   return blockers;

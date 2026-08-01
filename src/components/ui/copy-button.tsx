@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
 import type { Button as ButtonPrimitive } from "@base-ui/react/button";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
+import { copyText } from "@/lib/clipboard";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-manager";
 
@@ -24,6 +26,7 @@ function CopyButton({
   "aria-label": ariaLabel,
   ...props
 }: CopyButtonProps) {
+  const { t } = useTranslation("common");
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -35,7 +38,7 @@ function CopyButton({
     };
   }, []);
 
-  const defaultLabel = type === "link" ? "Copy link" : "Copy";
+  const defaultLabel = type === "link" ? t("copyLink") : t("copy");
 
   const handleClick = async () => {
     if (timeoutRef.current !== null) {
@@ -44,7 +47,7 @@ function CopyButton({
     }
 
     try {
-      await navigator.clipboard.writeText(value);
+      await copyText(value);
       setCopied(true);
       timeoutRef.current = setTimeout(() => {
         setCopied(false);
@@ -53,8 +56,8 @@ function CopyButton({
     } catch {
       setCopied(false);
       toast.add({
-        title: "Copy failed",
-        description: "Could not copy to clipboard.",
+        title: t("copyFailed"),
+        description: t("copyFailedDescription"),
         type: "error",
       });
     }
@@ -67,7 +70,7 @@ function CopyButton({
       variant="outline"
       size="icon"
       disabled={disabled}
-      aria-label={copied ? "Copied" : (ariaLabel ?? defaultLabel)}
+      aria-label={copied ? t("copied") : (ariaLabel ?? defaultLabel)}
       className={cn(copied && SUCCESS_CLASSNAME, className)}
       onClick={() => {
         void handleClick();

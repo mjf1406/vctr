@@ -30,3 +30,5 @@ dist-ssr
 .env
 .env.*
 !.env.example
+# Portainer / Compose self-host template (tracked on purpose — see example.env)
+!example.env
