@@ -11,18 +11,14 @@ import PendingComponent from "@/components/loading/PendingComponent";
 import { InnerRouterProvider } from "@/components/routing/InnerRouterProvider";
 import i18n, { ensureLocaleLoaded, getInitialLanguage } from "@/i18n";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
-import { readViteEnv } from "@/lib/runtimeEnv";
+import { resolveConvexUrl } from "@/lib/runtimeEnv";
 import { STORAGE_KEYS } from "@/lib/storageKeys";
 
 import { routeTree } from "./routeTree.gen";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { RootErrorComponent } from "./components/errors/RootErrorComponent";
 
-const convexUrl = readViteEnv("VITE_CONVEX_URL");
-if (!convexUrl) {
-  throw new Error("VITE_CONVEX_URL is not set");
-}
-const convex = new ConvexReactClient(convexUrl);
+const convex = new ConvexReactClient(resolveConvexUrl());
 const convexQueryClient = new ConvexQueryClient(convex);
 const queryClient = new QueryClient({
   defaultOptions: {

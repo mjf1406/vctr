@@ -45,11 +45,12 @@ docker compose down -v          # stop and wipe data
 ## Option B — Portainer
 
 1. Stacks → **Add stack** → **Repository**
-2. Repository URL + reference (branch with this compose file)
-3. Compose path: `docker-compose.yml`
-4. Environment variables — at least `PUBLIC_HOST` if not using localhost only (see [`.env.docker.example`](../.env.docker.example))
-5. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
-6. Open `http://<PUBLIC_HOST>:8088` and create an email/password account
+2. Repository URL: `https://github.com/mjf1406/vctr`
+3. Repository Reference: `refs/heads/master`
+4. Compose path: `docker-compose.yml`
+5. Environment variables — at least `PUBLIC_HOST` if not using localhost only (see [`.env.docker.example`](../.env.docker.example))
+6. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
+7. Open `http://<PUBLIC_HOST>:8088` and create an email/password account
 
 Default app port is **8088** (8080 is often used by qBittorrent and similar). Override with `WEB_PORT` if needed.
 
@@ -69,23 +70,6 @@ Portainer often reuses old layers/images. If a deploy fails or you pulled new gi
 
 Deleting unused images frees **disk** and forces a clean rebuild — do that after Dockerfile changes.
 
-## Build fails with exit code 134
-
-Exit **134** is SIGABRT (process aborted). On a host with plenty of RAM (e.g. 16GB) it is usually **not** OOM — often a native Vite+/Rolldown crash from mismatched install/build images. The Dockerfile installs and builds in the same full `node:22-bookworm` image for that reason.
-
-Still worth a clean rebuild after pulling:
-
-```bash
-docker builder prune -f
-docker image prune -f
-```
-
-If it keeps failing, rebuild once on the host with plain progress to see the abort line:
-
-```bash
-docker compose build --progress=plain web 2>&1 | tee /tmp/vctr-web-build.log
-```
-
 ## Instance secret
 
 `INSTANCE_NAME` and `INSTANCE_SECRET` identify the Convex instance. Changing them after the first start invalidates the admin key and can strand data. The compose default secret is for **local-only** use. For any shared or exposed host, set a fresh secret (`openssl rand -hex 32`) before the first start.
@@ -101,8 +85,18 @@ docker compose build --progress=plain web 2>&1 | tee /tmp/vctr-web-build.log
 
 ## Dashboard admin key
 
+Portainer names the project from the stack name (e.g. `classclarus`), so plain `docker compose exec` from your home directory often fails with “no configuration file provided”. Prefer the container name:
+
 ```bash
-docker compose exec backend cat /convex/data/admin_key
+sudo docker exec classclarus-backend-1 cat /convex/data/admin_key
 ```
+
+Or pass the Portainer project/stack name:
+
+```bash
+sudo docker compose -p classclarus exec backend cat /convex/data/admin_key
+```
+
+(If you used `docker compose` from a local clone, `docker compose exec backend cat /convex/data/admin_key` works inside that directory.)
 
 Paste that key into http://`<PUBLIC_HOST>`:6791 when prompted.
