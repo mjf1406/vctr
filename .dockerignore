@@ -5,6 +5,7 @@ dist
 .cursor
 .agents
 .vscode
+.vite-hooks
 *.local
 .env
 .env.*
@@ -12,6 +13,8 @@ dist
 agent-transcripts
 coverage
 **/__screenshots__
+**/*.test.ts
+**/*.test.tsx
 **/*.md
 !docs/SELF_HOSTING.md
 Dockerfile*

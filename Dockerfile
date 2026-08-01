@@ -35,9 +35,12 @@ ARG VITE_SELF_HOSTED=true
 ENV VITE_CONVEX_URL=$VITE_CONVEX_URL \
     VITE_CONVEX_SITE_URL=$VITE_CONVEX_SITE_URL \
     VITE_AUTH_PASSWORD_ENABLED=$VITE_AUTH_PASSWORD_ENABLED \
-    VITE_SELF_HOSTED=$VITE_SELF_HOSTED
+    VITE_SELF_HOSTED=$VITE_SELF_HOSTED \
+    NODE_ENV=production \
+    DISABLE_REACT_COMPILER=true \
+    NODE_OPTIONS=--max-old-space-size=4096
 
-# Skip `tsc -b` here — project typecheck is separate; Vite+ emits the SPA.
+# Skip `tsc -b` (separate from SPA emit). Avoid React Compiler in-image (OOM → exit 134).
 RUN bunx vp build
 
 FROM nginx:1.27-alpine AS web

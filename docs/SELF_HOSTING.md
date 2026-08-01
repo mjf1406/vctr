@@ -53,6 +53,10 @@ Wait until the `deploy` service finishes successfully, then open http://localhos
 
 If a previous deploy failed mid-build, remove the stack (keep the volume if you want data) and redeploy so `web`/`deploy` rebuild cleanly.
 
+### Build fails with exit code 134
+
+That is usually the Docker host running out of memory while bundling the SPA. Give Docker Desktop (or your engine) at least **6–8 GB RAM**, then redeploy. The image build already disables React Compiler and raises the Node heap to reduce peak usage.
+
 ## Changing host or ports
 
 Vite bakes Convex URLs at **image build** time. After changing `PUBLIC_HOST` or ports in `.env` / Portainer:

@@ -54,14 +54,24 @@ export default defineConfig({
   check: {
     lint: false,
   },
-  plugins: lazyPlugins(() => [
-    injectAppThemeStorageKey(),
-    tanstackRouter({
-      target: "react",
-      autoCodeSplitting: true,
-    }),
-    react(),
-    tailwindcss(),
-    babel({ presets: [reactCompilerPreset()] }),
-  ]),
+  plugins: lazyPlugins(() => {
+    const plugins: Plugin[] = [
+      injectAppThemeStorageKey(),
+      tanstackRouter({
+        target: "react",
+        autoCodeSplitting: true,
+      }),
+      react(),
+      tailwindcss(),
+    ];
+    // React Compiler + Babel is memory-heavy; Docker/Portainer builds often OOM (exit 134).
+    if (process.env.DISABLE_REACT_COMPILER !== "true") {
+      plugins.push(babel({ presets: [reactCompilerPreset()] }));
+    }
+    return plugins;
+  }),
+  build: {
+    // Slightly lower peak RAM during Docker image builds.
+    reportCompressedSize: false,
+  },
 });
