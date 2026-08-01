@@ -5,9 +5,9 @@ import { components } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
 import { mutation, query } from "./_generated/server.js";
 import { authz } from "./authz.js";
-import { sanitizeAvatarUrl } from "./lib/avatarUrl.js";
 import { entitledMutation } from "./lib/customFunctions.js";
 import { classScope } from "./lib/authzModel.js";
+import { resolveUserImageUrl } from "./lib/userImage.js";
 
 const presence = new Presence(components.presence);
 
@@ -93,7 +93,7 @@ export const list = query({
         return {
           ...entry,
           name: user.name,
-          image: sanitizeAvatarUrl(user.image) ?? undefined,
+          image: await resolveUserImageUrl(ctx, user),
         };
       }),
     );

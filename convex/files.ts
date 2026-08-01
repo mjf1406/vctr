@@ -3,7 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { api, internal } from "./_generated/api.js";
 import { action } from "./_generated/server.js";
 import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
-import { clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
+import { clearAvatarIfReferencesFile, clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
 import { requireFileOwner } from "./lib/fileAccess.js";
 import { ORPHAN_AGE_MS } from "./filesInternal.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
@@ -259,6 +259,7 @@ export const deleteFile = entitledMutation({
     await rateLimiter.limit(ctx, "fileDelete", { key: ctx.userId, throws: true });
     const file = await requireFileOwner(ctx, args.fileId, ctx.userId);
     await clearBannerIfReferencesFile(ctx, args.fileId, file.classId);
+    await clearAvatarIfReferencesFile(ctx, args.fileId, ctx.userId);
     await ctx.storage.delete(file.storageId);
     await ctx.db.delete("files", args.fileId);
     return null;

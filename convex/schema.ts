@@ -5,6 +5,24 @@ import { v } from "convex/values";
 
 const schema = defineSchema({
   ...authTables,
+  /**
+   * Extends Convex Auth `users` with an optional self-host/Electron avatar
+   * file. Display URLs are resolved at query time from this id (see
+   * `resolveUserImageUrl`); OAuth provider URLs remain in `image`.
+   */
+  users: defineTable({
+    name: v.optional(v.string()),
+    image: v.optional(v.string()),
+    email: v.optional(v.string()),
+    emailVerificationTime: v.optional(v.number()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
+    /** Personal `files` row used as the profile photo (self-host / Electron). */
+    avatarFileId: v.optional(v.id("files")),
+  })
+    .index("email", ["email"])
+    .index("phone", ["phone"]),
   userSettings: defineTable({
     userId: v.id("users"),
     language: languageValidator,

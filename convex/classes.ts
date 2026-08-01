@@ -24,6 +24,7 @@ import { rateLimiter } from "./lib/rateLimiter.js";
 import { clearLinksForClass } from "./lib/guardianLinks.js";
 import { deleteFilesForClass } from "./lib/filesCleanup.js";
 import { deleteJoinCodesForClass } from "./lib/joinCodesCleanup.js";
+import { resolveUserImageUrl } from "./lib/userImage.js";
 
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
@@ -404,7 +405,7 @@ export const eligibleOwners = classQuery({
         userId: user._id,
         name: user.name,
         email: user.email,
-        image: user.image,
+        image: await resolveUserImageUrl(ctx, user),
         role,
       });
     }

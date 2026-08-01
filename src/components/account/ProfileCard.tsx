@@ -1,15 +1,21 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import type { Id } from "../../../convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UploadQueue } from "@/components/upload/UploadQueue";
+import { useClearAvatar } from "@/hooks/user/useClearAvatar";
+import { useUpdateAvatar } from "@/hooks/user/useUpdateAvatar";
 import { useUpdateDisplayName } from "@/hooks/user/useUpdateDisplayName";
+import { useUploadFiles } from "@/hooks/files/useUploadFiles";
 import { isSelfHosted } from "@/lib/selfHosted";
+import { getUploadPreset } from "@/lib/upload/acceptPresets";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
 import { splitFullName } from "@/lib/user/userName";
 import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
@@ -19,6 +25,7 @@ type ProfileUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  avatarFileId?: Id<"files"> | null;
 };
 
 type ProfileCardProps = {
@@ -30,6 +37,12 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
   const { t } = useTranslation("account");
   const editable = isSelfHosted();
   const updateName = useUpdateDisplayName();
+  const updateAvatar = useUpdateAvatar();
+  const clearAvatar = useClearAvatar();
+  const { items, uploadFiles, abortFile, retryFile, isUploading } = useUploadFiles("images");
+  const imagePreset = getUploadPreset("images");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const notifiedUploadsRef = useRef(new Set<string>());
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -37,6 +50,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     firstName?: string;
     lastName?: string;
   }>({});
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -44,6 +58,28 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     setFirstName(parts.firstName);
     setLastName(parts.lastName);
   }, [user]);
+
+  useEffect(() => {
+    return () => {
+      if (localPreviewUrl) {
+        URL.revokeObjectURL(localPreviewUrl);
+      }
+    };
+  }, [localPreviewUrl]);
+
+  useEffect(() => {
+    for (const item of items) {
+      if (item.status !== "done" || item.fileId === undefined) continue;
+      if (notifiedUploadsRef.current.has(item.id)) continue;
+      notifiedUploadsRef.current.add(item.id);
+      void updateAvatar.mutateAsync({ fileId: item.fileId }).then(() => {
+        setLocalPreviewUrl((prev) => {
+          if (prev) URL.revokeObjectURL(prev);
+          return null;
+        });
+      });
+    }
+  }, [items, updateAvatar]);
 
   if (isPending) {
     return (
@@ -69,8 +105,11 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
 
   const displayName = getDisplayName(user);
   const initials = getInitials(user);
-  const safeImage = sanitizeAvatarUrl(user.image);
-  const isSaving = updateName.isPending;
+  const remoteImage = sanitizeAvatarUrl(user.image);
+  const displayImage = localPreviewUrl ?? remoteImage;
+  const isSavingName = updateName.isPending;
+  const isAvatarBusy = isUploading || updateAvatar.isPending || clearAvatar.isPending;
+  const hasCustomAvatar = user.avatarFileId != null || localPreviewUrl != null;
 
   const handleSave = (event: FormEvent) => {
     event.preventDefault();
@@ -85,6 +124,26 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
     void updateName.mutateAsync({ firstName: first, lastName: last });
   };
 
+  const handleAvatarSelected = (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    const file = fileList[0];
+    if (!file) return;
+    const preview = URL.createObjectURL(file);
+    setLocalPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return preview;
+    });
+    uploadFiles([file]);
+  };
+
+  const handleClearAvatar = () => {
+    setLocalPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    void clearAvatar.mutateAsync({});
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -94,12 +153,49 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-start">
-        <Avatar className="size-14 shrink-0">
-          {safeImage ? (
-            <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+        <div className="flex shrink-0 flex-col items-center gap-2">
+          <Avatar className="size-14">
+            {displayImage ? (
+              <AvatarImage src={displayImage} alt={displayName} referrerPolicy="no-referrer" />
+            ) : null}
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+          {editable ? (
+            <div className="flex flex-col items-center gap-1">
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept={imagePreset.accept}
+                onChange={(e) => {
+                  handleAvatarSelected(e.currentTarget.files);
+                  e.currentTarget.value = "";
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isAvatarBusy}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {isAvatarBusy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+                {t("changeAvatar")}
+              </Button>
+              {hasCustomAvatar ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={isAvatarBusy}
+                  onClick={handleClearAvatar}
+                >
+                  {t("removeAvatar")}
+                </Button>
+              ) : null}
+            </div>
           ) : null}
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
+        </div>
 
         {editable ? (
           <form onSubmit={handleSave} className="flex min-w-0 flex-1 flex-col gap-4">
@@ -114,7 +210,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
                     autoComplete="given-name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    disabled={isSaving}
+                    disabled={isSavingName}
                     aria-invalid={fieldErrors.firstName ? true : undefined}
                     placeholder={t("firstNamePlaceholder")}
                   />
@@ -129,7 +225,7 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
                     autoComplete="family-name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    disabled={isSaving}
+                    disabled={isSavingName}
                     aria-invalid={fieldErrors.lastName ? true : undefined}
                     placeholder={t("lastNamePlaceholder")}
                   />
@@ -143,9 +239,12 @@ export function ProfileCard({ user, isPending }: ProfileCardProps) {
                 </span>
               </div>
             </FieldGroup>
+            {items.length > 0 ? (
+              <UploadQueue items={items} onAbort={abortFile} onRetry={retryFile} />
+            ) : null}
             <div>
-              <Button type="submit" size="sm" disabled={isSaving}>
-                {isSaving ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+              <Button type="submit" size="sm" disabled={isSavingName}>
+                {isSavingName ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
                 {t("saveProfile")}
               </Button>
             </div>

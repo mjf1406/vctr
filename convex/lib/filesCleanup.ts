@@ -21,6 +21,24 @@ export async function clearBannerIfReferencesFile(
 }
 
 /**
+ * If `fileId` is the user's profile avatar, clear `avatarFileId` / `image`.
+ */
+export async function clearAvatarIfReferencesFile(
+  ctx: MutationCtx,
+  fileId: Id<"files">,
+  userId: Id<"users">,
+): Promise<void> {
+  const user = await ctx.db.get("users", userId);
+  if (!user || user.avatarFileId !== fileId) {
+    return;
+  }
+  await ctx.db.patch("users", userId, {
+    avatarFileId: undefined,
+    image: undefined,
+  });
+}
+
+/**
  * Delete all class-library files (rows + storage blobs) for a class.
  * Call before deleting the class row.
  */

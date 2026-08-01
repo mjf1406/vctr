@@ -28,6 +28,7 @@ import {
   getClassRoleForUser,
   listLinkedStudentsForGuardian,
 } from "./lib/guardianLinks.js";
+import { resolveUserImageUrl } from "./lib/userImage.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { isSelfHosted } from "./lib/selfHosted.js";
 
@@ -188,7 +189,7 @@ export const listByRole = entitledClassQuery({
       members.push({
         userId: user._id,
         name: user.name,
-        image: user.image,
+        image: await resolveUserImageUrl(ctx, user),
         email: includeEmail ? user.email : undefined,
         role,
         linkedStudents: includeLinks

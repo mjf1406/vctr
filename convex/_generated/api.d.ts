@@ -43,6 +43,7 @@ import type * as lib_rateLimiter from "../lib/rateLimiter.js";
 import type * as lib_selfHosted from "../lib/selfHosted.js";
 import type * as lib_trial from "../lib/trial.js";
 import type * as lib_uploadPresets from "../lib/uploadPresets.js";
+import type * as lib_userImage from "../lib/userImage.js";
 import type * as members from "../members.js";
 import type * as permissions from "../permissions.js";
 import type * as polar from "../polar.js";
@@ -90,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   "lib/selfHosted": typeof lib_selfHosted;
   "lib/trial": typeof lib_trial;
   "lib/uploadPresets": typeof lib_uploadPresets;
+  "lib/userImage": typeof lib_userImage;
   members: typeof members;
   permissions: typeof permissions;
   polar: typeof polar;
