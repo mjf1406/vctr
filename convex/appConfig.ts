@@ -20,8 +20,8 @@ export const APP_CONFIG = {
   github: "https://github.com/mjf1406/classclarus-app",
   /** Electron / desktop download landing (billing Free card). */
   downloadUrl: "https://github.com/mjf1406/classclarus-app",
-  /** Self-hosting docs (billing Free card). */
-  selfHostUrl: "https://github.com/mjf1406/classclarus-app",
+  /** Self-hosting docs (billing Free card). Change when cloning. */
+  selfHostUrl: "https://github.com/mjf1406/vctr/blob/master/docs/SELF_HOSTING.md",
   /** Tip / gift links (billing page; replace placeholders). */
   kofiUrl: "https://ko-fi.com/YOUR_PAGE",
   patreonUrl: "https://www.patreon.com/YOUR_PAGE",

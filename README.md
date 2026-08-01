@@ -217,20 +217,20 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 
 **Edit every field in [`convex/appConfig.ts`](./convex/appConfig.ts):**
 
-| Field                                   | Used for                                                                                                                                                                                      |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                            |
-| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check            |
-| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                                 |
-| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                                     |
-| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                              |
-| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                                 |
-| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                                 |
-| `downloadUrl` / `selfHostUrl`           | Links on the billing Free card ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx)) — point `selfHostUrl` at your repo’s self-host docs or releases |
-| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                                        |
-| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                                       |
-| `trial`                                 | App-managed card-less trial: `days`, `warnWithinDays`, `forceWithinDays` (banner timing; not a Polar product trial)                                                                           |
-| `uploads`                               | Per-user `quotaBytes` and per-preset `maxSizeBytes` (images / documents / audio)                                                                                                              |
+| Field                                   | Used for                                                                                                                                                                                                                                                                                           |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                                                                                                                                 |
+| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check                                                                                                                 |
+| `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                                                                                                                                      |
+| `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                                                                                                                                          |
+| `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                                                                                                                                   |
+| `privacyUrl` / `termsUrl` / `cookieUrl` | Legal links on login + footer                                                                                                                                                                                                                                                                      |
+| `changeLog` / `roadMap` / `github`      | Footer product links ([`src/components/navigation/AppFooter.tsx`](./src/components/navigation/AppFooter.tsx))                                                                                                                                                                                      |
+| `downloadUrl` / `selfHostUrl`           | Links on the billing Free card ([`src/routes/_authenticated/_app/billing.tsx`](./src/routes/_authenticated/_app/billing.tsx)). **Change `selfHostUrl` when cloning** — template default is [`docs/SELF_HOSTING.md` on this repo](https://github.com/mjf1406/vctr/blob/master/docs/SELF_HOSTING.md) |
+| `authzTenantId`                         | Authz tenant in [`convex/authz.ts`](./convex/authz.ts) — **set before first real authz data**; changing later requires rematerializing                                                                                                                                                             |
+| `themeColors` / `backgroundColors`      | Hex browser-chrome targets (keep aligned with CSS `--background` in [`src/style.css`](./src/style.css))                                                                                                                                                                                            |
+| `trial`                                 | App-managed card-less trial: `days`, `warnWithinDays`, `forceWithinDays` (banner timing; not a Polar product trial)                                                                                                                                                                                |
+| `uploads`                               | Per-user `quotaBytes` and per-preset `maxSizeBytes` (images / documents / audio)                                                                                                                                                                                                                   |
 
 - [ ] All `APP_CONFIG` fields updated for the new product (including `downloadUrl`, `selfHostUrl`, `trial`, `uploads`)
 - [ ] `authzTenantId` is a stable new id (not `classclarus`)
@@ -354,10 +354,16 @@ Keep the rest of the runbook (ports, `PUBLIC_HOST`, prune/rebuild, instance secr
 | [`example.env`](./example.env)                 | `PUBLIC_HOST`, `INSTANCE_NAME` (new `INSTANCE_SECRET` for non-toy installs) |
 | [`convex/appConfig.ts`](./convex/appConfig.ts) | `selfHostUrl` / `downloadUrl` / `github` → your repo or docs                |
 
+**Alert — change `APP_CONFIG.selfHostUrl` when cloning.** The billing “Self-host” button currently points at this template’s docs:
+
+`https://github.com/mjf1406/vctr/blob/master/docs/SELF_HOSTING.md`
+
+Point it at **your** fork’s `docs/SELF_HOSTING.md` (or equivalent) so users are not sent to `mjf1406/vctr`.
+
 - [ ] `docs/SELF_HOSTING.md` Portainer URL + branch updated for this remote
 - [ ] Admin-key examples use your stack/project name (or a clear `<stack>` placeholder)
 - [ ] Compose `name:` / `INSTANCE_NAME` match the new product (or left intentional)
-- [ ] `APP_CONFIG.selfHostUrl` points at the clone’s self-host entry (repo README section or `docs/SELF_HOSTING.md` on GitHub)
+- [ ] `APP_CONFIG.selfHostUrl` updated to your clone’s self-host docs URL (not `mjf1406/vctr`)
 
 ### 11. Run and verify
 
