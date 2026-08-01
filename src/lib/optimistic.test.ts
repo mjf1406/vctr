@@ -1,12 +1,40 @@
 import { describe, expect, test } from "vite-plus/test";
 
-import { patchDoc, randomClientId, removeById, upsertById } from "./optimistic";
+import {
+  patchDoc,
+  polyfillCryptoRandomUUID,
+  randomClientId,
+  removeById,
+  upsertById,
+} from "./optimistic";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 describe("randomClientId", () => {
   test("returns a uuid-shaped string", () => {
-    expect(randomClientId()).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-    );
+    expect(randomClientId()).toMatch(UUID_RE);
+  });
+});
+
+describe("polyfillCryptoRandomUUID", () => {
+  test("installs randomUUID when missing", () => {
+    const original = crypto.randomUUID;
+    // Simulate non-secure LAN origin (method absent).
+    Object.defineProperty(crypto, "randomUUID", {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
+
+    polyfillCryptoRandomUUID();
+    expect(typeof crypto.randomUUID).toBe("function");
+    expect(crypto.randomUUID()).toMatch(UUID_RE);
+
+    Object.defineProperty(crypto, "randomUUID", {
+      value: original,
+      configurable: true,
+      writable: true,
+    });
   });
 });
 

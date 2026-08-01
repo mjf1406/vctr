@@ -11,12 +11,16 @@ import PendingComponent from "@/components/loading/PendingComponent";
 import { InnerRouterProvider } from "@/components/routing/InnerRouterProvider";
 import i18n, { ensureLocaleLoaded, getInitialLanguage } from "@/i18n";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { polyfillCryptoRandomUUID } from "@/lib/optimistic";
 import { resolveConvexUrl } from "@/lib/runtimeEnv";
 import { STORAGE_KEYS } from "@/lib/storageKeys";
 
 import { routeTree } from "./routeTree.gen";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { RootErrorComponent } from "./components/errors/RootErrorComponent";
+
+// LAN HTTP (Electron / self-host) is not a secure context — presence needs this.
+polyfillCryptoRandomUUID();
 
 const convex = new ConvexReactClient(resolveConvexUrl());
 const convexQueryClient = new ConvexQueryClient(convex);
