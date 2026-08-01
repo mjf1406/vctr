@@ -47,6 +47,7 @@ import type * as members from "../members.js";
 import type * as permissions from "../permissions.js";
 import type * as polar from "../polar.js";
 import type * as polarReconcile from "../polarReconcile.js";
+import type * as presence from "../presence.js";
 import type * as trial from "../trial.js";
 import type * as trialBackfill from "../trialBackfill.js";
 import type * as users from "../users.js";
@@ -93,6 +94,7 @@ declare const fullApi: ApiFromModules<{
   permissions: typeof permissions;
   polar: typeof polar;
   polarReconcile: typeof polarReconcile;
+  presence: typeof presence;
   trial: typeof trial;
   trialBackfill: typeof trialBackfill;
   users: typeof users;
@@ -122,4 +124,5 @@ export declare const components: {
   authz: import("@djpanda/convex-authz/_generated/component.js").ComponentApi<"authz">;
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
   polar: import("@convex-dev/polar/_generated/component.js").ComponentApi<"polar">;
+  presence: import("@convex-dev/presence/_generated/component.js").ComponentApi<"presence">;
 };

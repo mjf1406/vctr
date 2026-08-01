@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
+import { ClassPresenceFacepile } from "@/components/classes/ClassPresenceFacepile";
 import { AppFooter } from "@/components/navigation/AppFooter";
 import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
 import {
@@ -10,6 +11,7 @@ import {
 import { ClassAppSidebar } from "@/components/navigation/class-sidebar/ClassSidebar";
 import { ClassBreadcrumb } from "@/components/navigation/class-sidebar/ClassBreadcrumb";
 import { ClassPermissionsProvider } from "@/components/permissions/ClassPermissionsProvider";
+import { ClassPresenceProvider } from "@/components/presence/ClassPresenceProvider";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -69,24 +71,31 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
 
     return (
       <ClassPermissionsProvider classId={classId}>
-        <SidebarProvider>
-          {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
-          <SidebarInset>
-            <div className="flex min-h-svh flex-col">
-              <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-3 bg-background/80 px-4 shadow-(--shadow-surface-quiet) backdrop-blur-md supports-backdrop-filter:bg-background/70">
-                <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <SidebarTrigger className="-ml-0.5" />
-                  <Separator orientation="vertical" className="h-4" />
-                  {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
+        <ClassPresenceProvider classId={classId}>
+          <SidebarProvider>
+            {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
+            <SidebarInset>
+              <div className="flex min-h-svh flex-col">
+                <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-3 bg-background/80 px-4 shadow-(--shadow-surface-quiet) backdrop-blur-md supports-backdrop-filter:bg-background/70">
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <SidebarTrigger className="-ml-0.5" />
+                    <Separator orientation="vertical" className="h-4" />
+                    {classDoc ? (
+                      <ClassBreadcrumb classDoc={classDoc} />
+                    ) : (
+                      <ClassBreadcrumbSkeleton />
+                    )}
+                  </div>
+                  {classDoc ? <ClassPresenceFacepile /> : null}
+                </header>
+                <div className="flex flex-1 flex-col">
+                  <ClassContent classPending={isPending || !classDoc} />
                 </div>
-              </header>
-              <div className="flex flex-1 flex-col">
-                <ClassContent classPending={isPending || !classDoc} />
               </div>
-            </div>
-            <AppFooter />
-          </SidebarInset>
-        </SidebarProvider>
+              <AppFooter />
+            </SidebarInset>
+          </SidebarProvider>
+        </ClassPresenceProvider>
       </ClassPermissionsProvider>
     );
   },
