@@ -9,6 +9,7 @@ import {
 export type LinkedStudentPublic = {
   userId: Id<"users">;
   name?: string;
+  email?: string;
 };
 
 export type ClassMemberPublic = {

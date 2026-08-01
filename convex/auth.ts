@@ -6,7 +6,21 @@ import { sanitizeAvatarUrl } from "./lib/avatarUrl.js";
 import { isSelfHosted } from "./lib/selfHosted.js";
 import { claimTrialGrant } from "./lib/trial.js";
 
-const providers = [Password, ...(process.env.AUTH_GOOGLE_ID ? [Google] : [])];
+function passwordProfile(params: Record<string, unknown>) {
+  const email = String(params.email ?? "").trim();
+  const firstName = typeof params.firstName === "string" ? params.firstName.trim() : "";
+  const lastName = typeof params.lastName === "string" ? params.lastName.trim() : "";
+  const name = [firstName, lastName].filter(Boolean).join(" ");
+  return {
+    email,
+    ...(name.length > 0 ? { name } : {}),
+  };
+}
+
+const providers = [
+  Password({ profile: passwordProfile }),
+  ...(process.env.AUTH_GOOGLE_ID ? [Google] : []),
+];
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers,

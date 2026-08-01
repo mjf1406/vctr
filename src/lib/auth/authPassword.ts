@@ -20,7 +20,8 @@ export const passwordSignInSchema = z.object({
 
 export const passwordSignUpSchema = passwordSignInSchema
   .extend({
-    name: z.string().trim().optional(),
+    firstName: z.string().trim().min(1),
+    lastName: z.string().trim().min(1),
     confirmPassword: z.string().min(8),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -30,3 +31,5 @@ export const passwordSignUpSchema = passwordSignInSchema
 
 export type PasswordSignInValues = z.infer<typeof passwordSignInSchema>;
 export type PasswordSignUpValues = z.infer<typeof passwordSignUpSchema>;
+
+export { fullNameFromParts } from "@/lib/user/userName";

@@ -29,6 +29,7 @@ import {
   listLinkedStudentsForGuardian,
 } from "./lib/guardianLinks.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 
 const memberListRoleValidator = v.union(
   v.literal("teacher"),
@@ -50,6 +51,7 @@ type ListedClassRole = "owner" | "teacher" | "assistant_teacher" | "student" | "
 const linkedStudentValidator = v.object({
   userId: v.id("users"),
   name: v.optional(v.string()),
+  email: v.optional(v.string()),
 });
 
 const classMemberValidator = v.object({
@@ -167,7 +169,10 @@ export const listByRole = entitledClassQuery({
       }
     }
 
-    const includeEmail = listRole === "teacher" || listRole === "assistant_teacher";
+    // Cloud: emails only on staff lists. Self-host/Electron: always include email so
+    // password accounts without a display name don't show as "Unnamed member".
+    const includeEmail =
+      isSelfHosted() || listRole === "teacher" || listRole === "assistant_teacher";
     const includeLinks = listRole === "guardian";
     const members: Array<{
       userId: Id<"users">;
@@ -175,7 +180,7 @@ export const listByRole = entitledClassQuery({
       image?: string;
       email?: string;
       role: ListedClassRole;
-      linkedStudents?: Array<{ userId: Id<"users">; name?: string }>;
+      linkedStudents?: Array<{ userId: Id<"users">; name?: string; email?: string }>;
     }> = [];
     for (const [userId, role] of byUserId) {
       const user = await ctx.db.get("users", userId as Id<"users">);

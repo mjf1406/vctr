@@ -35,6 +35,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   fileRename: { kind: "token bucket", rate: 60, period: HOUR, capacity: 20 },
   ensureTrialGrant: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },
   updateLanguage: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
+  updateDisplayName: { kind: "token bucket", rate: 30, period: HOUR, capacity: 10 },
   billingCheckout: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
   billingCheckoutGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingPortal: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },

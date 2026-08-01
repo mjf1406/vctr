@@ -101,7 +101,10 @@ function GuardianStudentSelect({
       options.push({
         value: linked.userId,
         name: linked.name,
-        label: getDisplayName({ _id: linked.userId, name: linked.name }, t("unnamedMember")),
+        label: getDisplayName(
+          { _id: linked.userId, name: linked.name, email: linked.email },
+          t("unnamedMember"),
+        ),
       });
     }
     return options.sort((a, b) => a.label.localeCompare(b.label));
@@ -176,7 +179,10 @@ function LinkedStudentsReadonly({ member }: { member: ClassMemberPublic }) {
     <div className="flex w-full flex-wrap items-center gap-1.5 rounded-4xl border border-input bg-input/30 px-2.5 py-1.5">
       {linkedStudents.map((student) => (
         <Badge key={student.userId} variant="secondary" className="rounded-4xl">
-          {getDisplayName({ _id: student.userId, name: student.name }, t("unnamedMember"))}
+          {getDisplayName(
+            { _id: student.userId, name: student.name, email: student.email },
+            t("unnamedMember"),
+          )}
         </Badge>
       ))}
     </div>

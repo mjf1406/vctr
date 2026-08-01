@@ -1,11 +1,12 @@
 import { getAuthSessionId, getAuthUserId } from "@convex-dev/auth/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import { query } from "./_generated/server.js";
 import { listLinkedProviders } from "./lib/accountDeletion.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
 import { languageValidator } from "./lib/languages.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
+import { isSelfHosted } from "./lib/selfHosted.js";
 
 export { languageValidator };
 
@@ -106,5 +107,47 @@ export const updateLanguage = authedMutation({
       throw new Error("Failed to create language settings");
     }
     return created;
+  },
+});
+
+/**
+ * Self-host / Electron only — password accounts can edit display name.
+ * Stored as a single `users.name` ("First Last").
+ */
+export const updateDisplayName = authedMutation({
+  args: {
+    firstName: v.string(),
+    lastName: v.string(),
+  },
+  returns: v.object({
+    name: v.string(),
+  }),
+  handler: async (ctx, args) => {
+    if (!isSelfHosted()) {
+      throw new ConvexError({
+        code: "SELF_HOSTED_ONLY",
+        message: "Profile name can only be edited in self-hosted mode.",
+      });
+    }
+    await rateLimiter.limit(ctx, "updateDisplayName", { key: ctx.userId, throws: true });
+
+    const firstName = args.firstName.trim();
+    const lastName = args.lastName.trim();
+    if (!firstName || !lastName) {
+      throw new ConvexError({
+        code: "NAME_REQUIRED",
+        message: "First and last name are required.",
+      });
+    }
+    if (firstName.length > 80 || lastName.length > 80) {
+      throw new ConvexError({
+        code: "NAME_TOO_LONG",
+        message: "Name is too long.",
+      });
+    }
+
+    const name = `${firstName} ${lastName}`;
+    await ctx.db.patch("users", ctx.userId, { name });
+    return { name };
   },
 });

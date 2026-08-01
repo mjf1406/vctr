@@ -2,6 +2,7 @@ import type { Id } from "../_generated/dataModel.js";
 import type { MutationCtx, QueryCtx } from "../_generated/server.js";
 import { authz } from "../authz.js";
 import { classScope, isClassRole, pickHighestClassRole, type ClassRole } from "./authzModel.js";
+import { isSelfHosted } from "./selfHosted.js";
 
 type ClassScope = ReturnType<typeof classScope>;
 
@@ -58,7 +59,7 @@ export async function listLinkedStudentsForGuardian(
   ctx: QueryCtx | MutationCtx,
   classId: Id<"classes">,
   guardianUserId: Id<"users">,
-): Promise<Array<{ userId: Id<"users">; name?: string }>> {
+): Promise<Array<{ userId: Id<"users">; name?: string; email?: string }>> {
   // eslint-disable-next-line @convex-dev/no-collect-in-query -- per-guardian links are classroom-bounded
   const links = await ctx.db
     .query("guardianStudentLinks")
@@ -67,16 +68,21 @@ export async function listLinkedStudentsForGuardian(
     )
     .collect();
 
-  const students: Array<{ userId: Id<"users">; name?: string }> = [];
+  const includeEmail = isSelfHosted();
+  const students: Array<{ userId: Id<"users">; name?: string; email?: string }> = [];
   for (const link of links) {
     const user = await ctx.db.get("users", link.studentUserId);
     if (!user) continue;
-    students.push({ userId: user._id, name: user.name });
+    students.push({
+      userId: user._id,
+      name: user.name,
+      email: includeEmail ? user.email : undefined,
+    });
   }
 
   students.sort((a, b) => {
-    const nameA = (a.name ?? a.userId).toLocaleLowerCase();
-    const nameB = (b.name ?? b.userId).toLocaleLowerCase();
+    const nameA = (a.name ?? a.email ?? a.userId).toLocaleLowerCase();
+    const nameB = (b.name ?? b.email ?? b.userId).toLocaleLowerCase();
     return nameA.localeCompare(nameB);
   });
   return students;

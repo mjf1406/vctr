@@ -15,6 +15,9 @@ export default [
     ignores: [
       "node_modules",
       "dist",
+      "dist-electron/**",
+      "release/**",
+      "resources/**",
       "public/**",
       "docker/**",
       "convex/_generated/**",
@@ -131,6 +134,42 @@ export default [
     },
     rules: {
       "@convex-dev/no-collect-in-query": "error",
+    },
+  },
+
+  // Electron main/preload + shared types (Node, tsconfig.node.json).
+  {
+    files: ["electron/*.ts", "shared/*.ts"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        projectService: {
+          defaultProject: "./tsconfig.node.json",
+          // Keep globs shallow (no `**`) — same pattern as the Convex block.
+          allowDefaultProject: ["electron/*.ts", "shared/*.ts", "eslint.config.js"],
+          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 50,
+        },
+        tsconfigRootDir,
+      },
+      globals: {
+        ...globals.node,
+        ...globals.es2021,
+      },
+    },
+    rules: {
+      // Preload/main are not React Fast Refresh modules.
+      "react-refresh/only-export-components": "off",
+    },
+  },
+
+  // Bun/Node scripts (no TS project).
+  {
+    files: ["scripts/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2021,
+      },
     },
   },
 ];

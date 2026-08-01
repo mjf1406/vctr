@@ -7,7 +7,11 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { passwordSignInSchema, passwordSignUpSchema } from "@/lib/auth/authPassword";
+import {
+  fullNameFromParts,
+  passwordSignInSchema,
+  passwordSignUpSchema,
+} from "@/lib/auth/authPassword";
 import { getSafeAuthRedirect } from "@/lib/auth/authRedirect";
 
 interface SignInWithPasswordProps {
@@ -21,7 +25,8 @@ type FieldErrors = {
   email?: string;
   password?: string;
   confirmPassword?: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   form?: string;
 };
 
@@ -33,7 +38,8 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -55,7 +61,8 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
         email,
         password,
         confirmPassword,
-        name: name.trim() || undefined,
+        firstName,
+        lastName,
       });
       if (!result.success) {
         const next: FieldErrors = {};
@@ -63,6 +70,8 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
           const key = issue.path[0];
           if (key === "email") next.email = t("invalidEmail");
           if (key === "password") next.password = t("passwordTooShort");
+          if (key === "firstName") next.firstName = t("nameRequired");
+          if (key === "lastName") next.lastName = t("nameRequired");
           if (key === "confirmPassword") {
             next.confirmPassword =
               issue.message === "mismatch" ? t("passwordsDoNotMatch") : t("passwordTooShort");
@@ -86,8 +95,13 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
     formData.set("email", email.trim());
     formData.set("password", password);
     formData.set("flow", flow);
-    if (flow === "signUp" && name.trim()) {
-      formData.set("name", name.trim());
+    if (flow === "signUp") {
+      const first = firstName.trim();
+      const last = lastName.trim();
+      formData.set("firstName", first);
+      formData.set("lastName", last);
+      // Also send combined name for providers/tools that only read `name`.
+      formData.set("name", fullNameFromParts(first, last));
     }
     void signIn("password", formData)
       .then(async () => {
@@ -104,25 +118,48 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
     setErrors({});
     setPassword("");
     setConfirmPassword("");
+    setFirstName("");
+    setLastName("");
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <FieldGroup className="gap-4">
         {flow === "signUp" ? (
-          <Field>
-            <FieldLabel htmlFor="auth-name">{t("nameLabel")}</FieldLabel>
-            <Input
-              id="auth-name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={isLoading}
-              placeholder={t("namePlaceholder")}
-            />
-          </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field data-invalid={errors.firstName ? true : undefined}>
+              <FieldLabel htmlFor="auth-first-name">{t("firstNameLabel")}</FieldLabel>
+              <Input
+                id="auth-first-name"
+                name="firstName"
+                type="text"
+                autoComplete="given-name"
+                required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                disabled={isLoading}
+                aria-invalid={errors.firstName ? true : undefined}
+                placeholder={t("firstNamePlaceholder")}
+              />
+              {errors.firstName ? <FieldError>{errors.firstName}</FieldError> : null}
+            </Field>
+            <Field data-invalid={errors.lastName ? true : undefined}>
+              <FieldLabel htmlFor="auth-last-name">{t("lastNameLabel")}</FieldLabel>
+              <Input
+                id="auth-last-name"
+                name="lastName"
+                type="text"
+                autoComplete="family-name"
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                disabled={isLoading}
+                aria-invalid={errors.lastName ? true : undefined}
+                placeholder={t("lastNamePlaceholder")}
+              />
+              {errors.lastName ? <FieldError>{errors.lastName}</FieldError> : null}
+            </Field>
+          </div>
         ) : null}
         <Field data-invalid={errors.email ? true : undefined}>
           <FieldLabel htmlFor="auth-email">{t("emailLabel")}</FieldLabel>
