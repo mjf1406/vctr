@@ -21,7 +21,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardPocket } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { surfaceVariants } from "@/components/ui/surface-variants";
 import { useClasses } from "@/hooks/classes/useClasses";
@@ -54,7 +54,9 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
             key={index}
             className={cn("flex items-center gap-3 p-4", surfaceVariants({ tier: "card" }))}
           >
-            <Skeleton className="size-10 rounded-lg" />
+            <CardPocket tone="primary" className="shrink-0 p-2">
+              <Skeleton className="size-10 rounded-lg" />
+            </CardPocket>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <Skeleton className="h-5 w-1/3" />
@@ -74,7 +76,9 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
       {items.map((index) => (
         <Card key={index} size="sm">
           <CardHeader className="flex flex-row items-start gap-3">
-            <Skeleton className="size-10 rounded-lg" />
+            <CardPocket tone="primary" className="shrink-0 p-2">
+              <Skeleton className="size-10 rounded-lg" />
+            </CardPocket>
             <div className="min-w-0 flex-1">
               <Skeleton className="h-6 w-1/2" />
               <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -86,10 +90,10 @@ function ClassesSkeleton({ viewMode }: { viewMode: ClassViewMode }) {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <Skeleton className="h-5 w-2/3" />
-            <div className="flex flex-col gap-0.5">
+            <CardPocket tone="secondary" className="flex flex-col gap-0.5">
               <Skeleton className="h-4 w-3/5" />
               <Skeleton className="h-4 w-1/2" />
-            </div>
+            </CardPocket>
           </CardContent>
         </Card>
       ))}

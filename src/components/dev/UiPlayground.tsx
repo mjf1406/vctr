@@ -11,7 +11,16 @@ import { useTheme } from "@/components/theme/theme-context";
 import { AsyncButton } from "@/components/ui/async-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardPocket,
+  CardTitle,
+} from "@/components/ui/card";
 import { CopyButton } from "@/components/ui/copy-button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Credenza,
   CredenzaBody,
@@ -426,6 +435,55 @@ export function UiPlayground() {
             </CredenzaContent>
           </Credenza>
         </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-medium">Surfaces</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card size="sm">
+            <CardHeader>
+              <CardTitle>Quiet card</CardTitle>
+              <CardDescription>Static surface, soft stage wash</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardPocket tone="secondary">Secondary pocket</CardPocket>
+            </CardContent>
+          </Card>
+          <Card size="sm" interactive>
+            <CardHeader>
+              <CardTitle>Interactive card</CardTitle>
+              <CardDescription>Hover for lift + deeper shadow</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardPocket tone="primary">Primary pocket</CardPocket>
+            </CardContent>
+          </Card>
+          <Card size="sm" selected>
+            <CardHeader>
+              <CardTitle>Selected card</CardTitle>
+              <CardDescription>Glow plane + brand rim</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardPocket tone="inset">Inset pocket</CardPocket>
+            </CardContent>
+          </Card>
+        </div>
+        <Tabs defaultValue="one">
+          <TabsList>
+            <TabsTrigger value="one">Active wash</TabsTrigger>
+            <TabsTrigger value="two">Idle</TabsTrigger>
+            <TabsTrigger value="three">Idle</TabsTrigger>
+          </TabsList>
+          <TabsContent value="one" className="text-muted-foreground">
+            Selected tab uses the glow plane.
+          </TabsContent>
+          <TabsContent value="two" className="text-muted-foreground">
+            Second panel
+          </TabsContent>
+          <TabsContent value="three" className="text-muted-foreground">
+            Third panel
+          </TabsContent>
+        </Tabs>
       </section>
 
       <section className="space-y-3">

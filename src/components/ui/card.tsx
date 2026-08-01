@@ -1,24 +1,27 @@
 import * as React from "react";
 
-import { surfaceVariants } from "@/components/ui/surface-variants";
+import { surfacePocketVariants, surfaceVariants } from "@/components/ui/surface-variants";
 import { cn } from "@/lib/utils";
 
 function Card({
   className,
   size = "default",
   interactive = false,
+  selected = false,
   ...props
 }: React.ComponentProps<"div"> & {
   size?: "default" | "sm";
   interactive?: boolean;
+  selected?: boolean;
 }) {
   return (
     <div
       data-slot="card"
       data-size={size}
       data-interactive={interactive || undefined}
+      data-selected={selected || undefined}
       className={cn(
-        surfaceVariants({ tier: "card", interactive }),
+        surfaceVariants({ tier: "card", interactive, selected }),
         "group/card flex flex-col gap-(--card-spacing) overflow-hidden py-(--card-spacing) text-sm [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         className,
       )}
@@ -89,4 +92,30 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
+function CardPocket({
+  className,
+  tone = "secondary",
+  ...props
+}: React.ComponentProps<"div"> & {
+  tone?: "primary" | "secondary" | "inset";
+}) {
+  return (
+    <div
+      data-slot="card-pocket"
+      data-tone={tone}
+      className={cn(surfacePocketVariants({ tone }), className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+  CardPocket,
+};

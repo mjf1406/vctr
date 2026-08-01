@@ -83,19 +83,54 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --shadow-surface: 0 1px 2px oklch(0.145 0 0 / 4%), 0 4px 12px oklch(0.145 0 0 / 6%);
-  --shadow-surface-hover: 0 2px 4px oklch(0.145 0 0 / 6%), 0 10px 24px oklch(0.145 0 0 / 10%);
-  --shadow-elevated: 0 4px 8px oklch(0.145 0 0 / 8%), 0 24px 48px oklch(0.145 0 0 / 14%);
-  /* Top stays at card; bottom softens into muted (card === background in light). */
+  /* Shadow stack: inset stage highlight + contact + mid + ambient ground. */
+  --shadow-surface-quiet:
+    inset 0 1px 0 oklch(1 0 0 / 72%), 0 1px 1px oklch(0.145 0 0 / 3%),
+    0 2px 6px oklch(0.145 0 0 / 4%);
+  --shadow-surface:
+    inset 0 1px 0 oklch(1 0 0 / 78%), 0 1px 2px oklch(0.145 0 0 / 4%),
+    0 4px 10px oklch(0.145 0 0 / 6%), 0 12px 28px oklch(0.145 0 0 / 8%);
+  --shadow-surface-hover:
+    inset 0 1px 0 oklch(1 0 0 / 85%), 0 2px 4px oklch(0.145 0 0 / 5%),
+    0 8px 18px oklch(0.145 0 0 / 8%), 0 20px 40px oklch(0.145 0 0 / 12%);
+  --shadow-surface-selected:
+    inset 0 1px 0 color-mix(in oklab, var(--primary) 22%, white), 0 1px 2px oklch(0.145 0 0 / 4%),
+    0 6px 16px color-mix(in oklab, var(--primary) 14%, transparent),
+    0 16px 36px oklch(0.145 0 0 / 10%);
+  --shadow-elevated:
+    inset 0 1px 0 oklch(1 0 0 / 65%), 0 4px 8px oklch(0.145 0 0 / 8%),
+    0 24px 48px oklch(0.145 0 0 / 14%);
+  --shadow-pocket: inset 0 1px 0 oklch(1 0 0 / 55%), 0 1px 2px oklch(0.145 0 0 / 4%);
+  /* Soft stage light + hue-tinted wash (primary whisper, same lightness family). */
   --surface-wash: linear-gradient(
-    165deg,
-    var(--card) 0%,
-    color-mix(in oklab, var(--muted) 32%, var(--card)) 100%
+    152deg,
+    color-mix(in oklab, var(--primary) 7%, var(--card)) 0%,
+    var(--card) 42%,
+    color-mix(in oklab, var(--primary) 4%, color-mix(in oklab, var(--muted) 36%, var(--card))) 100%
   );
+  --surface-wash-hover: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--primary) 11%, var(--card)) 0%,
+    color-mix(in oklab, var(--muted) 10%, var(--card)) 48%,
+    color-mix(in oklab, var(--primary) 6%, color-mix(in oklab, var(--muted) 40%, var(--card))) 100%
+  );
+  --surface-wash-selected: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--primary) 16%, var(--card)) 0%,
+    color-mix(in oklab, var(--primary) 7%, var(--card)) 52%,
+    color-mix(in oklab, var(--primary) 11%, color-mix(in oklab, var(--muted) 28%, var(--card))) 100%
+  );
+  --surface-pocket-primary: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--primary) 6%, var(--card)) 0%,
+    color-mix(in oklab, var(--muted) 22%, var(--card)) 100%
+  );
+  /* Atmospheric pairing: cooler page behind warmer tinted cards. */
   --page-wash: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--muted) 35%, var(--background)) 0%,
-    var(--background) 42%
+    color-mix(in oklab, oklch(0.965 0.012 250) 55%, var(--background)) 0%,
+    color-mix(in oklab, var(--muted) 22%, var(--background)) 40%,
+    var(--background) 74%
   );
 }
 
@@ -131,19 +166,48 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-  --shadow-surface: 0 1px 2px oklch(0 0 0 / 28%), 0 6px 16px oklch(0 0 0 / 36%);
-  --shadow-surface-hover: 0 2px 6px oklch(0 0 0 / 36%), 0 14px 32px oklch(0 0 0 / 48%);
-  --shadow-elevated: 0 8px 16px oklch(0 0 0 / 40%), 0 28px 56px oklch(0 0 0 / 55%);
-  /* Muted is lighter than card in dark — use it as the top highlight. */
+  --shadow-surface-quiet:
+    inset 0 1px 0 oklch(1 0 0 / 7%), 0 1px 2px oklch(0 0 0 / 28%), 0 4px 12px oklch(0 0 0 / 32%);
+  --shadow-surface:
+    inset 0 1px 0 oklch(1 0 0 / 9%), 0 1px 2px oklch(0 0 0 / 30%), 0 6px 14px oklch(0 0 0 / 38%),
+    0 16px 36px oklch(0 0 0 / 42%);
+  --shadow-surface-hover:
+    inset 0 1px 0 oklch(1 0 0 / 12%), 0 2px 6px oklch(0 0 0 / 36%), 0 12px 28px oklch(0 0 0 / 46%),
+    0 24px 48px oklch(0 0 0 / 50%);
+  --shadow-surface-selected:
+    inset 0 1px 0 color-mix(in oklab, var(--primary) 35%, white), 0 1px 2px oklch(0 0 0 / 30%),
+    0 8px 20px color-mix(in oklab, var(--primary) 22%, transparent), 0 20px 44px oklch(0 0 0 / 45%);
+  --shadow-elevated:
+    inset 0 1px 0 oklch(1 0 0 / 8%), 0 8px 16px oklch(0 0 0 / 40%), 0 28px 56px oklch(0 0 0 / 55%);
+  --shadow-pocket: inset 0 1px 0 oklch(1 0 0 / 6%), 0 1px 3px oklch(0 0 0 / 28%);
   --surface-wash: linear-gradient(
-    165deg,
-    color-mix(in oklab, var(--muted) 55%, var(--card)) 0%,
-    var(--card) 55%
+    152deg,
+    color-mix(in oklab, var(--primary) 12%, color-mix(in oklab, var(--muted) 50%, var(--card))) 0%,
+    var(--card) 48%,
+    color-mix(in oklab, var(--primary) 6%, var(--card)) 100%
+  );
+  --surface-wash-hover: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--primary) 16%, color-mix(in oklab, var(--muted) 55%, var(--card))) 0%,
+    color-mix(in oklab, var(--muted) 35%, var(--card)) 50%,
+    color-mix(in oklab, var(--primary) 9%, var(--card)) 100%
+  );
+  --surface-wash-selected: linear-gradient(
+    152deg,
+    color-mix(in oklab, var(--primary) 22%, color-mix(in oklab, var(--muted) 45%, var(--card))) 0%,
+    color-mix(in oklab, var(--primary) 10%, var(--card)) 52%,
+    color-mix(in oklab, var(--primary) 14%, var(--card)) 100%
+  );
+  --surface-pocket-primary: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--primary) 10%, color-mix(in oklab, var(--muted) 40%, var(--card))) 0%,
+    color-mix(in oklab, var(--muted) 30%, var(--card)) 100%
   );
   --page-wash: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--muted) 40%, var(--background)) 0%,
-    var(--background) 48%
+    color-mix(in oklab, oklch(0.18 0.02 250) 50%, var(--background)) 0%,
+    color-mix(in oklab, var(--muted) 28%, var(--background)) 44%,
+    var(--background) 78%
   );
 }
 
