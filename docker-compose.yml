@@ -92,6 +92,7 @@ services:
       SITE_PROXY_PORT: "${SITE_PROXY_PORT:-3211}"
       VITE_AUTH_PASSWORD_ENABLED: "true"
       VITE_SELF_HOSTED: "true"
+      NGINX_ENVSUBST_FILTER: "^(PUBLIC_HOST|PORT|SITE_PROXY_PORT)$"
     depends_on:
       deploy:
         condition: service_completed_successfully

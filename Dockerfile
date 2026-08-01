@@ -65,7 +65,9 @@ ENV PUBLIC_HOST=$PUBLIC_HOST \
     SITE_PROXY_PORT=$SITE_PROXY_PORT \
     VITE_AUTH_PASSWORD_ENABLED=true \
     VITE_SELF_HOSTED=true \
-    NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
+    NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d \
+    # Only substitute our host/port vars — do not touch nginx $uri etc.
+    NGINX_ENVSUBST_FILTER=^(PUBLIC_HOST|PORT|SITE_PROXY_PORT)$
 
 EXPOSE 80
 ENTRYPOINT ["/web-entrypoint.sh"]
