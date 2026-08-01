@@ -1,6 +1,6 @@
 # Electron classroom app
 
-Downloadable desktop build of ClassClarus for teachers. It runs the **same self-host mode** as [SELF_HOSTING.md](./SELF_HOSTING.md) (password auth, Polar off, local Convex), without Docker.
+Downloadable desktop build for teachers. It runs the **same self-host mode** as [SELF_HOSTING.md](./SELF_HOSTING.md) (password auth, Polar off, local Convex), without Docker. The installer / Task Manager name comes from [`APP_CONFIG.name`](../convex/appConfig.ts) (currently **vctr**).
 
 Students join from a normal browser on the **same Wi‑Fi**. They do not install Electron.
 
@@ -10,13 +10,13 @@ Billing Free card → [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → Git
 
 `https://github.com/mjf1406/vctr/releases/latest`
 
-CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers with stable names:
+CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers. Artifact names are `${APP_CONFIG.name}-…` via [`electron-builder.config.mjs`](../electron-builder.config.mjs):
 
-| Platform | Artifact                        |
-| -------- | ------------------------------- |
-| Windows  | `ClassClarus-Setup-Windows.exe` |
-| macOS    | `ClassClarus-macOS.dmg`         |
-| Linux    | `ClassClarus-Linux.AppImage`    |
+| Platform | Artifact (with current `APP_CONFIG.name`) |
+| -------- | ----------------------------------------- |
+| Windows  | `vctr-Setup-Windows.exe`                  |
+| macOS    | `vctr-macOS.dmg`                          |
+| Linux    | `vctr-Linux.AppImage`                     |
 
 Direct latest asset URLs (optional):
 
@@ -24,7 +24,7 @@ Direct latest asset URLs (optional):
 
 ## Teacher flow
 
-1. Install and open the app (allows Windows Firewall prompts for the app / ports).
+1. Install and open the app (allows Windows Firewall prompts for the app / ports). A splash window appears while the local Convex backend starts and deploys (first launch can take a minute).
 2. Wait until the classroom banner shows **running** and a LAN URL.
 3. Create an account (email/password).
 4. Create a class and a join code; open the projector display or share the QR (uses the LAN URL).

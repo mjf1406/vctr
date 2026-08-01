@@ -54,7 +54,7 @@ const builderArch = arch === "arm64" ? "arm64" : "x64";
 const builderArgs = [
   "electron-builder",
   "--config",
-  "electron-builder.yml",
+  "electron-builder.config.mjs",
   `--${builderPlatform}`,
   `--${builderArch}`,
 ];

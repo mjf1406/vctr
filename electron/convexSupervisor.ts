@@ -6,6 +6,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { app } from "electron";
 
+import { APP_CONFIG } from "../convex/appConfig.ts";
 import {
   adminKeyPath,
   authKeysPath,
@@ -17,7 +18,7 @@ import {
   userDataRoot,
 } from "./paths.ts";
 
-const INSTANCE_NAME = "classclarus-desktop";
+const INSTANCE_NAME = `${APP_CONFIG.slug}-desktop`;
 const MAX_RESTARTS = 5;
 
 export type SupervisorPorts = {
@@ -75,13 +76,22 @@ type RunCommand = (
   opts: { cwd?: string; env?: NodeJS.ProcessEnv; input?: string },
 ) => Promise<void>;
 
+function formatCommandFailure(label: string, code: number | null, stderr: string): Error {
+  const detail = stderr.trim().slice(-2_000);
+  return new Error(detail ? `${label} exit ${code}: ${detail}` : `${label} exit ${code}`);
+}
+
 function createRunCommand(projectDir: string): RunCommand {
   return (cmd, args, opts) => {
-    const stdio =
-      opts.input !== undefined ? (["pipe", "inherit", "inherit"] as const) : ("inherit" as const);
-
     if (app.isPackaged) {
       const convexCli = path.join(projectDir, "node_modules", "convex", "bin", "main.js");
+      if (!existsSync(convexCli)) {
+        return Promise.reject(
+          new Error(
+            `Missing Convex CLI at ${convexCli}. The packaged deploy-project is incomplete; rebuild with bun run electron:dist.`,
+          ),
+        );
+      }
       // Dev bootstrap passes ["x", "convex", ...]; packaged skips bun and hits the CLI.
       const convexIdx = args.indexOf("convex");
       const cliArgs = convexIdx >= 0 ? args.slice(convexIdx + 1) : args;
@@ -89,21 +99,32 @@ function createRunCommand(projectDir: string): RunCommand {
         const childProc = spawn(process.execPath, [convexCli, ...cliArgs], {
           cwd: opts.cwd,
           env: { ...opts.env, ELECTRON_RUN_AS_NODE: "1" },
-          stdio,
+          stdio: ["pipe", "pipe", "pipe"],
           windowsHide: true,
+        });
+        let stderr = "";
+        childProc.stderr?.on("data", (buf: Buffer) => {
+          const text = buf.toString();
+          stderr += text;
+          console.error(`[convex-cli] ${text.trimEnd()}`);
+        });
+        childProc.stdout?.on("data", (buf: Buffer) => {
+          console.log(`[convex-cli] ${buf.toString().trimEnd()}`);
         });
         if (opts.input !== undefined && childProc.stdin) {
           childProc.stdin.write(opts.input);
           childProc.stdin.end();
         }
         childProc.on("exit", (code) =>
-          code === 0 ? resolve() : reject(new Error(`convex exit ${code}`)),
+          code === 0 ? resolve() : reject(formatCommandFailure("convex", code, stderr)),
         );
         childProc.on("error", reject);
       });
     }
 
     const bunBin = process.env.ELECTRON_BUN_BIN || cmd || "bun";
+    const stdio =
+      opts.input !== undefined ? (["pipe", "inherit", "inherit"] as const) : ("inherit" as const);
     return new Promise<void>((resolve, reject) => {
       const childProc = spawn(bunBin, args, {
         cwd: opts.cwd,

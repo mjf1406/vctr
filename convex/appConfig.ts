@@ -4,7 +4,7 @@
  * `name` is never translated — i18n uses it via defaultVariables.appName.
  */
 export const APP_CONFIG = {
-  name: "ClassClarus",
+  name: "vctr",
   /** Storage keys (`${slug}-…` via src/lib/storageKeys.ts) and package-name check. */
   slug: "classclarus",
   /** Appended after name in the document title (`Name | suffix`). */

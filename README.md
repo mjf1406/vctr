@@ -221,8 +221,8 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 
 | Field                                   | Used for                                                                                                                                                                                                                                                                     |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`                                                                                                                                                                           |
-| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); comment also mentions package-name check                                                                                           |
+| `name`                                  | Display name; i18n `{{appName}}` via [`src/i18n/index.ts`](./src/i18n/index.ts) `defaultVariables`. Also drives Electron `productName` / installer filenames via [`electron-builder.config.mjs`](./electron-builder.config.mjs)                                              |
+| `slug`                                  | Product id for browser storage keys via [`src/lib/storageKeys.ts`](./src/lib/storageKeys.ts) (`${slug}-language`, `${slug}-ui-theme`, …); Electron `appId` (`com.${slug}.app`) and local Convex instance name (`${slug}-desktop`)                                            |
 | `titleSuffix`                           | Intended document title suffix (`Name \| suffix`) — keep in sync if you wire titles to config                                                                                                                                                                                |
 | `appUrl`                                | Canonical app origin (share/deep links; join URLs also use `window.location` in [`src/lib/invitations/joinCodes.ts`](./src/lib/invitations/joinCodes.ts))                                                                                                                    |
 | `marketingUrl`                          | Footer / login / unauthorized “learn more” links                                                                                                                                                                                                                             |
@@ -236,6 +236,7 @@ Canonical config (imported by the SPA via [`src/config/app.ts`](./src/config/app
 
 - [ ] All `APP_CONFIG` fields updated for the new product (including `downloadUrl`, `selfHostUrl`, `trial`, `uploads`)
 - [ ] `authzTenantId` is a stable new id (not `classclarus`)
+- [ ] Electron branding: set `name` / `slug` in `APP_CONFIG` only — [`electron-builder.config.mjs`](./electron-builder.config.mjs) derives `productName`, `appId`, and installer filenames (no separate `electron-builder.yml`). Rebuild with `bun run electron:dist` after changing them.
 
 **Replace brand image files** (paths are hard-coded in [`src/components/brand/Logo.tsx`](./src/components/brand/Logo.tsx) and error routes — keep filenames or update imports):
 

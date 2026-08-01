@@ -73,7 +73,15 @@ function buildEnv(
   };
 }
 
-async function createWindow(loadUrl: string): Promise<void> {
+function splashPath(): string {
+  return path.join(import.meta.dirname, "splash.html");
+}
+
+async function createWindow(): Promise<void> {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    return;
+  }
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 840,
@@ -89,11 +97,24 @@ async function createWindow(loadUrl: string): Promise<void> {
   });
 
   mainWindow.once("ready-to-show", () => mainWindow?.show());
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url);
     return { action: "deny" };
   });
 
+  await mainWindow.loadFile(splashPath());
+}
+
+async function navigateMainWindow(loadUrl: string): Promise<void> {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    await createWindow();
+  }
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    throw new Error("Main window unavailable");
+  }
   await mainWindow.loadURL(loadUrl);
 }
 
@@ -148,7 +169,7 @@ async function startClassroom(): Promise<void> {
     if (isDev()) {
       // Vite is LAN-bound by electron-dev.mjs; do not advertise a port with no listener.
       const viteUrl = process.env.ELECTRON_RENDERER_URL ?? `http://127.0.0.1:${webPort}`;
-      await createWindow(viteUrl);
+      await navigateMainWindow(viteUrl);
     } else {
       const staticServer = await listenStaticServer({
         rootDir: rendererDistDir(),
@@ -156,7 +177,7 @@ async function startClassroom(): Promise<void> {
         getEnv: () => currentEnv,
       });
       staticClose = () => staticServer.close();
-      await createWindow(loopbackBaseUrl);
+      await navigateMainWindow(loopbackBaseUrl);
     }
 
     // Refresh LAN IP periodically (DHCP churn)
@@ -180,6 +201,12 @@ async function startClassroom(): Promise<void> {
     const message = error instanceof Error ? error.message : String(error);
     console.error("[classroom] failed to start", error);
     setSession({ status: "error", errorMessage: message });
+    // Keep the splash window open so the error is visible.
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      await createWindow().catch((createError) => {
+        console.error("[classroom] failed to show error splash", createError);
+      });
+    }
   }
 }
 
@@ -198,11 +225,19 @@ async function shutdown(): Promise<void> {
 app.whenReady().then(() => {
   ipcMain.handle(CLASSROOM_IPC.getSession, () => session);
 
-  void startClassroom();
+  void createWindow()
+    .then(() => startClassroom())
+    .catch((error) => {
+      console.error("[classroom] startup failed before splash", error);
+    });
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0 && session.status === "running") {
-      void createWindow(session.loopbackBaseUrl);
+    if (BrowserWindow.getAllWindows().length === 0) {
+      void createWindow().then(async () => {
+        if (session.status === "running") {
+          await navigateMainWindow(session.loopbackBaseUrl);
+        }
+      });
     }
   });
 });
