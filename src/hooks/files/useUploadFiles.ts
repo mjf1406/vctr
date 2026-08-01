@@ -9,6 +9,7 @@ import { classFilesListQueryKey } from "@/hooks/files/useClassFiles";
 import type { UploadPresetKey, UploadPreset } from "@/lib/upload/acceptPresets";
 import { getUploadPreset } from "@/lib/upload/acceptPresets";
 import { codeFromError } from "@/lib/errors/convexError";
+import { randomClientId } from "@/lib/optimistic";
 
 export type UploadFileStatus = "queued" | "uploading" | "done" | "error" | "aborted";
 
@@ -37,10 +38,7 @@ type UploadOneResult = {
 };
 
 function createUploadId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-  return `upload_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+  return randomClientId();
 }
 
 function getFileExtension(file: File): string | null {

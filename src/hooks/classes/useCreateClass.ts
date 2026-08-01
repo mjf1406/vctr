@@ -9,6 +9,7 @@ import { ownedClassesQueryKey } from "@/hooks/classes/useOwnedClasses";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import type { ClassPublic } from "@/lib/classes/classes";
 import { messageFromError } from "@/lib/errors/convexError";
+import { randomClientId } from "@/lib/optimistic";
 
 type CreateClassArgs = {
   name: string;
@@ -28,7 +29,7 @@ export function useCreateClass() {
     mutationFn: (args: CreateClassArgs) => mutationFn(args),
     queryKeys: [queryKey, ownedKey],
     applyOptimisticUpdate: (queryClient, args) => {
-      const optimisticId = `optimistic:${crypto.randomUUID()}` as Id<"classes">;
+      const optimisticId = `optimistic:${randomClientId()}` as Id<"classes">;
       const now = Date.now();
       const optimistic: ClassPublic = {
         _id: optimisticId,
