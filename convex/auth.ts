@@ -2,6 +2,7 @@ import Google from "@auth/core/providers/google";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth } from "@convex-dev/auth/server";
 
+import { authz } from "./authz.js";
 import { sanitizeAvatarUrl } from "./lib/avatarUrl.js";
 import { isSelfHosted } from "./lib/selfHosted.js";
 import { claimTrialGrant } from "./lib/trial.js";
@@ -25,13 +26,20 @@ const providers = [
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers,
   callbacks: {
-    afterUserCreatedOrUpdated: async (ctx, { userId }) => {
+    afterUserCreatedOrUpdated: async (ctx, { userId, existingUserId }) => {
       const user = await ctx.db.get("users", userId);
       if (!user) {
         return;
       }
       if (user.email && !isSelfHosted()) {
         await claimTrialGrant(ctx, userId, user.email);
+      }
+      // First registered account on a self-host / Electron instance becomes admin.
+      if (isSelfHosted() && existingUserId === null) {
+        const sample = await ctx.db.query("users").take(2);
+        if (sample.length === 1) {
+          await authz.assignRole(ctx, userId, "app_admin");
+        }
       }
       const safeImage = sanitizeAvatarUrl(user.image);
       if (user.image === safeImage || (user.image === undefined && safeImage === null)) {

@@ -9,6 +9,7 @@
  */
 
 import type * as account from "../account.js";
+import type * as adminUsers from "../adminUsers.js";
 import type * as appConfig from "../appConfig.js";
 import type * as auth from "../auth.js";
 import type * as authz from "../authz.js";
@@ -57,6 +58,7 @@ import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server
 
 declare const fullApi: ApiFromModules<{
   account: typeof account;
+  adminUsers: typeof adminUsers;
   appConfig: typeof appConfig;
   auth: typeof auth;
   authz: typeof authz;

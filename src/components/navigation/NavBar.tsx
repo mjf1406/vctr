@@ -16,8 +16,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useIsAppAdmin } from "@/hooks/admin/useIsAppAdmin";
+import { isSelfHosted } from "@/lib/selfHosted";
 
-const NAV_LINKS = [
+const BASE_NAV_LINKS = [
   { to: "/account", labelKey: "account" },
   { to: "/billing", labelKey: "billing" },
   { to: "/join", labelKey: "join" },
@@ -33,6 +35,12 @@ const mobileLinkClassName =
 export function Navbar() {
   const { t } = useTranslation("common");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isAdmin } = useIsAppAdmin();
+  const showAdmin = isSelfHosted() && isAdmin;
+
+  const navLinks = showAdmin
+    ? [...BASE_NAV_LINKS, { to: "/admin", labelKey: "admin" } as const]
+    : BASE_NAV_LINKS;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background pt-[env(safe-area-inset-top)]">
@@ -44,7 +52,7 @@ export function Navbar() {
           <Logo />
         </Link>
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-4 md:flex">
-          {NAV_LINKS.map(({ to, labelKey }) => (
+          {navLinks.map(({ to, labelKey }) => (
             <Link key={to} to={to} className={desktopLinkClassName}>
               {t(labelKey)}
             </Link>
@@ -61,7 +69,7 @@ export function Navbar() {
                 <SheetTitle>{t("navMenu")}</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-1 flex-col gap-1 px-4">
-                {NAV_LINKS.map(({ to, labelKey }) => (
+                {navLinks.map(({ to, labelKey }) => (
                   <Link
                     key={to}
                     to={to}

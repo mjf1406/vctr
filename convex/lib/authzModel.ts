@@ -21,7 +21,7 @@ export const permissions = definePermissions({
   /** Class file library — create is teacher+; mutate stays ownership-based (uploader). */
   files: { read: true, create: true },
   /** App-level admin (global / unscoped). Not a class membership role. */
-  admin: { syncProducts: true, viewHealth: true },
+  admin: { syncProducts: true, viewHealth: true, manageUsers: true },
 });
 
 export const roles = defineRoles(permissions, {
@@ -52,7 +52,7 @@ export const roles = defineRoles(permissions, {
   },
   /** Global unscoped role — assigned without a class scope. */
   app_admin: {
-    admin: ["syncProducts", "viewHealth"],
+    admin: ["syncProducts", "viewHealth", "manageUsers"],
   },
 });
 

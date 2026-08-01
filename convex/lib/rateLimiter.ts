@@ -11,6 +11,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   classTransferOwnership: { kind: "token bucket", rate: 10, period: HOUR, capacity: 2 },
   accountDelete: { kind: "token bucket", rate: 5, period: HOUR, capacity: 1 },
   signOutOtherSessions: { kind: "token bucket", rate: 10, period: HOUR, capacity: 3 },
+  adminResetPassword: { kind: "token bucket", rate: 20, period: HOUR, capacity: 5 },
   joinCodeCreate: { kind: "token bucket", rate: 30, period: HOUR, capacity: 5 },
   joinCodeRevoke: { kind: "token bucket", rate: 60, period: HOUR, capacity: 10 },
   joinCodeRedeemShort: { kind: "token bucket", rate: 5, period: 5 * MINUTE, capacity: 5 },

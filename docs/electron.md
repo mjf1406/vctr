@@ -40,7 +40,7 @@ Dev (`electron:dev`) does not check the network for updates.
 
 1. Install and open the app (allows Windows Firewall prompts for the app / ports). A splash window appears while the local Convex backend starts and deploys (first launch can take a minute).
 2. Wait until the classroom banner shows **running** and a LAN URL.
-3. Create an account (email/password).
+3. Create an account (email/password). The **first** account becomes the instance admin and can use **Admin** to set temporary passwords for users who forget theirs (see [SELF_HOSTING.md](./SELF_HOSTING.md#instance-admin-password-resets)).
 4. Create a class and a join code; open the projector display or share the QR (uses the LAN URL).
 5. Students on the same Wi‑Fi open that URL, create accounts, and redeem the code.
 

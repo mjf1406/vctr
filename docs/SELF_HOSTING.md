@@ -50,7 +50,7 @@ docker compose down -v          # stop and wipe data
 4. Compose path: `docker-compose.yml`
 5. Environment variables → **Load variables from .env file** → upload [`example.env`](../example.env) (edit `PUBLIC_HOST` first if needed)
 6. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
-7. Open `http://<PUBLIC_HOST>:8088` and create an email/password account
+7. Open `http://<PUBLIC_HOST>:8088` and create an email/password account (the **first** account becomes the instance admin)
 
 Default app port is **8088** (8080 is often used by qBittorrent and similar). Override with `WEB_PORT` if needed.
 
@@ -124,6 +124,18 @@ If Portainer reuses stale layers after a Dockerfile or dependency change, follow
 | Auth     | Google (optional password) | Password only               |
 | Billing  | Polar + trial              | Always entitled / Polar off |
 | SPA host | e.g. Cloudflare Pages      | nginx in Compose            |
+
+## Instance admin (password resets)
+
+The **first** email/password account created on a fresh instance is granted the global `app_admin` role. That user sees **Admin** in the nav and can set a temporary password for any user who forgot theirs (all of that user’s sessions are signed out).
+
+Upgrading an existing instance that already has users (and no admin) — or recovering after losing the admin account — use the Convex CLI against the local deployment:
+
+```bash
+bunx convex run lib/admin:grantAppAdmin '{"userId":"<convex-user-id>"}'
+```
+
+(PowerShell: escape the JSON as `'{\"userId\":\"...\"}'`.)
 
 ## Dashboard admin key
 

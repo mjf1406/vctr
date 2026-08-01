@@ -19,6 +19,7 @@ const rateLimitNameValidator = v.union(
   v.literal("fileGetBytes"),
   v.literal("fileGetBytesGlobal"),
   v.literal("signOutOtherSessions"),
+  v.literal("adminResetPassword"),
 );
 
 /**

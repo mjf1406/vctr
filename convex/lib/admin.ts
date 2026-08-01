@@ -2,14 +2,45 @@ import { ConvexError, v } from "convex/values";
 
 import { api } from "../_generated/api.js";
 import type { Id } from "../_generated/dataModel.js";
-import { internalMutation, type ActionCtx } from "../_generated/server.js";
+import {
+  internalMutation,
+  type ActionCtx,
+  type MutationCtx,
+  type QueryCtx,
+} from "../_generated/server.js";
 import { authz } from "../authz.js";
+import type { AppPermission } from "./authzModel.js";
+import { requireAuthUserId } from "./auth.js";
+
+type AdminPermission = Extract<AppPermission, `admin:${string}`>;
 
 /**
- * Require the signed-in user to hold the global unscoped `app_admin` role
- * (permission `admin:syncProducts`).
+ * Require the signed-in user to hold a global unscoped admin permission
+ * (Query / Mutation context).
  */
-export async function requireAdmin(ctx: ActionCtx): Promise<{ userId: string; email: string }> {
+export async function requireAppAdmin(
+  ctx: QueryCtx | MutationCtx,
+  permission: AdminPermission = "admin:manageUsers",
+): Promise<Id<"users">> {
+  const userId = await requireAuthUserId(ctx);
+  const allowed = await authz.can(ctx, userId, permission);
+  if (!allowed) {
+    throw new ConvexError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
+  return userId;
+}
+
+/**
+ * Require the signed-in user to hold a global unscoped admin permission
+ * (Action context). Defaults to Polar `admin:syncProducts` for backward compat.
+ */
+export async function requireAdmin(
+  ctx: ActionCtx,
+  permission: AdminPermission = "admin:syncProducts",
+): Promise<{ userId: string; email: string }> {
   const user = await ctx.runQuery(api.users.currentUser, {});
   if (!user?.email) {
     throw new ConvexError({
@@ -17,7 +48,7 @@ export async function requireAdmin(ctx: ActionCtx): Promise<{ userId: string; em
       message: "Not authenticated",
     });
   }
-  const allowed = await authz.can(ctx, user._id, "admin:syncProducts");
+  const allowed = await authz.can(ctx, user._id, permission);
   if (!allowed) {
     throw new ConvexError({
       code: "FORBIDDEN",
