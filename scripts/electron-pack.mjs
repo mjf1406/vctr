@@ -38,7 +38,9 @@ process.env.VITE_CONVEX_URL = "http://127.0.0.1:3210";
 process.env.VITE_CONVEX_SITE_URL = "http://127.0.0.1:3211";
 process.env.DISABLE_REACT_COMPILER = "true";
 
-await $`bun run build`;
+// Match Docker web-build: skip `tsc -b` (Convex/app project refs fail typecheck in CI).
+// Renderer bundle only — Electron main/preload built next.
+await $`bunx vp build`;
 await $`bun scripts/build-electron.mjs`;
 
 const builderPlatform =

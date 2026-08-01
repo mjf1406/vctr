@@ -93,9 +93,15 @@ const arch = args.arch ?? detectArch();
 const name = assetName(platform, arch);
 const destDir = outDirFor(platform);
 
+/** @type {Record<string, string>} */
+const ghHeaders = { "User-Agent": "vctr-electron-download" };
+if (process.env.GITHUB_TOKEN) {
+  ghHeaders.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+}
+
 console.log(`Fetching release metadata...`);
 const releaseRes = await fetch(RELEASE_API, {
-  headers: { "User-Agent": "vctr-electron-download" },
+  headers: ghHeaders,
 });
 if (!releaseRes.ok) {
   throw new Error(`GitHub API ${releaseRes.status}`);
@@ -112,7 +118,7 @@ await mkdir(destDir, { recursive: true });
 const zipPath = path.join(destDir, name);
 console.log(`Downloading ${asset.browser_download_url}...`);
 const binRes = await fetch(asset.browser_download_url, {
-  headers: { "User-Agent": "vctr-electron-download" },
+  headers: ghHeaders,
   redirect: "follow",
 });
 if (!binRes.ok || !binRes.body) {

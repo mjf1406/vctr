@@ -49,11 +49,13 @@ Allow Windows Firewall prompts for Bun/Node on ports **8088**, **3210**, and **3
 
 ## Release
 
-The first downloadable build requires creating a GitHub Release via CI (there are no pre-built binaries until you do this once).
+The first downloadable build requires creating a GitHub Release via CI (there are no pre-built binaries until you do this once). Tag the commit that contains the release workflow (current `master`), not an older SHA:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git checkout master
+git pull
+git tag -f v0.1.0
+git push origin v0.1.0 --force
 ```
 
 Or Actions → **Electron Release** → Run workflow → version `0.1.0` (no leading `v`). That builds Windows, macOS (Apple Silicon), and Linux, then attaches the installers to the release.

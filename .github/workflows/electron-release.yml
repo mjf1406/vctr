@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -83,6 +83,8 @@ jobs:
         env:
           ELECTRON_PLATFORM: ${{ matrix.platform }}
           ELECTRON_ARCH: ${{ matrix.arch }}
+          # Higher GitHub API rate limit when downloading convex-local-backend
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bun scripts/electron-pack.mjs
 
       - name: Upload installer artifact
