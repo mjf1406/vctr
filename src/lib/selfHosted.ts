@@ -1,4 +1,6 @@
-/** True when the SPA was built for the local Docker self-host stack. */
+import { readViteEnv } from "@/lib/runtimeEnv";
+
+/** True when running the Docker self-host stack (runtime or build flag). */
 export function isSelfHosted(): boolean {
-  return import.meta.env.VITE_SELF_HOSTED === "true";
+  return readViteEnv("VITE_SELF_HOSTED") === "true";
 }

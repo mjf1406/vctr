@@ -2,76 +2,87 @@
 
 Run the app on your machine with **no Convex Cloud, Polar, or Google OAuth**. Auth is email/password only. Billing is disabled.
 
-Clone-and-run and Portainer both use the same root [`docker-compose.yml`](../docker-compose.yml).
+Clone-and-run and Portainer both use the same root [`docker-compose.yml`](../docker-compose.yml). Images for `web` and `deploy` are **built on the host**.
 
 ## Defaults
 
-| Service             | URL                   |
-| ------------------- | --------------------- |
-| App                 | http://localhost:8080 |
-| Convex API          | http://localhost:3210 |
-| Convex HTTP actions | http://localhost:3211 |
-| Convex dashboard    | http://localhost:6791 |
+| Service             | URL                         |
+| ------------------- | --------------------------- |
+| App                 | http://`<PUBLIC_HOST>`:8080 |
+| Convex API          | http://`<PUBLIC_HOST>`:3210 |
+| Convex HTTP actions | http://`<PUBLIC_HOST>`:3211 |
+| Convex dashboard    | http://`<PUBLIC_HOST>`:6791 |
 
 Data persists in the Docker volume `convex-data`.
 
+## `PUBLIC_HOST`
+
+Hostname or LAN IP that **browsers** use to reach the server (not a Docker service name).
+
+| Where you open the app    | `PUBLIC_HOST`       |
+| ------------------------- | ------------------- |
+| Same machine as Docker    | `localhost`         |
+| Other devices on your LAN | e.g. `192.168.1.50` |
+
 ## Option A — Clone and run
 
-Requires [Docker](https://docs.docker.com/get-docker/) with Compose v2.
+Requires Docker Compose v2 and enough RAM to build (see below).
 
 ```bash
 git clone <your-fork-or-repo-url>
 cd <repo>
-# optional: cp .env.docker.example .env
+cp .env.docker.example .env   # set PUBLIC_HOST if needed
 docker compose up -d --build
 ```
 
-First boot builds images, starts Convex, deploys functions, then serves the SPA. Open http://localhost:8080 and create an account.
-
-Useful commands:
-
 ```bash
-docker compose logs -f deploy   # function deploy
-docker compose logs -f backend
+docker compose logs -f deploy
+docker compose logs -f web
 docker compose down             # stop (keeps volume)
 docker compose down -v          # stop and wipe data
 ```
 
 ## Option B — Portainer
 
-1. Environments → **local** → **Stacks** → **Add stack**
-2. Build method: **Repository**
-3. **Repository URL**: your GitHub clone URL (public → leave Authentication off)
-4. **Repository reference**: `refs/heads/main` (or a release tag)
-5. **Compose path**: `docker-compose.yml`
-6. Optional: paste variables from [`.env.docker.example`](../.env.docker.example) into **Environment variables**
-7. Deploy the stack
+1. Stacks → **Add stack** → **Repository**
+2. Repository URL + reference (branch with this compose file)
+3. Compose path: `docker-compose.yml`
+4. Environment variables — at least `PUBLIC_HOST` if not using localhost only (see [`.env.docker.example`](../.env.docker.example))
+5. Deploy and wait for the `web` **build** and `deploy` one-shot to finish
+6. Open `http://<PUBLIC_HOST>:8080` and create an email/password account
 
-Wait until the `deploy` service finishes successfully, then open http://localhost:8080.
+### Clean rebuild after compose/Dockerfile changes
 
-`pull_policy: build` is set on buildable services so Portainer rebuilds images when the stack updates.
+Portainer often reuses old layers/images. If a deploy fails or you pulled new git commits:
 
-If a previous deploy failed mid-build, remove the stack (keep the volume if you want data) and redeploy so `web`/`deploy` rebuild cleanly.
+1. Remove the stack (keep the volume if you want data).
+2. Optionally prune unused build cache/images on the host:
 
-### Build fails with exit code 134
+   ```bash
+   docker builder prune -f
+   docker image prune -f
+   ```
 
-Not an `.env` problem. Exit 134 means the SPA build was killed (usually low Docker RAM). Defaults in compose are enough for localhost.
+3. Redeploy the stack so `web` / `deploy` rebuild from the current Dockerfile.
 
-1. Confirm Portainer **Repository reference** is the branch that has these Docker files (e.g. `refs/heads/docker`), not `main`/`master` if the stack only lives on a feature branch.
-2. Push the latest commit, then redeploy so Portainer rebuilds (not a cached failed layer).
-3. Give Docker Desktop (or the engine) at least **6–8 GB RAM**, then redeploy.
+Deleting unused images frees **disk** and forces a clean rebuild — do that after Dockerfile changes.
 
-The image build disables React Compiler and runs Vite+ under Node with an 8 GB heap cap.
+## Build fails with exit code 134
 
-## Changing host or ports
+Exit **134** is SIGABRT (process aborted). On a host with plenty of RAM (e.g. 16GB) it is usually **not** OOM — often a native Vite+/Rolldown crash from mismatched install/build images. The Dockerfile installs and builds in the same full `node:22-bookworm` image for that reason.
 
-Vite bakes Convex URLs at **image build** time. After changing `PUBLIC_HOST` or ports in `.env` / Portainer:
+Still worth a clean rebuild after pulling:
 
 ```bash
-docker compose up -d --build
+docker builder prune -f
+docker image prune -f
 ```
 
-`PUBLIC_HOST` must be the hostname your **browser** uses (usually `localhost`), not a Docker service name.
+If it keeps failing, rebuild once on the host with plain progress to see the abort line:
+
+```bash
+docker compose build --progress=plain web 2>&1 | tee /tmp/vctr-web-build.log
+```
 
 ## Instance secret
 
@@ -92,4 +103,4 @@ docker compose up -d --build
 docker compose exec backend cat /convex/data/admin_key
 ```
 
-Paste that key into http://localhost:6791 when prompted.
+Paste that key into http://`<PUBLIC_HOST>`:6791 when prompted.

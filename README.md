@@ -20,7 +20,7 @@ Vite+ / React / Convex app **template**. Package manager is **bun** only.
 
 Toolchain notes also live in [`AGENTS.md`](./AGENTS.md) (`vp install`, `vp check`, `vp test`).
 
-**Self-host (local Docker, no cloud):** see [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md) — one `docker compose up -d --build` (same file for Portainer).
+**Self-host (local Docker, no cloud):** see [`docs/SELF_HOSTING.md`](./docs/SELF_HOSTING.md) — `docker compose up -d --build` (same file for Portainer; set `PUBLIC_HOST` for LAN access).
 
 ---
 
