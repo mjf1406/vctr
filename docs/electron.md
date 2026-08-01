@@ -49,9 +49,13 @@ Allow Windows Firewall prompts for Bun/Node on ports **8088**, **3210**, and **3
 
 ## Release
 
+The first downloadable build requires creating a GitHub Release via CI (there are no pre-built binaries until you do this once).
+
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-Or run the **Electron Release** workflow manually. macOS builds are unsigned unless you add Apple notarization secrets (`CSC_*`); users may need to bypass Gatekeeper once.
+Or Actions → **Electron Release** → Run workflow → version `0.1.0` (no leading `v`). That builds Windows, macOS (Apple Silicon), and Linux, then attaches the installers to the release.
+
+macOS builds are unsigned unless you add Apple notarization secrets (`CSC_*`); users may need to bypass Gatekeeper once.

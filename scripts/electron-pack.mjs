@@ -41,7 +41,21 @@ process.env.DISABLE_REACT_COMPILER = "true";
 await $`bun run build`;
 await $`bun scripts/build-electron.mjs`;
 
-const builderArgs = ["electron-builder", "--config", "electron-builder.yml"];
+const builderPlatform =
+  platform === "win" || platform === "win32"
+    ? "win"
+    : platform === "mac" || platform === "darwin"
+      ? "mac"
+      : "linux";
+const builderArch = arch === "arm64" ? "arm64" : "x64";
+
+const builderArgs = [
+  "electron-builder",
+  "--config",
+  "electron-builder.yml",
+  `--${builderPlatform}`,
+  `--${builderArch}`,
+];
 if (dirOnly) builderArgs.push("--dir");
 if (publish) builderArgs.push("--publish", "always");
 else builderArgs.push("--publish", "never");
