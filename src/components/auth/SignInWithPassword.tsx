@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   fullNameFromParts,
   passwordSignInSchema,
@@ -179,10 +180,9 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
         </Field>
         <Field data-invalid={errors.password ? true : undefined}>
           <FieldLabel htmlFor="auth-password">{t("passwordLabel")}</FieldLabel>
-          <Input
+          <PasswordInput
             id="auth-password"
             name="password"
-            type="password"
             autoComplete={flow === "signIn" ? "current-password" : "new-password"}
             required
             value={password}
@@ -196,10 +196,9 @@ export function SignInWithPassword({ termsAccepted = false, redirectTo }: SignIn
         {flow === "signUp" ? (
           <Field data-invalid={errors.confirmPassword ? true : undefined}>
             <FieldLabel htmlFor="auth-confirm-password">{t("confirmPasswordLabel")}</FieldLabel>
-            <Input
+            <PasswordInput
               id="auth-confirm-password"
               name="confirmPassword"
-              type="password"
               autoComplete="new-password"
               required
               value={confirmPassword}

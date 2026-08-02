@@ -72,6 +72,8 @@ const pt = {
     iconCategoryCount: "{{name}} ({{count}} ícones)",
     logoSelfHosted: "Hospedagem própria",
     logoElectron: "Electron",
+    showPassword: "Mostrar senha",
+    hidePassword: "Ocultar senha",
   },
   auth: {
     welcomeTitle: "Bem-vindo",
@@ -217,6 +219,7 @@ const pt = {
     selfHostUpdateTitle: "Atualização disponível",
     selfHostUpdateDescription:
       "Está na {{current}}; a versão {{version}} está disponível para esta instância self-hosted.",
+    selfHostUpdateTip: "Dica: Se acabou de obter uma nova imagem, basta atualizar a página.",
     selfHostUpdateAction: "Guia de atualização",
     selfHostUpdateReleaseNotes: "Notas de lançamento",
     selfHostUpdateRemindLater: "Lembrar mais tarde",
@@ -566,7 +569,7 @@ const pt = {
     membersEmptyDescription: "Crie um código de convite para adicionar pessoas a esta turma.",
     unnamedMember: "Membro sem nome",
     presenceAriaLabel: "{{count}} online nesta turma",
-    presenceMoreAriaLabel: "Mais {{count}} online",
+    presenceChipLabel: "{{count}} online",
     presenceListTitle: "Online agora",
     presenceOnlineNow: "Online agora",
     presenceLastSeenJustNow: "Visto agora mesmo",

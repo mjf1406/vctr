@@ -74,6 +74,8 @@ const de = {
     iconCategoryCount: "{{name}} ({{count}} Symbole)",
     logoSelfHosted: "Selbst gehostet",
     logoElectron: "Electron",
+    showPassword: "Passwort anzeigen",
+    hidePassword: "Passwort verbergen",
   },
   auth: {
     welcomeTitle: "Willkommen",
@@ -222,6 +224,8 @@ const de = {
     selfHostUpdateTitle: "Update verfügbar",
     selfHostUpdateDescription:
       "Sie nutzen {{current}}; Version {{version}} ist für diese Self-Host-Instanz verfügbar.",
+    selfHostUpdateTip:
+      "Tipp: Wenn Sie gerade ein neues Image geladen haben, laden Sie einfach die Seite neu.",
     selfHostUpdateAction: "Upgrade-Anleitung",
     selfHostUpdateReleaseNotes: "Versionshinweise",
     selfHostUpdateRemindLater: "Später erinnern",
@@ -574,7 +578,7 @@ const de = {
       "Erstelle einen Einladungscode, um Personen zu dieser Klasse hinzuzufügen.",
     unnamedMember: "Unbenanntes Mitglied",
     presenceAriaLabel: "{{count}} online in dieser Klasse",
-    presenceMoreAriaLabel: "{{count}} weitere online",
+    presenceChipLabel: "{{count}} online",
     presenceListTitle: "Jetzt online",
     presenceOnlineNow: "Jetzt online",
     presenceLastSeenJustNow: "Gerade eben gesehen",

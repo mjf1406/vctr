@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { LightbulbIcon, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -40,10 +40,22 @@ export function SelfHostUpdateBannerView({
       <Alert className="mx-auto max-w-4xl">
         <AlertTitle className="pr-8">{t("selfHostUpdateTitle")}</AlertTitle>
         <AlertDescription>
-          {t("selfHostUpdateDescription", {
-            current: currentVersion,
-            version: availableVersion,
-          })}
+          <p>
+            {t("selfHostUpdateDescription", {
+              current: currentVersion,
+              version: availableVersion,
+            })}
+          </p>
+          <p
+            className={cn(
+              "mt-2 flex items-start gap-2 rounded-xl border px-2.5 py-2",
+              "border-orange-600 bg-[color-mix(in_oklab,var(--background)_80%,var(--color-orange-500)_20%)]",
+              "text-orange-700 dark:border-orange-400 dark:text-orange-400",
+            )}
+          >
+            <LightbulbIcon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+            <span>{t("selfHostUpdateTip")}</span>
+          </p>
         </AlertDescription>
         <div className="col-start-1 mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">

@@ -73,6 +73,8 @@ const nl = {
     iconCategoryCount: "{{name}} ({{count}} iconen)",
     logoSelfHosted: "Zelf gehost",
     logoElectron: "Electron",
+    showPassword: "Wachtwoord tonen",
+    hidePassword: "Wachtwoord verbergen",
   },
   auth: {
     welcomeTitle: "Welkom",
@@ -219,6 +221,8 @@ const nl = {
     selfHostUpdateTitle: "Update beschikbaar",
     selfHostUpdateDescription:
       "Je gebruikt {{current}}; versie {{version}} is beschikbaar voor deze self-host-instantie.",
+    selfHostUpdateTip:
+      "Tip: Als je zojuist een nieuwe image hebt opgehaald, ververs dan gewoon de pagina.",
     selfHostUpdateAction: "Upgradehandleiding",
     selfHostUpdateReleaseNotes: "Release-opmerkingen",
     selfHostUpdateRemindLater: "Later herinneren",
@@ -570,7 +574,7 @@ const nl = {
     membersEmptyDescription: "Maak een uitnodigingscode om mensen aan deze klas toe te voegen.",
     unnamedMember: "Naamloos lid",
     presenceAriaLabel: "{{count}} online in deze klas",
-    presenceMoreAriaLabel: "Nog {{count}} online",
+    presenceChipLabel: "{{count}} online",
     presenceListTitle: "Nu online",
     presenceOnlineNow: "Nu online",
     presenceLastSeenJustNow: "Zojuist gezien",

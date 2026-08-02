@@ -1,18 +1,42 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { LoginAuthFields, LoginTermsCheckbox } from "@/components/auth/LoginFormParts";
 import { LogoBig } from "@/components/brand/Logo";
+import PendingComponent from "@/components/loading/PendingComponent";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SignInWithGoogle } from "@/components/auth/SignInWithGoogle";
-import { SignInWithPasswordLazy } from "@/components/auth/SignInWithPasswordLazy";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { APP_CONFIG } from "@/config/app";
 import { isPasswordAuthEnabled } from "@/lib/auth/authPassword";
 import { getSafeAuthRedirect } from "@/lib/auth/authRedirect";
 import { stashPendingJoinCode } from "@/lib/auth/pendingJoinCode";
 import { JOIN_CODE_PARAM } from "@/lib/invitations/joinCodes";
-import PendingComponent from "@/components/loading/PendingComponent";
+
+const MOBILE_BREAKPOINT = 768;
+
+/** `null` until the viewport is measured — avoids a desktop-card flash on mobile. */
+function useLoginViewport(): boolean | null {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(mql.matches);
+    };
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return isMobile;
+}
 
 const loginSearchSchema = z.object({
   redirect: z.string().optional(),
@@ -51,13 +75,63 @@ export const Route = createFileRoute("/_public/login")({
     const [termsAccepted, setTermsAccepted] = useState(false);
     const { t } = useTranslation(["auth", "common"]);
     const passwordEnabled = isPasswordAuthEnabled();
+    const isMobile = useLoginViewport();
 
-    if (auth.isLoading) {
+    if (auth.isLoading || isMobile === null) {
       return <PendingComponent />;
     }
 
     if (auth.isAuthenticated) {
       return null;
+    }
+
+    const learnMoreLink = (
+      <a
+        href={APP_CONFIG.marketingUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline underline-offset-4"
+      >
+        {t("learnMore")}
+      </a>
+    );
+
+    if (isMobile) {
+      return (
+        <div className="relative min-h-[calc(100svh-3.5rem)] bg-background">
+          <div className="flex flex-col items-center px-6 pt-10">
+            <LogoBig />
+          </div>
+          <Drawer
+            open
+            onOpenChange={() => {
+              // Login drawer stays open; dismiss gestures are ignored.
+            }}
+            disablePointerDismissal
+            modal={false}
+          >
+            <DrawerContent className="[--drawer-inset:0px] rounded-b-none border-x-0 border-b-0">
+              <DrawerHeader className="text-left">
+                <DrawerTitle className="text-2xl">{t("welcomeTitle")}</DrawerTitle>
+                <DrawerDescription>
+                  {t("signInToContinue")} {learnMoreLink}
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-6">
+                <LoginTermsCheckbox
+                  termsAccepted={termsAccepted}
+                  onTermsAcceptedChange={setTermsAccepted}
+                />
+                <LoginAuthFields
+                  termsAccepted={termsAccepted}
+                  redirectTo={redirectTo}
+                  passwordEnabled={passwordEnabled}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </div>
+      );
     }
 
     return (
@@ -70,85 +144,20 @@ export const Route = createFileRoute("/_public/login")({
             <div>
               <CardTitle className="text-2xl">{t("welcomeTitle")}</CardTitle>
               <CardDescription className="mt-2">
-                {t("signInToContinue")}{" "}
-                <a
-                  href={APP_CONFIG.marketingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
-                >
-                  {t("learnMore")}
-                </a>
+                {t("signInToContinue")} {learnMoreLink}
               </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="mt-8 flex flex-col gap-4">
-            <div className="flex items-start gap-2 pb-2">
-              <Checkbox
-                id="terms-acceptance"
-                checked={termsAccepted}
-                onCheckedChange={(checked) => setTermsAccepted(checked === true)}
-                className="mt-0.5 bg-background"
-              />
-              <label
-                htmlFor="terms-acceptance"
-                className="cursor-pointer text-sm leading-relaxed text-muted-foreground"
-              >
-                {t("agreePrefix")}{" "}
-                <a
-                  href={APP_CONFIG.privacyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {t("privacyPolicy")}
-                </a>
-                ,{" "}
-                <a
-                  href={APP_CONFIG.termsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {t("termsAndConditions")}
-                </a>
-                , {t("and")}{" "}
-                <a
-                  href={APP_CONFIG.cookieUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {t("cookiePolicy")}
-                </a>
-                .
-              </label>
-            </div>
-            {passwordEnabled ? (
-              <SignInWithPasswordLazy termsAccepted={termsAccepted} redirectTo={redirectTo} />
-            ) : (
-              <SignInWithGoogle termsAccepted={termsAccepted} redirectTo={redirectTo} />
-            )}
-            <p className="text-sm opacity-50">
-              {passwordEnabled ? t("passwordAuthNote") : t("googleOnlyNote")}
-            </p>
-            <div className="mt-4 border-t pt-4">
-              <p className="text-center text-xs text-muted-foreground">
-                {t("appFooter")}{" "}
-                <a
-                  href={APP_CONFIG.marketingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
-                >
-                  {t("learnMore")}
-                </a>
-                .
-              </p>
-            </div>
+            <LoginTermsCheckbox
+              termsAccepted={termsAccepted}
+              onTermsAcceptedChange={setTermsAccepted}
+            />
+            <LoginAuthFields
+              termsAccepted={termsAccepted}
+              redirectTo={redirectTo}
+              passwordEnabled={passwordEnabled}
+            />
           </CardContent>
         </Card>
       </div>

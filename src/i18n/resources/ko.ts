@@ -72,6 +72,8 @@ const ko = {
     iconCategoryCount: "{{name}} ({{count}}개)",
     logoSelfHosted: "직접 호스팅",
     logoElectron: "Electron",
+    showPassword: "비밀번호 표시",
+    hidePassword: "비밀번호 숨기기",
   },
   auth: {
     welcomeTitle: "환영합니다",
@@ -216,6 +218,7 @@ const ko = {
     selfHostUpdateTitle: "업데이트 가능",
     selfHostUpdateDescription:
       "현재 버전은 {{current}}입니다. 이 셀프호스트 인스턴스에 {{version}}을(를) 사용할 수 있습니다.",
+    selfHostUpdateTip: "팁: 새 이미지를 방금 가져왔다면 페이지를 새로고침하세요.",
     selfHostUpdateAction: "업그레이드 안내",
     selfHostUpdateReleaseNotes: "릴리스 노트",
     selfHostUpdateRemindLater: "나중에 알림",
@@ -558,7 +561,7 @@ const ko = {
     membersEmptyDescription: "초대 코드를 만들어 클래스에 사람을 추가하세요.",
     unnamedMember: "이름 없는 멤버",
     presenceAriaLabel: "이 수업에 온라인 {{count}}명",
-    presenceMoreAriaLabel: "온라인 {{count}}명 더보기",
+    presenceChipLabel: "{{count}}명 온라인",
     presenceListTitle: "지금 온라인",
     presenceOnlineNow: "지금 온라인",
     presenceLastSeenJustNow: "방금 전까지 온라인",

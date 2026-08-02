@@ -13,7 +13,7 @@ import {
   CredenzaTitle,
 } from "@/components/ui/credenza";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -82,9 +82,8 @@ export function ResetPasswordCredenza({
           <FieldGroup>
             <Field data-invalid={errors.password ? true : undefined}>
               <FieldLabel htmlFor="admin-reset-password">{t("newPasswordLabel")}</FieldLabel>
-              <Input
+              <PasswordInput
                 id="admin-reset-password"
-                type="password"
                 autoComplete="new-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -96,9 +95,8 @@ export function ResetPasswordCredenza({
             </Field>
             <Field data-invalid={errors.confirmPassword ? true : undefined}>
               <FieldLabel htmlFor="admin-reset-confirm">{t("confirmPasswordLabel")}</FieldLabel>
-              <Input
+              <PasswordInput
                 id="admin-reset-confirm"
-                type="password"
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}

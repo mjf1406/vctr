@@ -19,6 +19,7 @@ Use these `type` values (they match the styled variants in `src/components/ui/to
 
 - `success`
 - `warning`
+- `tip`
 - `info`
 - `error`
 - `loading`

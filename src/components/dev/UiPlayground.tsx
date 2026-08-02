@@ -272,6 +272,18 @@ export function UiPlayground() {
             variant="outline"
             onClick={() =>
               toast.add({
+                title: "Tip",
+                description: "Try this helpful suggestion.",
+                type: "tip",
+              })
+            }
+          >
+            Tip
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              toast.add({
                 title: "Loading",
                 description: "Still working…",
                 type: "loading",

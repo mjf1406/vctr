@@ -2,7 +2,7 @@ import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { TrialBanner } from "@/components/billing/TrialBanner";
-import { ClassPresenceFacepile } from "@/components/classes/ClassPresenceFacepile";
+import { ClassPresenceChip } from "@/components/classes/ClassPresenceChip";
 import { SelfHostUpdateBanner } from "@/components/classroom/SelfHostUpdateBanner";
 import { AppFooter } from "@/components/navigation/AppFooter";
 import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
@@ -88,7 +88,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
                       <ClassBreadcrumbSkeleton />
                     )}
                   </div>
-                  {classDoc ? <ClassPresenceFacepile /> : null}
+                  {classDoc ? <ClassPresenceChip /> : null}
                 </header>
                 <SelfHostUpdateBanner />
                 <TrialBanner />

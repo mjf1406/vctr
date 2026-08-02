@@ -72,6 +72,8 @@ const en = {
     iconCategoryCount: "{{name}} ({{count}} icons)",
     logoSelfHosted: "Self-hosted",
     logoElectron: "Electron",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
   },
   auth: {
     welcomeTitle: "Welcome",
@@ -216,6 +218,7 @@ const en = {
     selfHostUpdateTitle: "Update available",
     selfHostUpdateDescription:
       "You're on {{current}}; version {{version}} is available for this self-hosted instance.",
+    selfHostUpdateTip: "Tip: If you just pulled a new image, simply refresh the page.",
     selfHostUpdateAction: "Upgrade guide",
     selfHostUpdateReleaseNotes: "Release notes",
     selfHostUpdateRemindLater: "Remind me later",
@@ -561,7 +564,7 @@ const en = {
     membersEmptyDescription: "Create an invite code to add people to this class.",
     unnamedMember: "Unnamed member",
     presenceAriaLabel: "{{count}} online in this class",
-    presenceMoreAriaLabel: "{{count}} more online",
+    presenceChipLabel: "{{count}} online",
     presenceListTitle: "Online now",
     presenceOnlineNow: "Online now",
     presenceLastSeenJustNow: "Last seen just now",

@@ -72,6 +72,8 @@ const ja = {
     iconCategoryCount: "{{name}}（{{count}} 個）",
     logoSelfHosted: "セルフホスト",
     logoElectron: "Electron",
+    showPassword: "パスワードを表示",
+    hidePassword: "パスワードを隠す",
   },
   auth: {
     welcomeTitle: "ようこそ",
@@ -218,6 +220,8 @@ const ja = {
     selfHostUpdateTitle: "アップデートがあります",
     selfHostUpdateDescription:
       "現在は {{current}} です。このセルフホスト環境向けにバージョン {{version}} が利用可能です。",
+    selfHostUpdateTip:
+      "ヒント: 新しいイメージを取得したばかりなら、ページを再読み込みしてください。",
     selfHostUpdateAction: "アップグレード手順",
     selfHostUpdateReleaseNotes: "リリースノート",
     selfHostUpdateRemindLater: "あとで",
@@ -566,7 +570,7 @@ const ja = {
     membersEmptyDescription: "招待コードを作成してクラスに人を追加してください。",
     unnamedMember: "名前のないメンバー",
     presenceAriaLabel: "このクラスにオンライン {{count}} 人",
-    presenceMoreAriaLabel: "他 {{count}} 人がオンライン",
+    presenceChipLabel: "{{count}} 人オンライン",
     presenceListTitle: "オンライン",
     presenceOnlineNow: "オンライン",
     presenceLastSeenJustNow: "たった今までオンライン",

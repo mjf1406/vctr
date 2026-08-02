@@ -8,6 +8,7 @@ import {
   XIcon,
   CircleCheckIcon,
   InfoIcon,
+  LightbulbIcon,
   TriangleAlertIcon,
   OctagonXIcon,
   Loader2Icon,
@@ -42,6 +43,7 @@ function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
         "group/toast pointer-events-auto absolute right-0 bottom-0 z-[calc(1000-var(--toast-index))] w-full origin-bottom rounded-4xl border border-border bg-background text-foreground will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "data-[type=success]:border-green-600 data-[type=success]:bg-[color-mix(in_oklab,var(--background)_80%,var(--color-green-500)_20%)] dark:data-[type=success]:border-green-400",
         "data-[type=warning]:border-amber-600 data-[type=warning]:bg-[color-mix(in_oklab,var(--background)_80%,var(--color-amber-500)_20%)] dark:data-[type=warning]:border-amber-400",
+        "data-[type=tip]:border-orange-600 data-[type=tip]:bg-[color-mix(in_oklab,var(--background)_80%,var(--color-orange-500)_20%)] dark:data-[type=tip]:border-orange-400",
         "data-[type=info]:border-cyan-600 data-[type=info]:bg-[color-mix(in_oklab,var(--background)_80%,var(--color-cyan-500)_20%)] dark:data-[type=info]:border-cyan-400",
         "data-[type=error]:border-destructive data-[type=error]:bg-[color-mix(in_oklab,var(--background)_80%,var(--destructive)_20%)]",
         "data-[type=loading]:border-border data-[type=loading]:bg-[color-mix(in_oklab,var(--background)_80%,var(--input)_20%)]",
@@ -147,6 +149,10 @@ function ToastIcon({ type }: { type: string | undefined }) {
     icon = <InfoIcon aria-hidden="true" />;
   }
 
+  if (type === "tip") {
+    icon = <LightbulbIcon aria-hidden="true" />;
+  }
+
   if (type === "warning") {
     icon = <TriangleAlertIcon aria-hidden="true" />;
   }
@@ -170,6 +176,7 @@ function ToastIcon({ type }: { type: string | undefined }) {
         "shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6",
         type === "success" && "text-green-700 dark:text-green-400",
         type === "warning" && "text-amber-700 dark:text-amber-400",
+        type === "tip" && "text-orange-700 dark:text-orange-400",
         type === "info" && "text-cyan-700 dark:text-cyan-400",
         type === "error" && "text-destructive",
       )}

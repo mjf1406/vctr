@@ -73,6 +73,8 @@ const ru = {
     iconCategoryCount: "{{name}} ({{count}} значков)",
     logoSelfHosted: "Самостоятельный хостинг",
     logoElectron: "Electron",
+    showPassword: "Показать пароль",
+    hidePassword: "Скрыть пароль",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",
@@ -219,6 +221,8 @@ const ru = {
     selfHostUpdateTitle: "Доступно обновление",
     selfHostUpdateDescription:
       "Сейчас установлена {{current}}; версия {{version}} доступна для этого self-host экземпляра.",
+    selfHostUpdateTip:
+      "Подсказка: если вы только что загрузили новый образ, просто обновите страницу.",
     selfHostUpdateAction: "Инструкция по обновлению",
     selfHostUpdateReleaseNotes: "Заметки о выпуске",
     selfHostUpdateRemindLater: "Напомнить позже",
@@ -566,7 +570,7 @@ const ru = {
     membersEmptyDescription: "Создайте код приглашения, чтобы добавить людей в этот класс.",
     unnamedMember: "Участник без имени",
     presenceAriaLabel: "{{count}} в сети в этом классе",
-    presenceMoreAriaLabel: "Ещё {{count}} в сети",
+    presenceChipLabel: "{{count}} в сети",
     presenceListTitle: "Сейчас в сети",
     presenceOnlineNow: "Сейчас в сети",
     presenceLastSeenJustNow: "Был(а) только что",

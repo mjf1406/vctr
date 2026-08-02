@@ -73,6 +73,8 @@ const uk = {
     iconCategoryCount: "{{name}} ({{count}} піктограм)",
     logoSelfHosted: "Самостійний хостинг",
     logoElectron: "Electron",
+    showPassword: "Показати пароль",
+    hidePassword: "Сховати пароль",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",
@@ -219,6 +221,7 @@ const uk = {
     selfHostUpdateTitle: "Доступне оновлення",
     selfHostUpdateDescription:
       "Зараз установлено {{current}}; версія {{version}} доступна для цього self-host екземпляра.",
+    selfHostUpdateTip: "Підказка: якщо ви щойно завантажили новий образ, просто оновіть сторінку.",
     selfHostUpdateAction: "Інструкція з оновлення",
     selfHostUpdateReleaseNotes: "Нотатки до випуску",
     selfHostUpdateRemindLater: "Нагадати пізніше",
@@ -565,7 +568,7 @@ const uk = {
     membersEmptyDescription: "Створіть код запрошення, щоб додати людей до цього класу.",
     unnamedMember: "Учасник без імені",
     presenceAriaLabel: "{{count}} онлайн у цьому класі",
-    presenceMoreAriaLabel: "Ще {{count}} онлайн",
+    presenceChipLabel: "{{count}} онлайн",
     presenceListTitle: "Зараз онлайн",
     presenceOnlineNow: "Зараз онлайн",
     presenceLastSeenJustNow: "Був(ла) щойно",
