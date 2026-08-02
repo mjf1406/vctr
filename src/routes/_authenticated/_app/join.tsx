@@ -243,7 +243,7 @@ export const Route = createFileRoute("/_authenticated/_app/join")({
               </Alert>
             ) : null}
 
-            <Button type="submit" disabled={!canSubmit}>
+            <Button type="submit" size="lg" className="w-full" disabled={!canSubmit}>
               {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
               {isSubmitting ? t("joining") : t("join")}
             </Button>

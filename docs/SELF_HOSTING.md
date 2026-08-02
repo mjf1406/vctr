@@ -1,6 +1,8 @@
 # Self-hosting (local Docker)
 
-Run the app on your machine with **no Convex Cloud, Polar, or Google OAuth**. Auth is email/password only. Billing is disabled.
+Run the app on your machine with **no Convex Cloud, Polar, or Google OAuth**. Auth is email/password only, billing is disabled, and Convex is self-hosted using their wonderful [guide](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md).
+
+This stack is meant for **LAN / local** hosting (one machine or a few devices on your network). It is **not** intended for hosting in the cloud for several remote users — ports are exposed directly, with no reverse proxy or TLS terminator sitting in front of it.
 
 Clone-and-run and Portainer both use the same root [`docker-compose.yml`](../docker-compose.yml). Images for `web` and `deploy` are **built on the host**.
 
