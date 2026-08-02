@@ -191,7 +191,7 @@ const it = {
     confirmPasswordPlaceholder: "Reinserisci la password",
     passwordTooShort: "La password deve avere almeno 8 caratteri.",
     passwordMismatch: "Le password non corrispondono.",
-    resetSessionsNote: "Tutte le altre sessioni verranno disconnesse.",
+    resetSessionsNote: "Tutte le loro sessioni verranno disconnesse.",
     resetSubmit: "Imposta password",
     cancel: "Annulla",
     resetSuccess: "Password aggiornata",

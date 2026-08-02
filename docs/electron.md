@@ -50,6 +50,20 @@ Dev (`electron:dev`) does not check the network for updates.
 - If DHCP changes the teacher IP, refresh the join link / QR from the banner.
 - Use only trusted school or home networks.
 
+## Data & uninstall
+
+Classroom data (local Convex DB, file storage, instance secret) lives under Electron’s `userData` folder in a `classroom/` subdirectory (see [`electron/paths.ts`](../electron/paths.ts)). With current `APP_CONFIG.name` = **vctr**:
+
+| OS      | Path                                  |
+| ------- | ------------------------------------- |
+| Windows | `%APPDATA%\vctr\`                     |
+| macOS   | `~/Library/Application Support/vctr/` |
+| Linux   | `~/.config/vctr/`                     |
+
+- **Windows:** the NSIS uninstaller can remove this data. Leave the checkbox unchecked to keep accounts/classes after uninstall; check it for a full wipe. Requires an installer built with `deleteAppDataOnUninstall` (see [`electron-builder.config.mjs`](../electron-builder.config.mjs)).
+- **macOS / Linux:** removing the app does **not** delete data. Delete the folder above manually for a full wipe.
+- Reinstalling without wiping keeps existing accounts and classes.
+
 ## Local development
 
 ```bash

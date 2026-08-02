@@ -193,7 +193,7 @@ const de = {
     confirmPasswordPlaceholder: "Passwort erneut eingeben",
     passwordTooShort: "Das Passwort muss mindestens 8 Zeichen haben.",
     passwordMismatch: "Die Passwörter stimmen nicht überein.",
-    resetSessionsNote: "Alle anderen Sitzungen werden abgemeldet.",
+    resetSessionsNote: "Alle ihre Sitzungen werden abgemeldet.",
     resetSubmit: "Passwort festlegen",
     cancel: "Abbrechen",
     resetSuccess: "Passwort aktualisiert",

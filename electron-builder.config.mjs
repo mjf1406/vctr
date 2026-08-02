@@ -108,6 +108,7 @@ const config = {
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: true,
   },
   publish: {
     provider: "github",

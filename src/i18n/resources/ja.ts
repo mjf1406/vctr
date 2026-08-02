@@ -189,7 +189,7 @@ const ja = {
     confirmPasswordPlaceholder: "パスワードを再入力",
     passwordTooShort: "パスワードは8文字以上にしてください。",
     passwordMismatch: "パスワードが一致しません。",
-    resetSessionsNote: "そのユーザーの他のセッションはすべてサインアウトされます。",
+    resetSessionsNote: "そのユーザーのセッションはすべてサインアウトされます。",
     resetSubmit: "パスワードを設定",
     cancel: "キャンセル",
     resetSuccess: "パスワードを更新しました",

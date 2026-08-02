@@ -187,7 +187,7 @@ const zhs = {
     confirmPasswordPlaceholder: "再次输入密码",
     passwordTooShort: "密码至少需要 8 个字符。",
     passwordMismatch: "两次输入的密码不一致。",
-    resetSessionsNote: "其所有其他会话将被退出登录。",
+    resetSessionsNote: "其所有会话将被退出登录。",
     resetSubmit: "设置密码",
     cancel: "取消",
     resetSuccess: "密码已更新",

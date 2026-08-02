@@ -191,7 +191,7 @@ const nl = {
     confirmPasswordPlaceholder: "Voer wachtwoord opnieuw in",
     passwordTooShort: "Wachtwoord moet minimaal 8 tekens zijn.",
     passwordMismatch: "Wachtwoorden komen niet overeen.",
-    resetSessionsNote: "Al hun andere sessies worden afgemeld.",
+    resetSessionsNote: "Al hun sessies worden afgemeld.",
     resetSubmit: "Wachtwoord instellen",
     cancel: "Annuleren",
     resetSuccess: "Wachtwoord bijgewerkt",

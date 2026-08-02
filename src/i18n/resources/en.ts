@@ -188,7 +188,7 @@ const en = {
     confirmPasswordPlaceholder: "Re-enter password",
     passwordTooShort: "Password must be at least 8 characters.",
     passwordMismatch: "Passwords do not match.",
-    resetSessionsNote: "All of their other sessions will be signed out.",
+    resetSessionsNote: "All of their sessions will be signed out.",
     resetSubmit: "Set password",
     cancel: "Cancel",
     resetSuccess: "Password updated",

@@ -1,3 +1,4 @@
+import { SessionValidityGuard } from "@/components/auth/SessionValidityGuard";
 import { AppUpdateReadyDialog } from "@/components/classroom/AppUpdateReadyDialog";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { BillingGate } from "@/components/billing/BillingGate";
@@ -36,10 +37,13 @@ export const Route = createFileRoute("/_authenticated")({
     }
 
     return (
-      <BillingGate>
-        <Outlet />
-        <AppUpdateReadyDialog />
-      </BillingGate>
+      <>
+        <SessionValidityGuard />
+        <BillingGate>
+          <Outlet />
+          <AppUpdateReadyDialog />
+        </BillingGate>
+      </>
     );
   },
 });

@@ -189,7 +189,7 @@ const pt = {
     confirmPasswordPlaceholder: "Digite a senha novamente",
     passwordTooShort: "A senha deve ter pelo menos 8 caracteres.",
     passwordMismatch: "As senhas não coincidem.",
-    resetSessionsNote: "Todas as outras sessões serão encerradas.",
+    resetSessionsNote: "Todas as sessões deles serão encerradas.",
     resetSubmit: "Definir senha",
     cancel: "Cancelar",
     resetSuccess: "Senha atualizada",

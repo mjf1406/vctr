@@ -187,7 +187,7 @@ const zht = {
     confirmPasswordPlaceholder: "再次輸入密碼",
     passwordTooShort: "密碼至少需要 8 個字元。",
     passwordMismatch: "兩次輸入的密碼不一致。",
-    resetSessionsNote: "其所有其他工作階段將被登出。",
+    resetSessionsNote: "其所有工作階段將被登出。",
     resetSubmit: "設定密碼",
     cancel: "取消",
     resetSuccess: "密碼已更新",

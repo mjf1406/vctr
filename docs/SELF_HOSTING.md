@@ -70,6 +70,31 @@ Portainer often reuses old layers/images. If a deploy fails or you pulled new gi
 
 Deleting unused images frees **disk** and forces a clean rebuild — do that after Dockerfile changes.
 
+## Uninstall / wipe data
+
+Wiping removes all classroom data (users, classes, uploads). A later deploy starts a fresh empty instance. Stopping without `-v` (or without deleting the volume) keeps data.
+
+### Clone and run
+
+```bash
+cd <repo>
+docker compose down             # stop (keeps volume)
+docker compose down -v          # stop and wipe the convex-data volume
+```
+
+Optional: delete the host `.env`, and prune unused images/cache if you no longer need the build artifacts:
+
+```bash
+docker builder prune -f
+docker image prune -f
+```
+
+### Portainer
+
+1. Remove the stack.
+2. To wipe data, also delete the Docker volume (typically `vctr_convex-data`, or `<stack-name>_convex-data`). Removing the stack alone keeps the volume.
+3. Optionally prune unused build cache/images on the host (same commands as above).
+
 ## Upgrading
 
 When a new GitHub Release is published, self-hosted instances show an in-app banner linking here if the running version is older than GitHub’s latest release tag.

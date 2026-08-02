@@ -188,7 +188,7 @@ const ko = {
     confirmPasswordPlaceholder: "비밀번호 다시 입력",
     passwordTooShort: "비밀번호는 8자 이상이어야 합니다.",
     passwordMismatch: "비밀번호가 일치하지 않습니다.",
-    resetSessionsNote: "해당 사용자의 다른 세션은 모두 로그아웃됩니다.",
+    resetSessionsNote: "해당 사용자의 세션은 모두 로그아웃됩니다.",
     resetSubmit: "비밀번호 설정",
     cancel: "취소",
     resetSuccess: "비밀번호가 업데이트되었습니다",

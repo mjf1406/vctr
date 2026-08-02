@@ -191,7 +191,7 @@ const uk = {
     confirmPasswordPlaceholder: "Введіть пароль ще раз",
     passwordTooShort: "Пароль має містити щонайменше 8 символів.",
     passwordMismatch: "Паролі не збігаються.",
-    resetSessionsNote: "Усі інші сеанси буде завершено.",
+    resetSessionsNote: "Усі їхні сеанси буде завершено.",
     resetSubmit: "Встановити пароль",
     cancel: "Скасувати",
     resetSuccess: "Пароль оновлено",

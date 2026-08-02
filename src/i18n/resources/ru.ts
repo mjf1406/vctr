@@ -191,7 +191,7 @@ const ru = {
     confirmPasswordPlaceholder: "Введите пароль ещё раз",
     passwordTooShort: "Пароль должен содержать не менее 8 символов.",
     passwordMismatch: "Пароли не совпадают.",
-    resetSessionsNote: "Все остальные сеансы будут завершены.",
+    resetSessionsNote: "Все их сеансы будут завершены.",
     resetSubmit: "Задать пароль",
     cancel: "Отмена",
     resetSuccess: "Пароль обновлён",

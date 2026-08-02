@@ -195,7 +195,7 @@ const fr = {
     confirmPasswordPlaceholder: "Saisir à nouveau le mot de passe",
     passwordTooShort: "Le mot de passe doit contenir au moins 8 caractères.",
     passwordMismatch: "Les mots de passe ne correspondent pas.",
-    resetSessionsNote: "Toutes leurs autres sessions seront déconnectées.",
+    resetSessionsNote: "Toutes leurs sessions seront déconnectées.",
     resetSubmit: "Définir le mot de passe",
     cancel: "Annuler",
     resetSuccess: "Mot de passe mis à jour",

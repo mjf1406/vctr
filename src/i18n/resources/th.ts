@@ -186,7 +186,7 @@ const th = {
     confirmPasswordPlaceholder: "กรอกรหัสผ่านอีกครั้ง",
     passwordTooShort: "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
     passwordMismatch: "รหัสผ่านไม่ตรงกัน",
-    resetSessionsNote: "เซสชันอื่นทั้งหมดจะถูกออกจากระบบ",
+    resetSessionsNote: "เซสชันทั้งหมดจะถูกออกจากระบบ",
     resetSubmit: "ตั้งรหัสผ่าน",
     cancel: "ยกเลิก",
     resetSuccess: "อัปเดตรหัสผ่านแล้ว",

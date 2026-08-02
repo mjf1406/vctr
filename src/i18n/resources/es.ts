@@ -191,7 +191,7 @@ const es = {
     confirmPasswordPlaceholder: "Vuelve a introducir la contraseña",
     passwordTooShort: "La contraseña debe tener al menos 8 caracteres.",
     passwordMismatch: "Las contraseñas no coinciden.",
-    resetSessionsNote: "Se cerrarán todas sus demás sesiones.",
+    resetSessionsNote: "Se cerrarán todas sus sesiones.",
     resetSubmit: "Establecer contraseña",
     cancel: "Cancelar",
     resetSuccess: "Contraseña actualizada",
