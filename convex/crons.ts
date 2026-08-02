@@ -10,6 +10,12 @@ crons.daily(
   internal.polarReconcile.reconcileSubscriptions,
 );
 
+crons.daily(
+  "sync github clone traffic",
+  { hourUTC: 6, minuteUTC: 0 },
+  internal.githubCloneSync.syncGithubClones,
+);
+
 crons.interval("expire overdue trial grants", { minutes: 5 }, internal.trial.expireLapsedGrants);
 
 export default crons;

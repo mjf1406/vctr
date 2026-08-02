@@ -49,6 +49,11 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   billingCancelGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
   billingOrders: { kind: "token bucket", rate: 60, period: HOUR, capacity: 20 },
   billingOrdersGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
+  /** Anonymous Free-card download click tracking (prod only). */
+  usageTrackDownload: { kind: "token bucket", rate: 10, period: HOUR, capacity: 5 },
+  usageTrackDownloadGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
+  usageTrackSelfHost: { kind: "token bucket", rate: 5, period: HOUR, capacity: 3 },
+  usageTrackSelfHostGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
 });
 
 export type RateLimitName = Parameters<typeof rateLimiter.limit>[1];

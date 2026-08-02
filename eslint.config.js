@@ -127,7 +127,7 @@ export default [
             "convex/*/*/*.ts",
             "eslint.config.js",
           ],
-          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 50,
+          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 80,
         },
         tsconfigRootDir,
       },

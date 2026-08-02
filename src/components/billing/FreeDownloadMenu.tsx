@@ -9,7 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTrackDesktopDownload } from "@/hooks/billing/useTrackDesktopDownload";
 import { DESKTOP_DOWNLOADS } from "@/lib/desktopDownloads";
+import type { DesktopOs } from "../../../convex/lib/usageTracking";
 
 function WindowsIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -29,13 +31,16 @@ function UbuntuIcon(props: SVGProps<SVGSVGElement>) {
 
 export function FreeDownloadMenu() {
   const { t } = useTranslation("billing");
+  const trackDownload = useTrackDesktopDownload();
+
+  const onDownload = (os: DesktopOs) => {
+    trackDownload.mutate({ os });
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={
-          <Button variant="default" size="sm" className="min-w-0 flex-1 justify-center gap-1.5" />
-        }
+        render={<Button variant="default" size="sm" className="w-full justify-center gap-1.5" />}
       >
         {t("freeDownload")}
         <ChevronDown className="size-3.5 opacity-70" />
@@ -43,18 +48,27 @@ export function FreeDownloadMenu() {
       <DropdownMenuContent align="start" className="min-w-44">
         <DropdownMenuItem
           render={<a href={DESKTOP_DOWNLOADS.windows} target="_blank" rel="noreferrer" />}
+          onClick={() => {
+            onDownload("windows");
+          }}
         >
           <WindowsIcon />
           {t("freeDownloadWindows")}
         </DropdownMenuItem>
         <DropdownMenuItem
           render={<a href={DESKTOP_DOWNLOADS.mac} target="_blank" rel="noreferrer" />}
+          onClick={() => {
+            onDownload("mac");
+          }}
         >
           <Apple />
           {t("freeDownloadMac")}
         </DropdownMenuItem>
         <DropdownMenuItem
           render={<a href={DESKTOP_DOWNLOADS.ubuntu} target="_blank" rel="noreferrer" />}
+          onClick={() => {
+            onDownload("ubuntu");
+          }}
         >
           <UbuntuIcon />
           {t("freeDownloadUbuntu")}

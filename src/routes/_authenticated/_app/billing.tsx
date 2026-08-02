@@ -3,11 +3,14 @@ import { useTranslation } from "react-i18next";
 
 import { APP_CONFIG } from "@/config/app";
 import { FreeDownloadMenu } from "@/components/billing/FreeDownloadMenu";
+import { GiftTipStats } from "@/components/billing/GiftTipStats";
 import { OrderHistory } from "@/components/billing/OrderHistory";
 import { PlanActionButton } from "@/components/billing/PlanActionButton";
 import { SubscriptionManagement } from "@/components/billing/SubscriptionManagement";
+import { DownloadUsageChip, SelfHostUsageChip } from "@/components/billing/UsageStatsChip";
 import { useBillingProducts } from "@/hooks/billing/useBillingProducts";
 import { useEntitlement } from "@/hooks/billing/useEntitlement";
+import { useTrackSelfHostClick } from "@/hooks/billing/useTrackSelfHostClick";
 import { useTheme } from "@/components/theme/theme-context";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -56,6 +59,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
     const yearly = products?.proYearly;
     const polarTheme = checkoutTheme(theme);
     const currentProductKey = raw?.productKey ?? null;
+    const trackSelfHostClick = useTrackSelfHostClick();
 
     if (selfHosted) {
       return (
@@ -138,19 +142,28 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
                 </CardDescription>
               </CardHeader>
               <CardContent />
-              <CardFooter className="flex min-w-0 flex-row gap-2">
-                <FreeDownloadMenu />
-                <a
-                  href={APP_CONFIG.selfHostUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "sm" }),
-                    "min-w-0 flex-1 justify-center",
-                  )}
-                >
-                  {t("freeSelfHost")}
-                </a>
+              <CardFooter className="flex min-w-0 flex-row items-start gap-2">
+                <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                  <FreeDownloadMenu />
+                  <DownloadUsageChip />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                  <a
+                    href={APP_CONFIG.selfHostUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "sm" }),
+                      "w-full justify-center",
+                    )}
+                    onClick={() => {
+                      trackSelfHostClick.mutate();
+                    }}
+                  >
+                    {t("freeSelfHost")}
+                  </a>
+                  <SelfHostUsageChip />
+                </div>
               </CardFooter>
             </Card>
 
@@ -236,8 +249,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
         <div className="mx-auto flex w-full max-w-lg mt-36 flex-col items-center gap-3 text-center">
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-semibold tracking-tight">{t("giftTitle")}</h2>
-            <p className="text-sm text-muted-foreground">{t("giftBody")}</p>
-            <p className="text-xs text-muted-foreground">{t("giftDisclaimer")}</p>
+            <GiftTipStats />
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a href={APP_CONFIG.kofiUrl} target="_blank" rel="noreferrer">
@@ -255,6 +267,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
               />
             </a>
           </div>
+          <p className="text-xs text-muted-foreground">{t("giftDisclaimer")}</p>
         </div>
       </div>
     );

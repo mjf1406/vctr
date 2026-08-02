@@ -442,26 +442,33 @@ vp test
 
 See [`.env.example`](./.env.example). Summary:
 
-| Variable                                | Location                         | Required                                   |
-| --------------------------------------- | -------------------------------- | ------------------------------------------ |
-| `CONVEX_DEPLOYMENT`                     | `.env.local` (from `convex dev`) | Yes (dev)                                  |
-| `VITE_CONVEX_URL`                       | `.env.local`                     | Yes                                        |
-| `VITE_CONVEX_SITE_URL`                  | `.env.local`                     | Yes (handy mirror of HTTP Actions URL)     |
-| `SITE_URL`                              | Convex env                       | Yes (SPA origin)                           |
-| `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                        |
-| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                        |
-| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional (password UI; on for self-host)   |
-| `VITE_SELF_HOSTED`                      | SPA build / Docker               | Self-host builds only                      |
-| `SELF_HOSTED`                           | Convex env                       | Self-host Docker (`true`)                  |
-| `POLAR_SERVER`                          | Convex env                       | Yes for billing (`sandbox` / `production`) |
-| `POLAR_SANDBOX_ACCESS_TOKEN`            | Convex env                       | Yes when `POLAR_SERVER=sandbox`            |
-| `POLAR_ACCESS_TOKEN`                    | Convex env                       | Yes when `POLAR_SERVER=production`         |
-| `POLAR_SANDBOX_WEBHOOK_SECRET`          | Convex env                       | Yes when sandbox                           |
-| `POLAR_WEBHOOK_SECRET`                  | Convex env                       | Yes when production                        |
-| `POLAR_PRODUCT_MONTHLY_ID`              | Convex env                       | Yes for billing                            |
-| `POLAR_PRODUCT_YEARLY_ID`               | Convex env                       | Yes for billing                            |
+| Variable                                | Location                         | Required                                                                                                                                                                             |
+| --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `CONVEX_DEPLOYMENT`                     | `.env.local` (from `convex dev`) | Yes (dev)                                                                                                                                                                            |
+| `VITE_CONVEX_URL`                       | `.env.local`                     | Yes                                                                                                                                                                                  |
+| `VITE_CONVEX_SITE_URL`                  | `.env.local`                     | Yes (handy mirror of HTTP Actions URL)                                                                                                                                               |
+| `SITE_URL`                              | Convex env                       | Yes (SPA origin)                                                                                                                                                                     |
+| `JWT_PRIVATE_KEY` / `JWKS`              | Convex env                       | Yes                                                                                                                                                                                  |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Convex env                       | Yes if using Google                                                                                                                                                                  |
+| `VITE_AUTH_PASSWORD_ENABLED`            | `.env.local`                     | Optional (password UI; on for self-host)                                                                                                                                             |
+| `VITE_SELF_HOSTED`                      | SPA build / Docker               | Self-host builds only                                                                                                                                                                |
+| `SELF_HOSTED`                           | Convex env                       | Self-host Docker (`true`)                                                                                                                                                            |
+| `POLAR_SERVER`                          | Convex env                       | Yes for billing (`sandbox` / `production`)                                                                                                                                           |
+| `POLAR_SANDBOX_ACCESS_TOKEN`            | Convex env                       | Yes when `POLAR_SERVER=sandbox`                                                                                                                                                      |
+| `POLAR_ACCESS_TOKEN`                    | Convex env                       | Yes when `POLAR_SERVER=production`                                                                                                                                                   |
+| `POLAR_SANDBOX_WEBHOOK_SECRET`          | Convex env                       | Yes when sandbox                                                                                                                                                                     |
+| `POLAR_WEBHOOK_SECRET`                  | Convex env                       | Yes when production                                                                                                                                                                  |
+| `POLAR_PRODUCT_MONTHLY_ID`              | Convex env                       | Yes for billing                                                                                                                                                                      |
+| `POLAR_PRODUCT_YEARLY_ID`               | Convex env                       | Yes for billing                                                                                                                                                                      |
+| `USAGE_TRACKING_ENABLED`                | Convex env                       | Optional — set `true` **only on production** to record anonymous Free-card download/self-host clicks and run the daily GitHub clone sync. Leave unset on dev / self-host / Electron. |
+| `USAGE_TRACKING_DEMO`                   | Convex env                       | Optional — set `true` on a **dev** deployment to show canned Free-card stats (chip / popover / tip copy) without writing events or calling GitHub. Never enable on production.       |
+| `GITHUB_TRAFFIC_TOKEN`                  | Convex env                       | Optional — GitHub PAT with push access (required to read [Traffic Clones](https://docs.github.com/en/rest/metrics/traffic)); needed when `USAGE_TRACKING_ENABLED=true`.              |
 
 Polar secrets belong on the **Convex deployment** (`bunx convex env set`), not in Vite. See clone step **6. Billing (Polar)**.
+
+Anonymous usage stats (billing Free card chip + tip copy) stay off until you set `USAGE_TRACKING_ENABLED=true` on the **production** Convex deployment. Pair it with `GITHUB_TRAFFIC_TOKEN` so the daily cron can sync repo clone counts (CI checkouts from `electron-release` are subtracted).
+
+For local UI review: `bunx convex env set USAGE_TRACKING_DEMO true` (dev deployment only).
 
 ---
 
@@ -469,7 +476,7 @@ Polar secrets belong on the **Convex deployment** (`bunx convex env set`), not i
 
 - React 19 + Vite+ ([`vite.config.ts`](./vite.config.ts), React Compiler)
 - TanStack Router / Query / Form / Table
-- Convex + `@convex-dev/auth` + `@djpanda/convex-authz` + `@convex-dev/rate-limiter` + `@convex-dev/polar`
+- Convex + `@convex-dev/auth` + `@djpanda/convex-authz` + `@convex-dev/rate-limiter` + `@convex-dev/polar` + `@convex-dev/aggregate`
 - shadcn (Base UI) + Tailwind v4
 - i18n: `react-i18next` ([`src/i18n/`](./src/i18n/))
 

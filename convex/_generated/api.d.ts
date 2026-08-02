@@ -20,6 +20,7 @@ import type * as classes from "../classes.js";
 import type * as crons from "../crons.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
+import type * as githubCloneSync from "../githubCloneSync.js";
 import type * as http from "../http.js";
 import type * as joinCodes from "../joinCodes.js";
 import type * as lib_accountDeletion from "../lib/accountDeletion.js";
@@ -44,6 +45,7 @@ import type * as lib_rateLimiter from "../lib/rateLimiter.js";
 import type * as lib_selfHosted from "../lib/selfHosted.js";
 import type * as lib_trial from "../lib/trial.js";
 import type * as lib_uploadPresets from "../lib/uploadPresets.js";
+import type * as lib_usageTracking from "../lib/usageTracking.js";
 import type * as lib_userImage from "../lib/userImage.js";
 import type * as members from "../members.js";
 import type * as permissions from "../permissions.js";
@@ -52,9 +54,14 @@ import type * as polarReconcile from "../polarReconcile.js";
 import type * as presence from "../presence.js";
 import type * as trial from "../trial.js";
 import type * as trialBackfill from "../trialBackfill.js";
+import type * as usage from "../usage.js";
 import type * as users from "../users.js";
 
-import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
 
 declare const fullApi: ApiFromModules<{
   account: typeof account;
@@ -69,6 +76,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   files: typeof files;
   filesInternal: typeof filesInternal;
+  githubCloneSync: typeof githubCloneSync;
   http: typeof http;
   joinCodes: typeof joinCodes;
   "lib/accountDeletion": typeof lib_accountDeletion;
@@ -93,6 +101,7 @@ declare const fullApi: ApiFromModules<{
   "lib/selfHosted": typeof lib_selfHosted;
   "lib/trial": typeof lib_trial;
   "lib/uploadPresets": typeof lib_uploadPresets;
+  "lib/usageTracking": typeof lib_usageTracking;
   "lib/userImage": typeof lib_userImage;
   members: typeof members;
   permissions: typeof permissions;
@@ -101,6 +110,7 @@ declare const fullApi: ApiFromModules<{
   presence: typeof presence;
   trial: typeof trial;
   trialBackfill: typeof trialBackfill;
+  usage: typeof usage;
   users: typeof users;
 }>;
 
@@ -112,7 +122,10 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "public">>;
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -122,11 +135,17 @@ export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "publ
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, "internal">>;
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
 
 export declare const components: {
   authz: import("@djpanda/convex-authz/_generated/component.js").ComponentApi<"authz">;
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
   polar: import("@convex-dev/polar/_generated/component.js").ComponentApi<"polar">;
   presence: import("@convex-dev/presence/_generated/component.js").ComponentApi<"presence">;
+  usageByKind: import("@convex-dev/aggregate/_generated/component.js").ComponentApi<"usageByKind">;
+  usageByDownloadOs: import("@convex-dev/aggregate/_generated/component.js").ComponentApi<"usageByDownloadOs">;
+  githubClones: import("@convex-dev/aggregate/_generated/component.js").ComponentApi<"githubClones">;
 };

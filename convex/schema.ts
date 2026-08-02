@@ -107,6 +107,26 @@ const schema = defineSchema({
     .index("by_class_guardian", ["classId", "guardianUserId"])
     .index("by_class_student", ["classId", "studentUserId"])
     .index("by_class_guardian_student", ["classId", "guardianUserId", "studentUserId"]),
+  /**
+   * Anonymous Free-card CTA clicks (cloud prod only). No user/IP fields.
+   * Aggregated via @convex-dev/aggregate for range counts.
+   */
+  anonymousUsageEvents: defineTable({
+    kind: v.union(v.literal("desktop_download"), v.literal("self_host_click")),
+    os: v.optional(v.union(v.literal("windows"), v.literal("mac"), v.literal("ubuntu"))),
+  }),
+  /**
+   * Daily GitHub Traffic clone counts (CI-adjusted). Synced by cron.
+   */
+  githubCloneDays: defineTable({
+    dayKey: v.string(),
+    dayStartMs: v.number(),
+    rawCount: v.number(),
+    ciSubtracted: v.number(),
+    count: v.number(),
+    uniques: v.number(),
+    syncedAt: v.number(),
+  }).index("by_dayKey", ["dayKey"]),
 });
 
 export default schema;
