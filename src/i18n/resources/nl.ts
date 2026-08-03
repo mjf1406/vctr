@@ -137,7 +137,7 @@ const nl = {
     selectFilesAria: "Bestanden selecteren",
 
     supportsImages: "Ondersteunt JPG, PNG, WEBP, AVIF en ICO",
-    supportsDocuments: "Ondersteunt PDF, DOC, DOCX en TXT",
+    supportsDocuments: "Ondersteunt PDF, DOCX en TXT",
     supportsAudio: "Ondersteunt MP3, WAV, OGG, FLAC en M4A",
     supportsAny: "Ondersteunt alle bestandstypen",
 
@@ -602,6 +602,11 @@ const nl = {
     bannerLoadFailed: "Bannerafbeelding kon niet worden geladen.",
     bannerSaveFailed: "Dashboardbanner kon niet worden ingesteld.",
     bannerClearFailed: "Dashboardbanner kon niet worden verwijderd.",
+    documentsUploadTitle: "Documentuploads",
+    documentsUploadDescription: "Test PDF-, DOCX- en TXT-uploads naar de klassenbibliotheek.",
+    documentsUploadEmpty: "Nog geen documenten geüpload.",
+    documentsUploadListLabel: "Geüploade documenten",
+    documentsUploadRemove: "Document verwijderen",
     navTeachers: "Docenten",
     navAssistantTeachers: "Assisterende docenten",
     navStudents: "Leerlingen",

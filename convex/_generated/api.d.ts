@@ -47,6 +47,7 @@ import type * as lib_trial from "../lib/trial.js";
 import type * as lib_uploadPresets from "../lib/uploadPresets.js";
 import type * as lib_usageTracking from "../lib/usageTracking.js";
 import type * as lib_userImage from "../lib/userImage.js";
+import type * as lib_zipEntries from "../lib/zipEntries.js";
 import type * as members from "../members.js";
 import type * as permissions from "../permissions.js";
 import type * as polar from "../polar.js";
@@ -57,11 +58,7 @@ import type * as trialBackfill from "../trialBackfill.js";
 import type * as usage from "../usage.js";
 import type * as users from "../users.js";
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
+import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
   account: typeof account;
@@ -103,6 +100,7 @@ declare const fullApi: ApiFromModules<{
   "lib/uploadPresets": typeof lib_uploadPresets;
   "lib/usageTracking": typeof lib_usageTracking;
   "lib/userImage": typeof lib_userImage;
+  "lib/zipEntries": typeof lib_zipEntries;
   members: typeof members;
   permissions: typeof permissions;
   polar: typeof polar;
@@ -122,10 +120,7 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "public">
->;
+export declare const api: FilterApi<typeof fullApi, FunctionReference<any, "public">>;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -135,10 +130,7 @@ export declare const api: FilterApi<
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "internal">
->;
+export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, "internal">>;
 
 export declare const components: {
   authz: import("@djpanda/convex-authz/_generated/component.js").ComponentApi<"authz">;

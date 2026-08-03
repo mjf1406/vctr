@@ -135,7 +135,7 @@ const en = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -592,6 +592,11 @@ const en = {
     bannerLoadFailed: "Could not load banner image.",
     bannerSaveFailed: "Could not set dashboard banner.",
     bannerClearFailed: "Could not remove dashboard banner.",
+    documentsUploadTitle: "Document uploads",
+    documentsUploadDescription: "Test PDF, DOCX, and TXT uploads into this class library.",
+    documentsUploadEmpty: "No documents uploaded yet.",
+    documentsUploadListLabel: "Uploaded documents",
+    documentsUploadRemove: "Remove document",
     navTeachers: "Teachers",
     navAssistantTeachers: "Assistant teachers",
     navStudents: "Students",

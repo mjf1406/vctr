@@ -452,6 +452,7 @@ export function UiPlayground() {
             {uploadT("uploadDemoDefaultTitle")}
           </h3>
           <FileDropzone presetKey="images" variant="default" />
+          <FileDropzone presetKey="documents" variant="default" />
           <FileDropzone presetKey="audio" variant="default" />
         </div>
 

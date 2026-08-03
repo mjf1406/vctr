@@ -137,7 +137,7 @@ const it = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -606,6 +606,11 @@ const it = {
     bannerLoadFailed: "Impossibile caricare l’immagine del banner.",
     bannerSaveFailed: "Impossibile impostare il banner della dashboard.",
     bannerClearFailed: "Impossibile rimuovere il banner della dashboard.",
+    documentsUploadTitle: "Caricamenti documenti",
+    documentsUploadDescription: "Prova i caricamenti PDF, DOCX e TXT nella libreria della classe.",
+    documentsUploadEmpty: "Nessun documento caricato ancora.",
+    documentsUploadListLabel: "Documenti caricati",
+    documentsUploadRemove: "Rimuovi documento",
     navTeachers: "Insegnanti",
     navAssistantTeachers: "Assistenti insegnanti",
     navStudents: "Studenti",

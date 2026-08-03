@@ -134,7 +134,7 @@ const zht = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -579,6 +579,11 @@ const zht = {
     bannerLoadFailed: "無法載入橫幅圖片。",
     bannerSaveFailed: "無法設定儀表板橫幅。",
     bannerClearFailed: "無法移除儀表板橫幅。",
+    documentsUploadTitle: "文件上傳",
+    documentsUploadDescription: "測試將 PDF、DOCX 與 TXT 上傳至班級資料庫。",
+    documentsUploadEmpty: "尚未上傳文件。",
+    documentsUploadListLabel: "已上傳文件",
+    documentsUploadRemove: "移除文件",
     navTeachers: "教師",
     navAssistantTeachers: "助教",
     navStudents: "學生",

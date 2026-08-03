@@ -134,7 +134,7 @@ const ko = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -589,6 +589,11 @@ const ko = {
     bannerLoadFailed: "배너 이미지를 불러올 수 없습니다.",
     bannerSaveFailed: "대시보드 배너를 설정할 수 없습니다.",
     bannerClearFailed: "대시보드 배너를 제거할 수 없습니다.",
+    documentsUploadTitle: "문서 업로드",
+    documentsUploadDescription: "클래스 라이브러리에 PDF, DOCX, TXT 업로드를 테스트합니다.",
+    documentsUploadEmpty: "아직 업로드된 문서가 없습니다.",
+    documentsUploadListLabel: "업로드된 문서",
+    documentsUploadRemove: "문서 제거",
     navTeachers: "교사",
     navAssistantTeachers: "보조 교사",
     navStudents: "학생",

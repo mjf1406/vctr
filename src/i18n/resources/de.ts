@@ -138,7 +138,7 @@ const de = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -607,6 +607,11 @@ const de = {
     bannerLoadFailed: "Bannerbild konnte nicht geladen werden.",
     bannerSaveFailed: "Dashboard-Banner konnte nicht gesetzt werden.",
     bannerClearFailed: "Dashboard-Banner konnte nicht entfernt werden.",
+    documentsUploadTitle: "Dokument-Uploads",
+    documentsUploadDescription: "Teste PDF-, DOCX- und TXT-Uploads in die Klassenbibliothek.",
+    documentsUploadEmpty: "Noch keine Dokumente hochgeladen.",
+    documentsUploadListLabel: "Hochgeladene Dokumente",
+    documentsUploadRemove: "Dokument entfernen",
     navTeachers: "Lehrkräfte",
     navAssistantTeachers: "Assistenzlehrkräfte",
     navStudents: "Schüler",

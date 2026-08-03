@@ -135,7 +135,7 @@ const ja = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -599,6 +599,12 @@ const ja = {
     bannerLoadFailed: "バナー画像を読み込めませんでした。",
     bannerSaveFailed: "ダッシュボードバナーを設定できませんでした。",
     bannerClearFailed: "ダッシュボードバナーを削除できませんでした。",
+    documentsUploadTitle: "ドキュメントのアップロード",
+    documentsUploadDescription:
+      "クラスライブラリへの PDF・DOCX・TXT のアップロードをテストします。",
+    documentsUploadEmpty: "まだドキュメントがありません。",
+    documentsUploadListLabel: "アップロード済みドキュメント",
+    documentsUploadRemove: "ドキュメントを削除",
     navTeachers: "教員",
     navAssistantTeachers: "アシスタント教員",
     navStudents: "生徒",

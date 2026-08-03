@@ -135,7 +135,7 @@ const pt = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -599,6 +599,11 @@ const pt = {
     bannerLoadFailed: "Não foi possível carregar a imagem do banner.",
     bannerSaveFailed: "Não foi possível definir o banner do painel.",
     bannerClearFailed: "Não foi possível remover o banner do painel.",
+    documentsUploadTitle: "Envios de documentos",
+    documentsUploadDescription: "Teste envios PDF, DOCX e TXT na biblioteca da turma.",
+    documentsUploadEmpty: "Nenhum documento enviado ainda.",
+    documentsUploadListLabel: "Documentos enviados",
+    documentsUploadRemove: "Remover documento",
     navTeachers: "Professores",
     navAssistantTeachers: "Professores assistentes",
     navStudents: "Alunos",

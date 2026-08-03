@@ -4,16 +4,14 @@
  */
 
 import { APP_CONFIG } from "../appConfig.js";
+import { isDocxOoxml } from "./zipEntries.js";
 
 export const UPLOAD_PRESET_KEYS = ["images", "documents", "audio"] as const;
 
 export type UploadPresetKey = (typeof UPLOAD_PRESET_KEYS)[number];
 
-/**
- * Presets accepted by finalize/register today.
- * `documents` stays defined for future OOXML-validated uploads but is rejected server-side.
- */
-export const ENABLED_UPLOAD_PRESETS = ["images", "audio"] as const;
+/** Presets accepted by finalize/register. DOCX requires OOXML ZIP entry checks. */
+export const ENABLED_UPLOAD_PRESETS = ["images", "documents", "audio"] as const;
 
 export type EnabledUploadPresetKey = (typeof ENABLED_UPLOAD_PRESETS)[number];
 
@@ -42,11 +40,10 @@ export const UPLOAD_PRESET_DEFINITIONS: Record<UploadPresetKey, UploadPresetDefi
     key: "documents",
     allowedMimeTypes: [
       "application/pdf",
-      "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "text/plain",
     ],
-    allowedExtensions: [".pdf", ".doc", ".docx", ".txt"],
+    allowedExtensions: [".pdf", ".docx", ".txt"],
     maxSizeBytes: APP_CONFIG.uploads.maxSizeBytes.documents,
   },
   audio: {
@@ -185,17 +182,14 @@ export function detectContentType(bytes: Uint8Array): string | null {
   if (startsWithBytes(bytes, [0x25, 0x50, 0x44, 0x46])) {
     return "application/pdf";
   }
-  // OLE Compound File (legacy .doc)
-  if (startsWithBytes(bytes, [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1])) {
-    return "application/msword";
-  }
-  // Reject ZIP / OOXML containers. Re-enable docx only after verifying
-  // [Content_Types].xml (and preferably word/) inside the archive — bare PK
-  // magic accepts arbitrary ZIPs as documents.
+  // DOCX (OOXML): require [Content_Types].xml + word/ — bare ZIP rejected.
   if (
     startsWithBytes(bytes, [0x50, 0x4b, 0x03, 0x04]) ||
     startsWithBytes(bytes, [0x50, 0x4b, 0x05, 0x06])
   ) {
+    if (isDocxOoxml(bytes)) {
+      return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    }
     return null;
   }
   // WAV: RIFF....WAVE

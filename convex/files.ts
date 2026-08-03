@@ -130,9 +130,9 @@ export const finalizeUpload = action({
 
     // Avoid blob.slice(): Convex storage blobs throw RangeError on slice+arrayBuffer
     // when size > slice length (get-convex/convex-backend#507).
+    // Full buffer required for DOCX OOXML central-directory checks (presets ≤5 MiB).
     const bytes = new Uint8Array(await blob.arrayBuffer());
-    const sample = bytes.subarray(0, Math.min(64, bytes.length));
-    const detected = detectContentType(sample);
+    const detected = detectContentType(bytes);
     if (validateDetectedContentType(args.preset, detected) !== null || !detected) {
       await ctx.storage.delete(args.storageId);
       throw new ConvexError({

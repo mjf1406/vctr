@@ -133,7 +133,7 @@ const th = {
     selectFilesAria: "เลือกไฟล์",
 
     supportsImages: "รองรับ JPG, PNG, WEBP, AVIF และ ICO",
-    supportsDocuments: "รองรับ PDF, DOC, DOCX และ TXT",
+    supportsDocuments: "รองรับ PDF, DOCX และ TXT",
     supportsAudio: "รองรับ MP3, WAV, OGG, FLAC และ M4A",
     supportsAny: "รองรับไฟล์ทุกประเภท",
 
@@ -580,6 +580,11 @@ const th = {
     bannerLoadFailed: "โหลดรูปแบนเนอร์ไม่ได้",
     bannerSaveFailed: "ตั้งค่าแบนเนอร์แดชบอร์ดไม่ได้",
     bannerClearFailed: "ลบแบนเนอร์แดชบอร์ดไม่ได้",
+    documentsUploadTitle: "อัปโหลดเอกสาร",
+    documentsUploadDescription: "ทดสอบอัปโหลด PDF, DOCX และ TXT ไปยังคลังของชั้นเรียน",
+    documentsUploadEmpty: "ยังไม่มีเอกสารที่อัปโหลด",
+    documentsUploadListLabel: "เอกสารที่อัปโหลด",
+    documentsUploadRemove: "ลบเอกสาร",
     navTeachers: "ครู",
     navAssistantTeachers: "ผู้ช่วยครู",
     navStudents: "นักเรียน",

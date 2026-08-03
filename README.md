@@ -306,7 +306,7 @@ Authz client: [`convex/authz.ts`](./convex/authz.ts) (`tenantId: APP_CONFIG.auth
 
 **Uploads / files**
 
-- Enabled presets today: **images** and **audio** only ([`convex/lib/uploadPresets.ts`](./convex/lib/uploadPresets.ts)). The `documents` preset definitions and PDF/OLE/txt sniffers remain in code but are **rejected server-side** until OOXML validation (e.g. `[Content_Types].xml` inside ZIP) is solid; bare ZIP/`PK` magic is rejected.
+- Enabled presets: **images**, **documents** (PDF, DOCX, TXT), and **audio** ([`convex/lib/uploadPresets.ts`](./convex/lib/uploadPresets.ts)). DOCX is accepted only when the ZIP central directory contains `[Content_Types].xml` and a `word/` part — bare ZIP/`PK` magic is rejected. Legacy `.doc` (OLE) is not supported.
 - Class library: `files:create` = **owner / teacher** (not assistant_teacher); `files:read` = all class members (role-scoped, so students can load banners); rename/delete stay **uploader ownership**. After changing the role catalog, rematerialize via [`convex/authzBackfill.ts`](./convex/authzBackfill.ts).
 
 **Backend example modules:**

@@ -137,7 +137,7 @@ const ru = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -600,6 +600,11 @@ const ru = {
     bannerLoadFailed: "Не удалось загрузить изображение баннера.",
     bannerSaveFailed: "Не удалось установить баннер панели.",
     bannerClearFailed: "Не удалось удалить баннер панели.",
+    documentsUploadTitle: "Загрузка документов",
+    documentsUploadDescription: "Проверьте загрузку PDF, DOCX и TXT в библиотеку класса.",
+    documentsUploadEmpty: "Документы ещё не загружены.",
+    documentsUploadListLabel: "Загруженные документы",
+    documentsUploadRemove: "Удалить документ",
     navTeachers: "Учителя",
     navAssistantTeachers: "Помощники учителя",
     navStudents: "Ученики",

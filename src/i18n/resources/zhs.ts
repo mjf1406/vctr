@@ -134,7 +134,7 @@ const zhs = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -579,6 +579,11 @@ const zhs = {
     bannerLoadFailed: "无法加载横幅图片。",
     bannerSaveFailed: "无法设置仪表盘横幅。",
     bannerClearFailed: "无法移除仪表盘横幅。",
+    documentsUploadTitle: "文档上传",
+    documentsUploadDescription: "测试将 PDF、DOCX 和 TXT 上传到班级资料库。",
+    documentsUploadEmpty: "尚未上传文档。",
+    documentsUploadListLabel: "已上传文档",
+    documentsUploadRemove: "移除文档",
     navTeachers: "教师",
     navAssistantTeachers: "助教",
     navStudents: "学生",

@@ -136,7 +136,7 @@ const es = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -603,6 +603,11 @@ const es = {
     bannerLoadFailed: "No se pudo cargar la imagen del banner.",
     bannerSaveFailed: "No se pudo establecer el banner del panel.",
     bannerClearFailed: "No se pudo quitar el banner del panel.",
+    documentsUploadTitle: "Subidas de documentos",
+    documentsUploadDescription: "Prueba subidas PDF, DOCX y TXT a la biblioteca de la clase.",
+    documentsUploadEmpty: "Aún no hay documentos subidos.",
+    documentsUploadListLabel: "Documentos subidos",
+    documentsUploadRemove: "Eliminar documento",
     navTeachers: "Profesores",
     navAssistantTeachers: "Profesores asistentes",
     navStudents: "Estudiantes",

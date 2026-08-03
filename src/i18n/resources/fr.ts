@@ -140,7 +140,7 @@ const fr = {
     selectFilesAria: "Select files",
 
     supportsImages: "Supports JPG, PNG, WEBP, AVIF, and ICO formats",
-    supportsDocuments: "Supports PDF, DOC, DOCX, and TXT formats",
+    supportsDocuments: "Supports PDF, DOCX, and TXT formats",
     supportsAudio: "Supports MP3, WAV, OGG, FLAC, and M4A formats",
     supportsAny: "Supports all file types",
 
@@ -613,6 +613,12 @@ const fr = {
     bannerLoadFailed: "Impossible de charger l’image de la bannière.",
     bannerSaveFailed: "Impossible de définir la bannière du tableau de bord.",
     bannerClearFailed: "Impossible de supprimer la bannière du tableau de bord.",
+    documentsUploadTitle: "Envois de documents",
+    documentsUploadDescription:
+      "Testez les envois PDF, DOCX et TXT dans la bibliothèque de la classe.",
+    documentsUploadEmpty: "Aucun document envoyé pour le moment.",
+    documentsUploadListLabel: "Documents envoyés",
+    documentsUploadRemove: "Supprimer le document",
     navTeachers: "Enseignants",
     navAssistantTeachers: "Assistants enseignants",
     navStudents: "Élèves",
