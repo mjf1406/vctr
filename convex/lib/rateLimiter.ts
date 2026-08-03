@@ -1,4 +1,4 @@
-import { HOUR, MINUTE, RateLimiter } from "@convex-dev/rate-limiter";
+import { DAY, HOUR, MINUTE, RateLimiter, WEEK } from "@convex-dev/rate-limiter";
 
 import { components } from "../_generated/api.js";
 
@@ -54,6 +54,9 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   usageTrackDownloadGlobal: { kind: "token bucket", rate: 120, period: MINUTE, capacity: 40 },
   usageTrackSelfHost: { kind: "token bucket", rate: 5, period: HOUR, capacity: 3 },
   usageTrackSelfHostGlobal: { kind: "token bucket", rate: 60, period: MINUTE, capacity: 20 },
+  /** Cloud feedback form — per signed-in user. */
+  feedbackSubmitDaily: { kind: "token bucket", rate: 10, period: DAY, capacity: 10 },
+  feedbackSubmitWeekly: { kind: "token bucket", rate: 20, period: WEEK, capacity: 20 },
 });
 
 export type RateLimitName = Parameters<typeof rateLimiter.limit>[1];

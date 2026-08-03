@@ -18,6 +18,7 @@ import type * as billing from "../billing.js";
 import type * as billingActions from "../billingActions.js";
 import type * as classes from "../classes.js";
 import type * as crons from "../crons.js";
+import type * as feedback from "../feedback.js";
 import type * as files from "../files.js";
 import type * as filesInternal from "../filesInternal.js";
 import type * as githubCloneSync from "../githubCloneSync.js";
@@ -71,6 +72,7 @@ declare const fullApi: ApiFromModules<{
   billingActions: typeof billingActions;
   classes: typeof classes;
   crons: typeof crons;
+  feedback: typeof feedback;
   files: typeof files;
   filesInternal: typeof filesInternal;
   githubCloneSync: typeof githubCloneSync;

@@ -1,14 +1,17 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuthActions, useConvexAuth } from "@convex-dev/auth/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronsUpDown, CreditCard, LogOut, Settings, Wallet } from "lucide-react";
+import { ChevronsUpDown, CreditCard, LogOut, Settings, Shield, Wallet } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useIsAppAdmin } from "@/hooks/admin/useIsAppAdmin";
 import { useEntitlement } from "@/hooks/billing/useEntitlement";
+import { useIsFeedbackAdmin } from "@/hooks/feedback/useIsFeedbackAdmin";
 import { removeAllFileBytesQueries } from "@/hooks/files/useFileBytes";
 import { useCurrentUser } from "@/hooks/user/useCurrentUser";
 import { buildPlanSummary } from "@/lib/billing/planSummary";
+import { isSelfHosted } from "@/lib/selfHosted";
 import { getDisplayName, getInitials } from "@/lib/user/userDisplay";
 import { sanitizeAvatarUrl } from "../../../convex/lib/avatarUrl";
 import { Button } from "@/components/ui/button";
@@ -52,6 +55,11 @@ function useAccountMenuState() {
 
 function AccountMenuItems({ onSignOut }: { onSignOut: () => void }) {
   const { t } = useTranslation("common");
+  const selfHosted = isSelfHosted();
+  const { isAdmin: isSelfHostAdmin } = useIsAppAdmin();
+  const { isAdmin: isFeedbackAdmin } = useIsFeedbackAdmin();
+  const showSelfHostAdmin = selfHosted && isSelfHostAdmin;
+  const showCloudAdmin = !selfHosted && isFeedbackAdmin;
 
   return (
     <>
@@ -67,6 +75,18 @@ function AccountMenuItems({ onSignOut }: { onSignOut: () => void }) {
         <Wallet />
         {t("billing")}
       </DropdownMenuItem>
+      {showSelfHostAdmin ? (
+        <DropdownMenuItem render={<Link to="/admin" />}>
+          <Shield />
+          {t("admin")}
+        </DropdownMenuItem>
+      ) : null}
+      {showCloudAdmin ? (
+        <DropdownMenuItem render={<Link to="/admin/feedback" />}>
+          <Shield />
+          {t("admin")}
+        </DropdownMenuItem>
+      ) : null}
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {

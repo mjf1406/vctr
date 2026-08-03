@@ -26,6 +26,8 @@ const BASE_NAV_LINKS = [
   { to: "/settings", labelKey: "settings" },
 ] as const;
 
+const CLOUD_FEEDBACK_LINK = { to: "/feedback", labelKey: "feedback" } as const;
+
 const desktopLinkClassName =
   "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
@@ -36,11 +38,14 @@ export function Navbar() {
   const { t } = useTranslation("common");
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAdmin } = useIsAppAdmin();
-  const showAdmin = isSelfHosted() && isAdmin;
+  const selfHosted = isSelfHosted();
+  const showAdmin = selfHosted && isAdmin;
 
-  const navLinks = showAdmin
-    ? [...BASE_NAV_LINKS, { to: "/admin", labelKey: "admin" } as const]
-    : BASE_NAV_LINKS;
+  const navLinks = [
+    ...BASE_NAV_LINKS,
+    ...(!selfHosted ? [CLOUD_FEEDBACK_LINK] : []),
+    ...(showAdmin ? [{ to: "/admin", labelKey: "admin" } as const] : []),
+  ];
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background pt-[env(safe-area-inset-top)]">

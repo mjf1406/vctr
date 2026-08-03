@@ -127,6 +127,34 @@ const schema = defineSchema({
     uniques: v.number(),
     syncedAt: v.number(),
   }).index("by_dayKey", ["dayKey"]),
+  /**
+   * Cloud product feedback (message-in-a-bottle). Not used on self-host / Electron.
+   */
+  feedback: defineTable({
+    userId: v.id("users"),
+    type: v.union(v.literal("bug"), v.literal("feature"), v.literal("concern"), v.literal("other")),
+    title: v.string(),
+    body: v.string(),
+    stepsToReproduce: v.optional(v.string()),
+    expected: v.optional(v.string()),
+    actual: v.optional(v.string()),
+    severity: v.optional(v.union(v.literal("low"), v.literal("medium"), v.literal("high"))),
+    useCase: v.optional(v.string()),
+    proposedSolution: v.optional(v.string()),
+    importance: v.optional(
+      v.union(v.literal("nice"), v.literal("important"), v.literal("critical")),
+    ),
+    impact: v.optional(v.string()),
+    wantReply: v.boolean(),
+    attachmentFileIds: v.array(v.id("files")),
+    createdAt: v.number(),
+    archivedAt: v.optional(v.number()),
+    /** Demo / seed rows — deletable via clearDemo. */
+    isSeed: v.optional(v.boolean()),
+  })
+    .index("by_createdAt", ["createdAt"])
+    .index("by_userId", ["userId"])
+    .index("by_isSeed", ["isSeed"]),
 });
 
 export default schema;

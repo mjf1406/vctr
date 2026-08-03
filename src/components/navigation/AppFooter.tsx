@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { APP_CONFIG } from "@/config/app";
 import { useAppLanguage } from "@/i18n/language-context";
+import { isSelfHosted } from "@/lib/selfHosted";
 
 /** Lucide no longer ships a GitHub mark; keep a simple brand SVG. */
 function GithubIcon(props: SVGProps<SVGSVGElement>) {
@@ -38,7 +39,7 @@ function FooterInternalLink({
   to,
   children,
 }: {
-  to: "/join" | "/settings" | "/account" | "/billing";
+  to: "/join" | "/settings" | "/account" | "/billing" | "/feedback";
   children: ReactNode;
 }) {
   return (
@@ -68,6 +69,7 @@ export function AppFooter() {
   const { isAuthenticated } = useConvexAuth();
   const { language, setLanguage, isSaving } = useAppLanguage();
   const year = new Date().getFullYear();
+  const showFeedback = isAuthenticated && !isSelfHosted();
 
   return (
     <footer className="mt-64 shrink-0 border-t bg-background">
@@ -118,6 +120,9 @@ export function AppFooter() {
                 <FooterInternalLink to="/settings">{t("settings")}</FooterInternalLink>
                 <FooterInternalLink to="/account">{t("account")}</FooterInternalLink>
                 <FooterInternalLink to="/billing">{t("billing")}</FooterInternalLink>
+                {showFeedback ? (
+                  <FooterInternalLink to="/feedback">{t("feedback")}</FooterInternalLink>
+                ) : null}
               </>
             ) : null}
           </FooterColumn>
