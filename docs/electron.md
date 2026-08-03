@@ -8,7 +8,7 @@ Students join from a normal browser on the **same Wi‑Fi**. They do not install
 
 Billing Free card → **Download** dropdown (Windows / Mac / Ubuntu) → direct GitHub **latest** assets via [`src/lib/desktopDownloads.ts`](../src/lib/desktopDownloads.ts) (derived from `APP_CONFIG.github` + `APP_CONFIG.name`).
 
-Release landing page (docs / clone checklist): [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → `…/releases/latest`.
+Release landing page (docs / [`CLONE_CHECKLIST.md`](../CLONE_CHECKLIST.md)): [`APP_CONFIG.downloadUrl`](../convex/appConfig.ts) → `…/releases/latest`.
 
 CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers. Artifact names are `${APP_CONFIG.name}-…` via [`electron-builder.config.mjs`](../electron-builder.config.mjs):
 

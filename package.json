@@ -19,6 +19,7 @@
     "typecheck": "tsc --noEmit",
     "audit": "bun audit",
     "preview": "vp preview",
+    "post-clone": "bun scripts/post-clone.mjs",
     "prepare": "vp config",
     "electron:download-backend": "bun scripts/download-convex-backend.mjs",
     "electron:build-main": "bun scripts/build-electron.mjs",
