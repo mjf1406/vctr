@@ -1,3 +1,9 @@
+# VCTR template
+
+**VCTR** = this template. **ClassClarus** = sample domain (classes, roles, join codes). Keep platform patterns; replace classroom nouns unless `--keep-classroom`.
+
+Clone: `bun run post-clone` → [`CLONE_CHECKLIST.md`](./CLONE_CHECKLIST.md). Keep [`.cursor/rules/`](./.cursor/rules/). Use [`.cursor/skills/`](./.cursor/skills/) for authz / Polar / shadcn / Convex components.
+
 <!--VITE PLUS START-->
 
 # Using Vite+, the Unified Toolchain for the Web

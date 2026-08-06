@@ -46,7 +46,7 @@ Do **not** reuse the template’s Convex deployment or copy `.env` / `.env.local
 
 - [ ] `.env.example` present with Vite-side vars documented
 
-`bun run post-clone` marks the identity items it edits. Brand image files under `public/brand/` and `public/favicon.svg` are still manual (keep filenames or update imports in `src/components/brand/Logo.tsx`).
+`bun run post-clone` marks the identity items it edits. Product brand: `public/brand/` (+ `Logo.tsx`). Template favicon: `public/vctr/vctr-favicon.webp` (`index.html`) — replace file or update the `href` when rebranding.
 
 <!-- clone:brand-assets -->
 

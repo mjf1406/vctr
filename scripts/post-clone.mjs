@@ -652,7 +652,7 @@ Suggested order:
   3. Google OAuth → bunx convex env set AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET
      Redirect: {CONVEX_SITE_URL}/api/auth/callback/google
   4. Polar sandbox → env + grantAppAdmin + polar:syncProducts
-  5. Replace public/brand/** + public/favicon.svg
+  5. Replace public/brand/** + public/vctr/vctr-favicon.webp
   6. vp run ds
 
 Do not copy template secrets. Tick boxes in CLONE_CHECKLIST.md as you go.

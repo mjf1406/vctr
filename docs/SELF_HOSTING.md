@@ -94,7 +94,7 @@ docker image prune -f
 ### Portainer
 
 1. Remove the stack.
-2. To wipe data, also delete the Docker volume (typically `vctr_convex-data`, or `<stack-name>_convex-data`). Removing the stack alone keeps the volume.
+2. To wipe data, also delete the Docker volume (typically `<stack-name>_convex-data`). Removing the stack alone keeps the volume.
 3. Optionally prune unused build cache/images on the host (same commands as above).
 
 ## Upgrading

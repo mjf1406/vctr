@@ -1,8 +1,10 @@
 # Electron classroom app
 
-Downloadable desktop build for teachers. It runs the **same self-host mode** as [SELF_HOSTING.md](./SELF_HOSTING.md) (password auth, Polar off, local Convex), without Docker. The installer / Task Manager name comes from [`APP_CONFIG.name`](../convex/appConfig.ts) (currently **vctr**).
+Downloadable desktop build for teachers. It runs the **same self-host mode** as [SELF_HOSTING.md](./SELF_HOSTING.md) (password auth, Polar off, local Convex), without Docker. The installer / Task Manager name comes from [`APP_CONFIG.name`](../convex/appConfig.ts).
 
 Students join from a normal browser on the **same Wi‑Fi**. They do not install Electron.
+
+`post-clone` rewrites `APP_CONFIG` (artifact names, GitHub URLs, userData paths). This file does not need a separate rewrite.
 
 ## Downloads
 
@@ -12,17 +14,17 @@ Release landing page (docs / [`CLONE_CHECKLIST.md`](../CLONE_CHECKLIST.md)): [`A
 
 CI (`.github/workflows/electron-release.yml`) builds Windows, macOS (Apple Silicon), and Linux on version tags `v*` and publishes installers. Artifact names are `${APP_CONFIG.name}-…` via [`electron-builder.config.mjs`](../electron-builder.config.mjs):
 
-| Menu label | Artifact (with current `APP_CONFIG.name`)                   |
-| ---------- | ----------------------------------------------------------- |
-| Windows    | `vctr-Setup-Windows.exe`                                    |
-| Mac        | `vctr-macOS.dmg` (install) / `vctr-macOS.zip` (auto-update) |
-| Ubuntu     | `vctr-Linux.AppImage`                                       |
+| Menu label | Artifact                                                        |
+| ---------- | --------------------------------------------------------------- |
+| Windows    | `${APP_CONFIG.name}-Setup-Windows.exe`                          |
+| Mac        | `${APP_CONFIG.name}-macOS.dmg` / `${APP_CONFIG.name}-macOS.zip` |
+| Ubuntu     | `${APP_CONFIG.name}-Linux.AppImage`                             |
 
 Each release also attaches electron-updater feed files (`latest.yml`, `latest-mac.yml`, `latest-linux.yml`) and `.blockmap` files so installed apps can check for updates.
 
 Direct latest asset URL shape:
 
-`https://github.com/mjf1406/vctr/releases/latest/download/<artifact-name>`
+`{APP_CONFIG.github}/releases/latest/download/<artifact-name>`
 
 ## Auto-updates
 
@@ -52,13 +54,13 @@ Dev (`electron:dev`) does not check the network for updates.
 
 ## Data & uninstall
 
-Classroom data (local Convex DB, file storage, instance secret) lives under Electron’s `userData` folder in a `classroom/` subdirectory (see [`electron/paths.ts`](../electron/paths.ts)). With current `APP_CONFIG.name` = **vctr**:
+Classroom data (local Convex DB, file storage, instance secret) lives under Electron’s `userData` folder in a `classroom/` subdirectory (see [`electron/paths.ts`](../electron/paths.ts)). Folder name follows `APP_CONFIG.name`:
 
-| OS      | Path                                  |
-| ------- | ------------------------------------- |
-| Windows | `%APPDATA%\vctr\`                     |
-| macOS   | `~/Library/Application Support/vctr/` |
-| Linux   | `~/.config/vctr/`                     |
+| OS      | Path                                    |
+| ------- | --------------------------------------- |
+| Windows | `%APPDATA%\<APP_CONFIG.name>\`          |
+| macOS   | `~/Library/Application Support/<name>/` |
+| Linux   | `~/.config/<name>/`                     |
 
 - **Windows:** the NSIS uninstaller can remove this data. Leave the checkbox unchecked to keep accounts/classes after uninstall; check it for a full wipe. Requires an installer built with `deleteAppDataOnUninstall` (see [`electron-builder.config.mjs`](../electron-builder.config.mjs)).
 - **macOS / Linux:** removing the app does **not** delete data. Delete the folder above manually for a full wipe.

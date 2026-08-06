@@ -1,6 +1,7 @@
 /**
- * TEMPLATE: Single brand config — change these when cloning.
- * Brand image assets live under public/brand/.
+ * TEMPLATE: Single brand config — change these when cloning (`bun run post-clone`).
+ * **vctr** = template package name; **classclarus** slug/URLs = sample product (ClassClarus).
+ * Brand images: `public/brand/`. Template favicon: `public/vctr/vctr-favicon.webp`.
  * `name` is never translated — i18n uses it via defaultVariables.appName.
  */
 export const APP_CONFIG = {
