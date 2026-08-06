@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 
 import { api, internal } from "./_generated/api.js";
+import type { Doc, Id } from "./_generated/dataModel.js";
 import { action } from "./_generated/server.js";
 import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
 import { clearAvatarIfReferencesFile, clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
@@ -85,8 +86,8 @@ export const finalizeUpload = action({
     classId: v.optional(v.id("classes")),
   },
   returns: v.id("files"),
-  handler: async (ctx, args) => {
-    const user = await ctx.runQuery(api.users.currentUser, {});
+  handler: async (ctx, args): Promise<Id<"files">> => {
+    const user = (await ctx.runQuery(api.users.currentUser, {})) as Doc<"users"> | null;
     if (!user) {
       throw new ConvexError({
         code: "UNAUTHENTICATED",
@@ -168,10 +169,18 @@ export const getFileBytes = action({
     }),
     v.null(),
   ),
-  handler: async (ctx, args) => {
-    const file = await ctx.runQuery(internal.filesInternal.getAccessibleFile, {
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{ bytes: ArrayBuffer; contentType: string; name: string } | null> => {
+    const file = (await ctx.runQuery(internal.filesInternal.getAccessibleFile, {
       fileId: args.fileId,
-    });
+    })) as {
+      storageId: Id<"_storage">;
+      viewerId: Id<"users">;
+      contentType: string;
+      name: string;
+    } | null;
     if (!file) {
       return null;
     }
@@ -185,11 +194,11 @@ export const getFileBytes = action({
       key: file.viewerId,
     });
 
-    const blob = await ctx.storage.get(file.storageId);
+    const blob: Blob | null = await ctx.storage.get(file.storageId);
     if (!blob) {
       return null;
     }
-    const buffer = await blob.arrayBuffer();
+    const buffer: ArrayBuffer = await blob.arrayBuffer();
     return {
       bytes: buffer,
       contentType: file.contentType,

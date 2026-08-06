@@ -5,9 +5,9 @@ import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
-import type { Plugin } from "vite";
+import type { Plugin, PluginOption } from "vite";
 
-import { APP_CONFIG } from "./convex/appConfig";
+import { APP_CONFIG } from "./convex/appConfig.js";
 
 /** Keep FOUC theme bootstrap in index.html aligned with STORAGE_KEYS.theme. */
 function injectAppThemeStorageKey(): Plugin {
@@ -56,7 +56,7 @@ export default defineConfig({
     lint: false,
   },
   plugins: lazyPlugins(() => {
-    const plugins: Plugin[] = [
+    const plugins: PluginOption[] = [
       injectAppThemeStorageKey(),
       tanstackRouter({
         target: "react",

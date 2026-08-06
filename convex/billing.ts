@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 
 import { polar } from "./polar.js";
 import { authedMutation, authedQuery } from "./lib/customFunctions.js";
@@ -29,6 +29,8 @@ const entitlementValidator = v.object({
   subscription: v.union(subscriptionSummaryValidator, v.null()),
 });
 
+type Entitlement = Infer<typeof entitlementValidator>;
+
 /**
  * Raw entitlement fields for the current user.
  * Status is derived client-side (queries must not call `Date.now()`).
@@ -36,7 +38,7 @@ const entitlementValidator = v.object({
 export const getEntitlement = authedQuery({
   args: {},
   returns: entitlementValidator,
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<Entitlement> => {
     if (isSelfHosted()) {
       return {
         trialEndsAt: null,
@@ -52,9 +54,11 @@ export const getEntitlement = authedQuery({
       .withIndex("by_userId", (q) => q.eq("userId", ctx.userId))
       .first();
 
-    const subscription = await polar.getCurrentSubscription(ctx, {
-      userId: ctx.userId,
-    });
+    // Annotated to break polar ↔ api ↔ billing circular inference.
+    const subscription: Awaited<ReturnType<typeof polar.getCurrentSubscription>> =
+      await polar.getCurrentSubscription(ctx, {
+        userId: ctx.userId,
+      });
 
     const summary = subscription
       ? {

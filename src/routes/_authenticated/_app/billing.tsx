@@ -157,7 +157,7 @@ export const Route = createFileRoute("/_authenticated/_app/billing")({
                       "w-full justify-center",
                     )}
                     onClick={() => {
-                      trackSelfHostClick.mutate();
+                      trackSelfHostClick.mutate({});
                     }}
                   >
                     {t("freeSelfHost")}

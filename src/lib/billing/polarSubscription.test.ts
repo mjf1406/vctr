@@ -32,7 +32,7 @@ describe("toPolarComponentSubscription", () => {
       trialEnd: null,
       seats: null,
       customFieldData: undefined,
-    } as Parameters<typeof toPolarComponentSubscription>[0]);
+    } as unknown as Parameters<typeof toPolarComponentSubscription>[0]);
 
     expect(result.id).toBe("sub_1");
     expect(result.status).toBe("active");
@@ -70,7 +70,7 @@ describe("toPolarComponentSubscription", () => {
       trialEnd: null,
       seats: 3,
       customFieldData: { note: "x" },
-    } as Parameters<typeof toPolarComponentSubscription>[0]);
+    } as unknown as Parameters<typeof toPolarComponentSubscription>[0]);
 
     expect(result.status).toBe("canceled");
     expect(result.createdAt).toBe("2024-03-01T00:00:00.000Z");

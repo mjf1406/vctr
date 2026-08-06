@@ -36,14 +36,15 @@ export function createFeedbackFormSchema(messages: FeedbackFormMessages) {
         .trim()
         .min(1, messages.bodyRequired)
         .max(MAX_FEEDBACK_BODY_LENGTH, messages.bodyTooLong),
-      stepsToReproduce: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
-      expected: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
-      actual: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
+      // Prefer plain strings (not `.default()`) so input/output match TanStack Form values.
+      stepsToReproduce: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
+      expected: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
+      actual: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
       severity: z.enum(FEEDBACK_SEVERITIES).optional(),
-      useCase: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
-      proposedSolution: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
+      useCase: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
+      proposedSolution: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
       importance: z.enum(FEEDBACK_IMPORTANCES).optional(),
-      impact: z.string().max(MAX_FEEDBACK_FIELD_LENGTH).default(""),
+      impact: z.string().max(MAX_FEEDBACK_FIELD_LENGTH),
       wantReply: z.boolean(),
     })
     .superRefine((value, ctx) => {

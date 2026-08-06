@@ -1,4 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
+import type { QueryKey } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
@@ -25,7 +26,7 @@ export function useRemoveClassMember(listRole: MemberListRole) {
   return useOptimisticMutation({
     mutationFn: (args: RemoveClassMemberArgs) => mutationFn(args),
     queryKeys: (args) => {
-      const keys = [
+      const keys: QueryKey[] = [
         classMembersByRoleQueryKey(args.classId, listRole),
         classMemberCountsQueryKey(args.classId),
       ];
@@ -35,7 +36,7 @@ export function useRemoveClassMember(listRole: MemberListRole) {
       return keys;
     },
     invalidateQueryKeys: (args) => {
-      const keys = [classesListQueryKey(), classPermissionsQueryKey(args.classId)];
+      const keys: QueryKey[] = [classesListQueryKey(), classPermissionsQueryKey(args.classId)];
       if (listRole === "student") {
         keys.push(classMembersByRoleQueryKey(args.classId, "guardian"));
       }

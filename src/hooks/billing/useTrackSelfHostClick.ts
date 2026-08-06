@@ -15,7 +15,7 @@ export function useTrackSelfHostClick() {
   const statsKey = usageStatsQueryKey();
 
   return useOptimisticMutation({
-    mutationFn: () => mutationFn({}),
+    mutationFn: (_args: Record<string, never>) => mutationFn({}),
     queryKeys: [statsKey],
     applyOptimisticUpdate: (queryClient) => {
       queryClient.setQueryData<UsageStatsSummary>(statsKey, (old) =>

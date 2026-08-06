@@ -13,10 +13,10 @@
   "scripts": {
     "dev": "vp dev",
     "build": "tsc -b && vp build",
-    "check": "vp check --fix && bun run lint:fix",
+    "check": "vp check --fix && bun run lint:fix && bun run typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b",
     "audit": "bun audit",
     "preview": "vp preview",
     "post-clone": "bun scripts/post-clone.mjs",

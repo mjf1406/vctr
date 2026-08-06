@@ -123,20 +123,26 @@ function createRunCommand(projectDir: string): RunCommand {
     }
 
     const bunBin = process.env.ELECTRON_BUN_BIN || cmd || "bun";
-    const stdio =
-      opts.input !== undefined ? (["pipe", "inherit", "inherit"] as const) : ("inherit" as const);
     return new Promise<void>((resolve, reject) => {
-      const childProc = spawn(bunBin, args, {
-        cwd: opts.cwd,
-        env: opts.env,
-        stdio,
-        windowsHide: true,
-      });
+      const childProc =
+        opts.input !== undefined
+          ? spawn(bunBin, args, {
+              cwd: opts.cwd,
+              env: opts.env,
+              stdio: ["pipe", "inherit", "inherit"],
+              windowsHide: true,
+            })
+          : spawn(bunBin, args, {
+              cwd: opts.cwd,
+              env: opts.env,
+              stdio: "inherit",
+              windowsHide: true,
+            });
       if (opts.input !== undefined && childProc.stdin) {
         childProc.stdin.write(opts.input);
         childProc.stdin.end();
       }
-      childProc.on("exit", (code) =>
+      childProc.on("exit", (code: number | null) =>
         code === 0 ? resolve() : reject(new Error(`${bunBin} ${args.join(" ")} exit ${code}`)),
       );
       childProc.on("error", reject);

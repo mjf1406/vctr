@@ -2,17 +2,20 @@ import { Polar } from "@convex-dev/polar";
 import { v } from "convex/values";
 
 import { api, components } from "./_generated/api.js";
-import type { DataModel } from "./_generated/dataModel.js";
+import type { DataModel, Doc } from "./_generated/dataModel.js";
 import { action } from "./_generated/server.js";
 import { requireAdmin } from "./lib/admin.js";
 import { POLAR_ENV, polarEnvPresence } from "./lib/polarEnv.js";
 import { isSelfHosted } from "./lib/selfHosted.js";
 
-export const polar = new Polar<DataModel, { proMonthly: string; proYearly: string }>(
+type PolarProducts = { proMonthly: string; proYearly: string };
+
+// Explicit annotation breaks the api ↔ polar circular inference (TS7022).
+export const polar: Polar<DataModel, PolarProducts> = new Polar<DataModel, PolarProducts>(
   components.polar,
   {
-    getUserInfo: async (ctx) => {
-      const user = await ctx.runQuery(api.users.currentUser, {});
+    getUserInfo: async (ctx): Promise<{ userId: string; email: string }> => {
+      const user = (await ctx.runQuery(api.users.currentUser, {})) as Doc<"users"> | null;
       if (!user?.email) {
         throw new Error("Not authenticated");
       }

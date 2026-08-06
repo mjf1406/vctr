@@ -1,4 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
+import type { QueryKey } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api } from "../../../convex/_generated/api";
@@ -27,7 +28,7 @@ export function useDeleteFile() {
   return useOptimisticMutation({
     mutationFn: (args: DeleteFileArgs) => mutationFn({ fileId: args.fileId }),
     queryKeys: (args) => {
-      const keys = [fileBytesQueryKey(args.fileId)];
+      const keys: QueryKey[] = [fileBytesQueryKey(args.fileId)];
       if (args.classId !== undefined) {
         keys.push(classFilesListQueryKey(args.classId));
       }

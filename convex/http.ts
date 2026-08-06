@@ -1,3 +1,4 @@
+import type { WebhookEventHandlers } from "@convex-dev/polar";
 import { httpRouter } from "convex/server";
 
 import { components } from "./_generated/api.js";
@@ -30,21 +31,23 @@ async function logAndPersistSubscription(
   });
 }
 
-polar.registerRoutes(http, {
-  events: {
-    "subscription.canceled": async (ctx, event) => {
-      await logAndPersistSubscription(ctx, event.type, event.data);
-    },
-    "subscription.revoked": async (ctx, event) => {
-      await logAndPersistSubscription(ctx, event.type, event.data);
-    },
-    "subscription.past_due": async (ctx, event) => {
-      await logAndPersistSubscription(ctx, event.type, event.data);
-    },
-    "subscription.uncanceled": async (ctx, event) => {
-      await logAndPersistSubscription(ctx, event.type, event.data);
-    },
+const subscriptionLifecycleEvents = {
+  "subscription.canceled": async (ctx, event) => {
+    await logAndPersistSubscription(ctx, event.type, event.data);
   },
+  "subscription.revoked": async (ctx, event) => {
+    await logAndPersistSubscription(ctx, event.type, event.data);
+  },
+  "subscription.past_due": async (ctx, event) => {
+    await logAndPersistSubscription(ctx, event.type, event.data);
+  },
+  "subscription.uncanceled": async (ctx, event) => {
+    await logAndPersistSubscription(ctx, event.type, event.data);
+  },
+} satisfies WebhookEventHandlers;
+
+polar.registerRoutes(http, {
+  events: subscriptionLifecycleEvents,
 });
 
 export default http;

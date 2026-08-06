@@ -60,12 +60,15 @@ async function loadClassContext(ctx: AuthedCtx, classId: Id<"classes">) {
 /**
  * Mutation wrapper that requires authentication.
  * Soft-auth queries (empty/null when logged out) should keep using plain `query`.
+ *
+ * Note: wrappers are built from base `mutation`/`query` (not nested custom builders).
+ * Nesting `customMutation(authedMutation, …)` loses CustomCtx typing in convex-helpers.
  */
 export const authedMutation = customMutation(mutation, {
   args: {},
   input: async (ctx) => {
     const userId = await requireAuthUserId(ctx);
-    return { ctx: { ...ctx, userId }, args: {} };
+    return { ctx: { userId }, args: {} };
   },
 });
 
@@ -73,11 +76,12 @@ export const authedMutation = customMutation(mutation, {
  * Mutation wrapper that requires authentication + an active trial or subscription.
  * Use for write paths that should not work after the free trial expires.
  */
-export const entitledMutation = customMutation(authedMutation, {
+export const entitledMutation = customMutation(mutation, {
   args: {},
   input: async (ctx) => {
-    await assertEntitled(ctx, ctx.userId);
-    return { ctx, args: {} };
+    const userId = await requireAuthUserId(ctx);
+    await assertEntitled(ctx, userId);
+    return { ctx: { userId }, args: {} };
   },
 });
 
@@ -91,7 +95,7 @@ export const authedQuery = customQuery(query, {
   args: {},
   input: async (ctx) => {
     const userId = await requireAuthUserId(ctx);
-    return { ctx: { ...ctx, userId }, args: {} };
+    return { ctx: { userId }, args: {} };
   },
 });
 
@@ -99,11 +103,12 @@ export const authedQuery = customQuery(query, {
  * Query wrapper that requires authentication + an active trial or subscription.
  * Use for class/tenant data reads that should not work after the free trial expires.
  */
-export const entitledQuery = customQuery(authedQuery, {
+export const entitledQuery = customQuery(query, {
   args: {},
   input: async (ctx) => {
-    await assertEntitled(ctx, ctx.userId);
-    return { ctx, args: {} };
+    const userId = await requireAuthUserId(ctx);
+    await assertEntitled(ctx, userId);
+    return { ctx: { userId }, args: {} };
   },
 });
 
@@ -112,13 +117,14 @@ export const entitledQuery = customQuery(authedQuery, {
  * Callers still enforce the specific permission they need via `ctx.require(...)`.
  * Does not require entitlement (exit paths: delete, transfer ownership).
  */
-export const classMutation = customMutation(authedMutation, {
+export const classMutation = customMutation(mutation, {
   args: { classId: v.id("classes") },
   input: async (ctx, args) => {
-    const classCtx = await loadClassContext(ctx, args.classId);
+    const userId = await requireAuthUserId(ctx);
+    const classCtx = await loadClassContext({ ...ctx, userId }, args.classId);
     return {
       ctx: {
-        ...ctx,
+        userId,
         ...classCtx,
       },
       args: {},
@@ -130,13 +136,15 @@ export const classMutation = customMutation(authedMutation, {
  * Class-scoped mutation that also requires an active trial or subscription.
  * Use for paid class writes (update, archive, members, invites).
  */
-export const entitledClassMutation = customMutation(entitledMutation, {
+export const entitledClassMutation = customMutation(mutation, {
   args: { classId: v.id("classes") },
   input: async (ctx, args) => {
-    const classCtx = await loadClassContext(ctx, args.classId);
+    const userId = await requireAuthUserId(ctx);
+    await assertEntitled(ctx, userId);
+    const classCtx = await loadClassContext({ ...ctx, userId }, args.classId);
     return {
       ctx: {
-        ...ctx,
+        userId,
         ...classCtx,
       },
       args: {},
@@ -148,13 +156,14 @@ export const entitledClassMutation = customMutation(entitledMutation, {
  * Class-scoped query: loads the class, injects scope + can/require helpers.
  * Does not require entitlement (exit paths that still need class context).
  */
-export const classQuery = customQuery(authedQuery, {
+export const classQuery = customQuery(query, {
   args: { classId: v.id("classes") },
   input: async (ctx, args) => {
-    const classCtx = await loadClassContext(ctx, args.classId);
+    const userId = await requireAuthUserId(ctx);
+    const classCtx = await loadClassContext({ ...ctx, userId }, args.classId);
     return {
       ctx: {
-        ...ctx,
+        userId,
         ...classCtx,
       },
       args: {},
@@ -166,13 +175,15 @@ export const classQuery = customQuery(authedQuery, {
  * Class-scoped query that also requires an active trial or subscription.
  * Use for class/member/invitation reads that should lock out after trial expiry.
  */
-export const entitledClassQuery = customQuery(entitledQuery, {
+export const entitledClassQuery = customQuery(query, {
   args: { classId: v.id("classes") },
   input: async (ctx, args) => {
-    const classCtx = await loadClassContext(ctx, args.classId);
+    const userId = await requireAuthUserId(ctx);
+    await assertEntitled(ctx, userId);
+    const classCtx = await loadClassContext({ ...ctx, userId }, args.classId);
     return {
       ctx: {
-        ...ctx,
+        userId,
         ...classCtx,
       },
       args: {},

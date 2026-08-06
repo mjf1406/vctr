@@ -1,11 +1,11 @@
-import { useQuery, type PlaceholderDataFunction, type UseQueryResult } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
 import { useConvexAuth } from "@convex-dev/auth/react";
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from "convex/server";
 
 type UseAuthedQueryOptions<TData> = {
   gcTime: number;
-  placeholderData?: TData | PlaceholderDataFunction<TData, Error, TData, readonly unknown[]>;
+  placeholderData?: TData | ((previousData: TData | undefined) => TData | undefined);
 };
 
 /**
@@ -31,7 +31,7 @@ export function useAuthedQuery<ConvexQueryReference extends FunctionReference<"q
       (isAuthenticated ? args : "skip") as FunctionArgs<ConvexQueryReference> | "skip",
     ),
     gcTime: options.gcTime,
-    placeholderData: options.placeholderData,
+    ...(options.placeholderData !== undefined ? { placeholderData: options.placeholderData } : {}),
     retry: false,
   });
 
