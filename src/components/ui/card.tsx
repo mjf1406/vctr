@@ -1,28 +1,18 @@
 import * as React from "react";
 
-import { surfacePocketVariants, surfaceVariants } from "@/components/ui/surface-variants";
 import { cn } from "@/lib/utils";
 
 function Card({
   className,
   size = "default",
-  interactive = false,
-  selected = false,
   ...props
-}: React.ComponentProps<"div"> & {
-  size?: "default" | "sm";
-  interactive?: boolean;
-  selected?: boolean;
-}) {
+}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
   return (
     <div
       data-slot="card"
       data-size={size}
-      data-interactive={interactive || undefined}
-      data-selected={selected || undefined}
       className={cn(
-        surfaceVariants({ tier: "card", interactive, selected }),
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden py-(--card-spacing) text-sm [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-2xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         className,
       )}
       {...props}
@@ -92,30 +82,4 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardPocket({
-  className,
-  tone = "secondary",
-  ...props
-}: React.ComponentProps<"div"> & {
-  tone?: "primary" | "secondary" | "inset";
-}) {
-  return (
-    <div
-      data-slot="card-pocket"
-      data-tone={tone}
-      className={cn(surfacePocketVariants({ tone }), className)}
-      {...props}
-    />
-  );
-}
-
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
-  CardPocket,
-};
+export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };

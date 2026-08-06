@@ -4,6 +4,7 @@ import { MenuIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { ThemeToggle } from "../theme/theme-toggle";
+import { FeedbackNavButton } from "@/components/navigation/FeedbackNavButton";
 import { NavUser } from "@/components/navigation/NavUser";
 import { Logo } from "@/components/brand/Logo";
 import { ConnectionStatus } from "@/components/navigation/ConnectionStatus";
@@ -26,8 +27,6 @@ const BASE_NAV_LINKS = [
   { to: "/settings", labelKey: "settings" },
 ] as const;
 
-const CLOUD_FEEDBACK_LINK = { to: "/feedback", labelKey: "feedback" } as const;
-
 const desktopLinkClassName =
   "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
@@ -43,7 +42,6 @@ export function Navbar() {
 
   const navLinks = [
     ...BASE_NAV_LINKS,
-    ...(!selfHosted ? [CLOUD_FEEDBACK_LINK] : []),
     ...(showAdmin ? [{ to: "/admin", labelKey: "admin" } as const] : []),
   ];
 
@@ -93,6 +91,7 @@ export function Navbar() {
               </SheetFooter>
             </SheetContent>
           </Sheet>
+          <FeedbackNavButton />
           <ConnectionStatus />
           <NavUser variant="avatar" />
           <div className="hidden items-center gap-2 md:flex">

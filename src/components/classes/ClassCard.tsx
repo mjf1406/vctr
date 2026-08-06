@@ -6,15 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
 import { ActionMenu, type ActionMenuItem } from "@/components/ui/action-menu";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardPocket,
-  CardTitle,
-} from "@/components/ui/card";
-import { surfaceVariants } from "@/components/ui/surface-variants";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ClassPublic } from "@/lib/classes/classes";
 import type { ClassViewMode } from "@/lib/classes/classSort";
 import { cn } from "@/lib/utils";
@@ -91,15 +83,12 @@ export function ClassCard({
     return (
       <div
         className={cn(
-          "relative flex items-center gap-3 p-4",
-          surfaceVariants({ tier: "card", interactive: !isArchived }),
+          "relative flex items-center gap-3 rounded-2xl bg-card p-4 ring-1 ring-foreground/10 transition-colors hover:bg-accent/40",
           isArchived && "opacity-80",
         )}
       >
         {openLink}
-        <CardPocket tone="primary" className="relative z-10 shrink-0 p-2">
-          <ClassIconDisplay icon={classDoc.icon} />
-        </CardPocket>
+        <ClassIconDisplay icon={classDoc.icon} />
         <div className="relative z-10 min-w-0 flex-1 pointer-events-none">
           <div className="flex flex-wrap items-center gap-2">
             <p className="truncate font-medium text-foreground">{classDoc.name}</p>
@@ -116,14 +105,11 @@ export function ClassCard({
   return (
     <Card
       size="sm"
-      interactive={!isArchived}
-      className={cn("relative", isArchived && "opacity-80")}
+      className={cn("relative transition-colors hover:bg-accent/40", isArchived && "opacity-80")}
     >
       {openLink}
       <CardHeader className="relative z-10 flex flex-row items-start gap-3 pointer-events-none">
-        <CardPocket tone="primary" className="shrink-0 p-2">
-          <ClassIconDisplay icon={classDoc.icon} />
-        </CardPocket>
+        <ClassIconDisplay icon={classDoc.icon} />
         <div className="min-w-0 flex-1">
           <CardTitle className="truncate text-base font-semibold">{classDoc.name}</CardTitle>
           <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -135,7 +121,7 @@ export function ClassCard({
       </CardHeader>
       <CardContent className="relative z-10 flex flex-col gap-3 pointer-events-none">
         <CardDescription className="line-clamp-3">{description}</CardDescription>
-        <CardPocket tone="secondary" className="flex flex-col gap-0.5 text-xs">
+        <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
           <span>
             {t("createdAt", {
               date: formatTimestamp(classDoc._creationTime, i18n.language),
@@ -146,7 +132,7 @@ export function ClassCard({
               date: formatTimestamp(classDoc.updatedAt, i18n.language),
             })}
           </span>
-        </CardPocket>
+        </div>
       </CardContent>
     </Card>
   );

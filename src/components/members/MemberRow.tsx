@@ -9,9 +9,6 @@ import { useIsClassMemberOnline } from "@/components/presence/classPresenceConte
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CardPocket } from "@/components/ui/card";
-import { surfaceVariants } from "@/components/ui/surface-variants";
-import { cn } from "@/lib/utils";
 import {
   Combobox,
   ComboboxChip,
@@ -225,30 +222,26 @@ export function MemberRow({
   const showGuardianLinks = member.role === "guardian" && onSetLinkedStudents !== undefined;
   const canEditLinks = !permissionsPending && can("guardians:invite");
 
-  const hasActions = showGuardianLinks || showRoleSelect || (showRemove && removePermission);
-
   return (
-    <div className={cn("flex h-full flex-col gap-3 p-4", surfaceVariants({ tier: "member" }))}>
+    <div className="flex h-full flex-col gap-3 rounded-2xl border p-4">
       <div className="flex min-w-0 flex-col items-center gap-2 text-center">
-        <div className="rounded-full bg-[image:var(--member-avatar-ring)] p-[3px] shadow-(--shadow-pocket)">
-          <Avatar className="size-12 ring-2 ring-background">
-            {safeImage ? (
-              <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
-            ) : null}
-            <AvatarFallback>{initials}</AvatarFallback>
-            {isOnline ? (
-              <AvatarBadge
-                className="size-3.5 bg-emerald-500 p-0 text-transparent"
-                aria-label={t("presenceOnlineNow")}
-              >
-                <span
-                  aria-hidden
-                  className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75"
-                />
-              </AvatarBadge>
-            ) : null}
-          </Avatar>
-        </div>
+        <Avatar className="size-12">
+          {safeImage ? (
+            <AvatarImage src={safeImage} alt={displayName} referrerPolicy="no-referrer" />
+          ) : null}
+          <AvatarFallback>{initials}</AvatarFallback>
+          {isOnline ? (
+            <AvatarBadge
+              className="size-3.5 bg-emerald-500 p-0 text-transparent"
+              aria-label={t("presenceOnlineNow")}
+            >
+              <span
+                aria-hidden
+                className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75"
+              />
+            </AvatarBadge>
+          ) : null}
+        </Avatar>
         <div className="flex min-w-0 flex-col items-center gap-1">
           <div className="flex min-w-0 flex-wrap items-center justify-center gap-2">
             <span className="truncate text-sm font-medium">{displayName}</span>
@@ -261,59 +254,57 @@ export function MemberRow({
           ) : null}
         </div>
       </div>
-      {hasActions ? (
-        <CardPocket tone="inset" className="mt-auto flex flex-col gap-2">
-          {showGuardianLinks ? (
-            canEditLinks ? (
-              <GuardianStudentSelect
-                classId={classId}
-                member={member}
-                onSetLinkedStudents={onSetLinkedStudents}
-              />
-            ) : (
-              <LinkedStudentsReadonly member={member} />
-            )
-          ) : null}
-          {showRoleSelect ? (
-            <Select
-              value={member.role}
-              onValueChange={(next) => {
-                if (next == null || !isJoinCodeRole(next) || next === member.role) return;
-                onChangeRole(member, next);
-              }}
+      <div className="mt-auto flex flex-col gap-2">
+        {showGuardianLinks ? (
+          canEditLinks ? (
+            <GuardianStudentSelect
+              classId={classId}
+              member={member}
+              onSetLinkedStudents={onSetLinkedStudents}
+            />
+          ) : (
+            <LinkedStudentsReadonly member={member} />
+          )
+        ) : null}
+        {showRoleSelect ? (
+          <Select
+            value={member.role}
+            onValueChange={(next) => {
+              if (next == null || !isJoinCodeRole(next) || next === member.role) return;
+              onChangeRole(member, next);
+            }}
+          >
+            <SelectTrigger size="sm" className="w-full" aria-label={t("changeRole")}>
+              <SelectValue>
+                <ClassRoleSelectLabel role={member.role} colored />
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {roleOptions.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    <ClassRoleSelectLabel role={role} />
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        ) : null}
+        {showRemove && removePermission ? (
+          <Can permission={removePermission}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => onRemove(member)}
             >
-              <SelectTrigger size="sm" className="w-full" aria-label={t("changeRole")}>
-                <SelectValue>
-                  <ClassRoleSelectLabel role={member.role} colored />
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {roleOptions.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      <ClassRoleSelectLabel role={role} />
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          ) : null}
-          {showRemove && removePermission ? (
-            <Can permission={removePermission}>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={() => onRemove(member)}
-              >
-                <UserMinusIcon data-icon="inline-start" />
-                {t("removeMember")}
-              </Button>
-            </Can>
-          ) : null}
-        </CardPocket>
-      ) : null}
+              <UserMinusIcon data-icon="inline-start" />
+              {t("removeMember")}
+            </Button>
+          </Can>
+        ) : null}
+      </div>
     </div>
   );
 }

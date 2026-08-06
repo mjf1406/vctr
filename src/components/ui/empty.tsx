@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { surfaceVariants } from "@/components/ui/surface-variants";
 import { cn } from "@/lib/utils";
 
 function Empty({
@@ -14,7 +13,9 @@ function Empty({
       data-card={card || undefined}
       className={cn(
         "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 p-12 text-center text-balance",
-        card ? surfaceVariants({ tier: "card" }) : "rounded-lg border-dashed",
+        card
+          ? "rounded-2xl bg-card text-card-foreground ring-1 ring-foreground/10"
+          : "rounded-lg border-dashed",
         className,
       )}
       {...props}

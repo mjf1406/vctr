@@ -4,6 +4,7 @@ import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AdminAppSidebar } from "@/components/navigation/admin-sidebar/AdminSidebar";
 import { AdminBreadcrumb } from "@/components/navigation/admin-sidebar/AdminBreadcrumb";
 import { AppFooter } from "@/components/navigation/AppFooter";
+import { FeedbackNavButton } from "@/components/navigation/FeedbackNavButton";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -42,12 +43,13 @@ export const Route = createFileRoute("/_authenticated/admin")({
         <AdminAppSidebar />
         <SidebarInset>
           <div className="flex min-h-svh flex-col">
-            <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-3 bg-background/80 px-4 shadow-(--shadow-surface-quiet) backdrop-blur-md supports-backdrop-filter:bg-background/70">
+            <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 border-b bg-background px-4">
               <div className="flex min-w-0 flex-1 items-center gap-3">
                 <SidebarTrigger className="-ml-0.5" />
                 <Separator orientation="vertical" className="h-4" />
                 <AdminBreadcrumb />
               </div>
+              <FeedbackNavButton />
             </header>
             <div className="flex flex-1 flex-col">
               <Outlet />

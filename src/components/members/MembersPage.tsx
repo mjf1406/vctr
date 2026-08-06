@@ -20,8 +20,6 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
-import { surfaceVariants } from "@/components/ui/surface-variants";
-import { cn } from "@/lib/utils";
 import { useClassMembersByRole } from "@/hooks/members/useClassMembersByRole";
 import { useMemberSearch } from "@/hooks/members/useMemberSearch";
 import { useRemoveClassMember } from "@/hooks/members/useRemoveClassMember";
@@ -49,18 +47,7 @@ function MembersSkeleton() {
   return (
     <div className={MEMBERS_GRID_CLASS}>
       {Array.from({ length: 8 }, (_, index) => (
-        <div
-          key={index}
-          className={cn(
-            "flex h-40 flex-col items-center gap-3 p-4",
-            surfaceVariants({ tier: "member" }),
-          )}
-        >
-          <Skeleton className="size-14 rounded-full" />
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-3 w-32" />
-          <Skeleton className="mt-auto h-8 w-full rounded-xl" />
-        </div>
+        <Skeleton key={index} className="h-40 w-full rounded-2xl" />
       ))}
     </div>
   );
@@ -141,35 +128,31 @@ export function MembersPage({ classId, role, titleKey }: MembersPageProps) {
       </div>
 
       {showSearch ? (
-        <div className={cn("max-w-md p-2", surfaceVariants({ tier: "card" }))}>
-          <InputGroup>
-            <InputGroupInput
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder={t("membersSearchPlaceholder")}
-              aria-label={t("membersSearchLabel")}
-              autoComplete="off"
-              spellCheck={false}
-            />
-            <InputGroupAddon>
-              <SearchIcon aria-hidden="true" />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              <InputGroupText>
-                {t("membersSearchResults", { count: filtered.length })}
-              </InputGroupText>
-              {searchQuery ? (
-                <InputGroupButton
-                  size="icon-xs"
-                  aria-label={t("membersSearchClear")}
-                  onClick={() => setSearchQuery("")}
-                >
-                  <XIcon />
-                </InputGroupButton>
-              ) : null}
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
+        <InputGroup className="max-w-md">
+          <InputGroupInput
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder={t("membersSearchPlaceholder")}
+            aria-label={t("membersSearchLabel")}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <InputGroupAddon>
+            <SearchIcon aria-hidden="true" />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <InputGroupText>{t("membersSearchResults", { count: filtered.length })}</InputGroupText>
+            {searchQuery ? (
+              <InputGroupButton
+                size="icon-xs"
+                aria-label={t("membersSearchClear")}
+                onClick={() => setSearchQuery("")}
+              >
+                <XIcon />
+              </InputGroupButton>
+            ) : null}
+          </InputGroupAddon>
+        </InputGroup>
       ) : null}
 
       {isPending || isAuthLoading ? <MembersSkeleton /> : null}

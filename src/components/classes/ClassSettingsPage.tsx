@@ -1,4 +1,4 @@
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -8,14 +8,7 @@ import {
 } from "@/components/classes/ClassFormCredenza";
 import { ClassIconDisplay } from "@/components/classes/ClassIconDisplay";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardPocket,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileDropzone } from "@/components/upload/FileDropzone";
@@ -23,8 +16,6 @@ import { useClass } from "@/hooks/classes/useClass";
 import { useClearClassBanner } from "@/hooks/classes/useClearClassBanner";
 import { useSetClassBanner } from "@/hooks/classes/useSetClassBanner";
 import { useUpdateClass } from "@/hooks/classes/useUpdateClass";
-import { useClassFiles } from "@/hooks/files/useClassFiles";
-import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useFileBytes } from "@/hooks/files/useFileBytes";
 import type { ClassFormValues } from "@/lib/classes/classFormSchema";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -63,26 +54,13 @@ function BannerPreview({ fileId }: { fileId: Id<"files"> }) {
   );
 }
 
-function formatFileSize(bytes: number, language: string): string {
-  return new Intl.NumberFormat(language, {
-    style: "unit",
-    unit: "kilobyte",
-    unitDisplay: "short",
-    maximumFractionDigits: 1,
-  }).format(bytes / 1024);
-}
-
 export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
   const { t, i18n } = useTranslation("classes");
   const { data: classDoc, isPending, isError, refetch, isAuthLoading } = useClass(classId);
-  const { data: classFiles = [] } = useClassFiles(classId);
   const updateClass = useUpdateClass();
   const setBanner = useSetClassBanner();
   const clearBanner = useClearClassBanner();
-  const deleteFile = useDeleteFile();
   const [editOpen, setEditOpen] = useState(false);
-
-  const documentFiles = classFiles.filter((file) => file.preset === "documents");
 
   const showSkeleton = (isPending || isAuthLoading) && classDoc == null;
 
@@ -139,9 +117,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
           <Card className="max-w-2xl">
             <CardHeader className="flex flex-row items-start justify-between gap-3">
               <div className="flex min-w-0 items-start gap-3">
-                <CardPocket tone="primary" className="shrink-0 p-2">
-                  <ClassIconDisplay icon={classDoc.icon} />
-                </CardPocket>
+                <ClassIconDisplay icon={classDoc.icon} />
                 <div className="min-w-0">
                   <CardTitle className="text-lg font-semibold">{classDoc.name}</CardTitle>
                   <CardDescription>{classDoc.year}</CardDescription>
@@ -161,7 +137,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
               <p className="text-sm text-muted-foreground">
                 {classDoc.description?.trim() || t("noDescription")}
               </p>
-              <CardPocket tone="secondary" className="flex flex-col gap-0.5 text-xs">
+              <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
                 <span>
                   {t("createdAt", {
                     date: formatTimestamp(classDoc._creationTime, i18n.language),
@@ -172,7 +148,7 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
                     date: formatTimestamp(classDoc.updatedAt, i18n.language),
                   })}
                 </span>
-              </CardPocket>
+              </div>
             </CardContent>
           </Card>
 
@@ -206,53 +182,6 @@ export function ClassSettingsPage({ classId }: ClassSettingsPageProps) {
                 multiple={false}
                 onUploaded={handleBannerUploaded}
               />
-            </CardContent>
-          </Card>
-
-          <Card className="max-w-2xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">{t("documentsUploadTitle")}</CardTitle>
-              <CardDescription>{t("documentsUploadDescription")}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <FileDropzone
-                title={t("documentsUploadTitle")}
-                variant="compact"
-                presetKey="documents"
-                classId={classId}
-                multiple
-              />
-              {documentFiles.length === 0 ? (
-                <p className="text-sm text-muted-foreground">{t("documentsUploadEmpty")}</p>
-              ) : (
-                <ul className="flex flex-col gap-2" aria-label={t("documentsUploadListLabel")}>
-                  {documentFiles.map((file) => (
-                    <li
-                      key={file._id}
-                      className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2"
-                    >
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{file.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatFileSize(file.size, i18n.language)} · {file.contentType}
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon-sm"
-                        aria-label={t("documentsUploadRemove")}
-                        disabled={deleteFile.isPending}
-                        onClick={() => {
-                          deleteFile.mutate({ fileId: file._id, classId });
-                        }}
-                      >
-                        <Trash2Icon aria-hidden="true" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </CardContent>
           </Card>
         </>

@@ -20,11 +20,9 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
-import { surfaceVariants } from "@/components/ui/surface-variants";
 import { useAdminResetPassword } from "@/hooks/admin/useAdminResetPassword";
 import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
 
 type AdminUserRow = {
   _id: Id<"users">;
@@ -64,33 +62,31 @@ export function AdminUsersPage() {
       </div>
 
       {showSearch ? (
-        <div className={cn("max-w-md p-2", surfaceVariants({ tier: "card" }))}>
-          <InputGroup>
-            <InputGroupInput
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder={t("searchPlaceholder")}
-              aria-label={t("searchLabel")}
-              autoComplete="off"
-              spellCheck={false}
-            />
-            <InputGroupAddon>
-              <SearchIcon aria-hidden="true" />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              <InputGroupText>{t("searchResults", { count: filtered.length })}</InputGroupText>
-              {searchQuery ? (
-                <InputGroupButton
-                  size="icon-xs"
-                  aria-label={t("searchClear")}
-                  onClick={() => setSearchQuery("")}
-                >
-                  <XIcon />
-                </InputGroupButton>
-              ) : null}
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
+        <InputGroup className="max-w-md">
+          <InputGroupInput
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("searchLabel")}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <InputGroupAddon>
+            <SearchIcon aria-hidden="true" />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <InputGroupText>{t("searchResults", { count: filtered.length })}</InputGroupText>
+            {searchQuery ? (
+              <InputGroupButton
+                size="icon-xs"
+                aria-label={t("searchClear")}
+                onClick={() => setSearchQuery("")}
+              >
+                <XIcon />
+              </InputGroupButton>
+            ) : null}
+          </InputGroupAddon>
+        </InputGroup>
       ) : null}
 
       {isPending ? (
@@ -136,10 +132,7 @@ export function AdminUsersPage() {
           {filtered.map((user) => (
             <li
               key={user._id}
-              className={cn(
-                "flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between",
-                surfaceVariants({ tier: "card" }),
-              )}
+              className="flex flex-col gap-3 rounded-2xl border p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <p className="truncate font-medium">{user.name?.trim() || t("unnamedUser")}</p>

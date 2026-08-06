@@ -70,7 +70,7 @@ export function ClassSwitcher({ currentClass }: ClassSwitcherProps) {
                 />
               }
             >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0/25%)]">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground">
                 {currentClass.name.slice(0, 1).toUpperCase()}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
