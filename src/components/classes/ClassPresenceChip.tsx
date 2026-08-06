@@ -92,8 +92,9 @@ export function ClassPresenceChip() {
         }
       >
         <UsersIcon data-icon="inline-start" />
-        <span>{t("presenceChipLabel", { count: online.length })}</span>
-        <span aria-hidden className="size-1.5 rounded-full bg-emerald-500" />
+        <span className="tabular-nums md:hidden">{online.length}</span>
+        <span className="hidden md:inline">{t("presenceChipLabel", { count: online.length })}</span>
+        <span aria-hidden className="size-1.5 rounded-full bg-emerald-500 max-md:hidden" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-56">
         <DropdownMenuGroup>

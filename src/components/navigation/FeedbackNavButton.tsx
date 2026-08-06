@@ -4,6 +4,7 @@ import { MessageSquareIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { isSelfHosted } from "@/lib/selfHosted";
 
 type FeedbackNavButtonProps = {
@@ -25,11 +26,15 @@ export function FeedbackNavButton({ className }: FeedbackNavButtonProps) {
       variant="outline"
       size="sm"
       nativeButton={false}
-      className={className}
+      aria-label={label}
+      className={cn(
+        "max-md:size-8 max-md:gap-0 max-md:px-0 max-md:has-data-[icon=inline-start]:pl-0",
+        className,
+      )}
       render={<Link to="/feedback" />}
     >
       <MessageSquareIcon data-icon="inline-start" />
-      {label}
+      <span className="hidden md:inline">{label}</span>
     </Button>
   );
 }
