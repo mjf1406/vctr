@@ -75,6 +75,10 @@ const zht = {
     logoElectron: "Electron",
     showPassword: "顯示密碼",
     hidePassword: "隱藏密碼",
+    pwaUpdateTitle: "更新已就緒",
+    pwaUpdateDescription: "有新版本可用。請重新載入以使用。",
+    pwaUpdateReload: "重新載入",
+    pwaUpdateLater: "稍後",
   },
   auth: {
     welcomeTitle: "歡迎",

@@ -74,6 +74,10 @@ const th = {
     logoElectron: "Electron",
     showPassword: "แสดงรหัสผ่าน",
     hidePassword: "ซ่อนรหัสผ่าน",
+    pwaUpdateTitle: "อัปเดตพร้อมแล้ว",
+    pwaUpdateDescription: "มีเวอร์ชันใหม่ พร้อมใช้งาน โหลดใหม่เพื่อใช้เวอร์ชันนี้",
+    pwaUpdateReload: "โหลดใหม่",
+    pwaUpdateLater: "ไว้ทีหลัง",
   },
   auth: {
     welcomeTitle: "ยินดีต้อนรับ",

@@ -12,6 +12,7 @@ import { InnerRouterProvider } from "@/components/routing/InnerRouterProvider";
 import i18n, { ensureLocaleLoaded, getInitialLanguage } from "@/i18n";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
 import { polyfillCryptoRandomUUID } from "@/lib/optimistic";
+import { installVitePreloadRecovery } from "@/lib/pwa/recoverFromStaleAssets";
 import { resolveConvexUrl } from "@/lib/runtimeEnv";
 import { STORAGE_KEYS } from "@/lib/storageKeys";
 
@@ -21,6 +22,7 @@ import { RootErrorComponent } from "./components/errors/RootErrorComponent";
 
 // LAN HTTP (Electron / self-host) is not a secure context — presence needs this.
 polyfillCryptoRandomUUID();
+installVitePreloadRecovery();
 
 const convex = new ConvexReactClient(resolveConvexUrl());
 const convexQueryClient = new ConvexQueryClient(convex);

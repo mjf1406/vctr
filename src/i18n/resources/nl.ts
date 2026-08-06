@@ -76,6 +76,10 @@ const nl = {
     logoElectron: "Electron",
     showPassword: "Wachtwoord tonen",
     hidePassword: "Wachtwoord verbergen",
+    pwaUpdateTitle: "Update gereed",
+    pwaUpdateDescription: "Er is een nieuwe versie beschikbaar. Herlaad om deze te gebruiken.",
+    pwaUpdateReload: "Herladen",
+    pwaUpdateLater: "Later",
   },
   auth: {
     welcomeTitle: "Welkom",

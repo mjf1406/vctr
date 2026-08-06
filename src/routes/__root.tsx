@@ -4,6 +4,7 @@ import { QueryDevtools } from "@/components/dev/QueryDevtools";
 import { RouterDevtools } from "@/components/dev/RouterDevtools";
 import PendingComponent from "@/components/loading/PendingComponent";
 import { RootErrorComponent } from "@/components/errors/RootErrorComponent";
+import { PwaRoot } from "@/components/pwa/PwaReloadBanner";
 
 export type RouterAuthContext = {
   isAuthenticated: boolean;
@@ -19,6 +20,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   errorComponent: RootErrorComponent,
   component: () => (
     <>
+      <PwaRoot />
       <Outlet />
       <RouterDevtools />
       <QueryDevtools />

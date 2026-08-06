@@ -75,6 +75,10 @@ const es = {
     logoElectron: "Electron",
     showPassword: "Mostrar contraseña",
     hidePassword: "Ocultar contraseña",
+    pwaUpdateTitle: "Actualización lista",
+    pwaUpdateDescription: "Hay una nueva versión disponible. Recarga para usarla.",
+    pwaUpdateReload: "Recargar",
+    pwaUpdateLater: "Más tarde",
   },
   auth: {
     welcomeTitle: "Bienvenido",

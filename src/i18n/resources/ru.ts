@@ -76,6 +76,10 @@ const ru = {
     logoElectron: "Electron",
     showPassword: "Показать пароль",
     hidePassword: "Скрыть пароль",
+    pwaUpdateTitle: "Обновление готово",
+    pwaUpdateDescription: "Доступна новая версия. Перезагрузите, чтобы применить её.",
+    pwaUpdateReload: "Перезагрузить",
+    pwaUpdateLater: "Позже",
   },
   auth: {
     welcomeTitle: "Добро пожаловать",

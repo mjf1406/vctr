@@ -13,4 +13,6 @@ export const STORAGE_KEYS = {
   selfHostUpdateDismissed: appStorageKey("self-host-update-dismissed"),
   /** sessionStorage: hide banner for this version until the tab session ends. */
   selfHostUpdateRemindLater: appStorageKey("self-host-update-remind-later"),
+  /** sessionStorage: hide PWA reload banner until the tab session ends. */
+  pwaUpdateLater: appStorageKey("pwa-update-later"),
 } as const;

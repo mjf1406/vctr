@@ -75,6 +75,10 @@ const ja = {
     logoElectron: "Electron",
     showPassword: "パスワードを表示",
     hidePassword: "パスワードを隠す",
+    pwaUpdateTitle: "アップデートの準備ができました",
+    pwaUpdateDescription: "新しいバージョンがあります。再読み込みして適用してください。",
+    pwaUpdateReload: "再読み込み",
+    pwaUpdateLater: "後で",
   },
   auth: {
     welcomeTitle: "ようこそ",

@@ -75,6 +75,10 @@ const ko = {
     logoElectron: "Electron",
     showPassword: "비밀번호 표시",
     hidePassword: "비밀번호 숨기기",
+    pwaUpdateTitle: "업데이트 준비 완료",
+    pwaUpdateDescription: "새 버전을 사용할 수 있습니다. 다시 불러와 적용하세요.",
+    pwaUpdateReload: "다시 불러오기",
+    pwaUpdateLater: "나중에",
   },
   auth: {
     welcomeTitle: "환영합니다",

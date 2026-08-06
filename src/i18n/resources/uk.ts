@@ -76,6 +76,10 @@ const uk = {
     logoElectron: "Electron",
     showPassword: "Показати пароль",
     hidePassword: "Сховати пароль",
+    pwaUpdateTitle: "Оновлення готове",
+    pwaUpdateDescription: "Доступна нова версія. Перезавантажте, щоб застосувати її.",
+    pwaUpdateReload: "Перезавантажити",
+    pwaUpdateLater: "Пізніше",
   },
   auth: {
     welcomeTitle: "Ласкаво просимо",

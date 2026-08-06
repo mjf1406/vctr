@@ -5,6 +5,7 @@ import { faInbox } from "@fortawesome/free-solid-svg-icons/faInbox";
 import { useTranslation } from "react-i18next";
 import { ClassRoleBadge } from "@/components/badges/ClassRoleBadges";
 import { SelfHostUpdateBannerView } from "@/components/classroom/SelfHostUpdateBanner";
+import { PwaReloadBannerView } from "@/components/pwa/PwaReloadBanner";
 import { LanguageSelect } from "@/components/i18n/LanguageSelect";
 import { FontAwesomeIconPickerLazy } from "@/components/icons/FontAwesomeIconPickerLazy";
 import { iconDefinitionToId } from "@/components/icons/fontawesome-icon-catalog";
@@ -60,6 +61,7 @@ export function UiPlayground() {
   const [pdfPending, setPdfPending] = useState(false);
   const [pdfProgress, setPdfProgress] = useState(0);
   const [undoRestored, setUndoRestored] = useState(false);
+  const [showPwaUpdateBanner, setShowPwaUpdateBanner] = useState(false);
   const pdfIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -99,6 +101,21 @@ export function UiPlayground() {
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-8 sm:px-8">
+      {showPwaUpdateBanner ? (
+        <PwaReloadBannerView
+          className="fixed inset-x-0 top-0 z-[100] pt-[max(0.75rem,env(safe-area-inset-top))]"
+          onReload={() => {
+            setShowPwaUpdateBanner(false);
+            toast.add({
+              title: "Reload",
+              description: "Would call updateServiceWorker(true).",
+              type: "info",
+            });
+          }}
+          onLater={() => setShowPwaUpdateBanner(false)}
+        />
+      ) : null}
+
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">{t("description")}</p>
@@ -136,6 +153,44 @@ export function UiPlayground() {
               toast.add({
                 title: "Dismissed",
                 description: "Would dismiss version 0.1.11 permanently.",
+                type: "info",
+              })
+            }
+          />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-medium">PWA reload banner</h2>
+        <p className="text-sm text-muted-foreground">
+          Same fixed top banner the app shows when a service-worker update is waiting. Real updates
+          need <code className="text-xs">vp build &amp;&amp; vp preview</code>, not{" "}
+          <code className="text-xs">vp dev</code>.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowPwaUpdateBanner(true)}
+            disabled={showPwaUpdateBanner}
+          >
+            Show update banner
+          </Button>
+        </div>
+        <div className="overflow-hidden rounded-2xl border">
+          <PwaReloadBannerView
+            className="border-b-0"
+            onReload={() =>
+              toast.add({
+                title: "Reload",
+                description: "Would call updateServiceWorker(true).",
+                type: "info",
+              })
+            }
+            onLater={() =>
+              toast.add({
+                title: "Later",
+                description: "Would hide for this browser session.",
                 type: "info",
               })
             }
