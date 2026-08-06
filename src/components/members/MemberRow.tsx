@@ -234,12 +234,7 @@ export function MemberRow({
             <AvatarBadge
               className="size-3.5 bg-emerald-500 p-0 text-transparent"
               aria-label={t("presenceOnlineNow")}
-            >
-              <span
-                aria-hidden
-                className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75"
-              />
-            </AvatarBadge>
+            />
           ) : null}
         </Avatar>
         <div className="flex min-w-0 flex-col items-center gap-1">
