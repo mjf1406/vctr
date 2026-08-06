@@ -261,11 +261,13 @@ export const list = authedQuery({
     await requireAppAdmin(ctx, "admin:viewFeedback");
 
     // Inbox is intentionally small (product owner).
-     
+
     const all = await ctx.db.query("feedback").withIndex("by_createdAt").order("desc").take(500);
 
     const filtered = all
-      .filter((row) => (args.archived ? row.archivedAt !== undefined : row.archivedAt === undefined))
+      .filter((row) =>
+        args.archived ? row.archivedAt !== undefined : row.archivedAt === undefined,
+      )
       .slice(0, FEEDBACK_LIST_LIMIT);
 
     return await Promise.all(filtered.map((row) => toAdminItem(ctx, row)));

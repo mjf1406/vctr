@@ -161,9 +161,9 @@ export default [
     },
   },
 
-  // Bun/Node scripts (no TS project).
+  // Bun/Node scripts + root builder configs (no TS project).
   {
-    files: ["scripts/**/*.{js,mjs,cjs}"],
+    files: ["scripts/**/*.{js,mjs,cjs}", "electron-builder.config.mjs"],
     languageOptions: {
       globals: {
         ...globals.node,
