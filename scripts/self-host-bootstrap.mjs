@@ -1,6 +1,7 @@
 /**
  * Shared self-host bootstrap for Docker deploy and Electron first-run.
- * Waits for Convex, deploys functions, sets SELF_HOSTED / SITE_URL / JWT keys.
+ * Waits for Convex, deploys functions, syncs authz catalog roles (same as
+ * `vp run deploy` → perms-prod), then sets SELF_HOSTED / SITE_URL / JWT keys.
  *
  * Usage (CLI):
  *   bun scripts/self-host-bootstrap.mjs \
@@ -177,6 +178,19 @@ export async function runSelfHostBootstrap(options) {
       env,
     });
   }
+
+  // Same as cloud `vp run deploy` → `perms-prod`: re-materialize effective
+  // permissions after role/permission catalog changes. Run every bootstrap so
+  // instances that deployed before this step still catch up.
+  log("Syncing authz catalog roles...");
+  await runCommand(
+    bunBin,
+    ["x", "convex", "run", "internal.authzBackfill.syncCatalogRoles", ...envFileArgs],
+    {
+      cwd: options.projectDir,
+      env,
+    },
+  );
 
   log("Setting self-host Convex env...");
   const setEnv = async (key, value) => {
