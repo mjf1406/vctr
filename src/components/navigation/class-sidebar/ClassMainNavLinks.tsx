@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   ChevronRight,
   GraduationCap,
-  History,
+  KeyRound,
   LayoutDashboard,
   Mail,
   Settings2,
@@ -81,10 +81,10 @@ export function ClassNavMain({ classDoc }: { classDoc: ClassDoc }) {
       permission: "class:read",
     },
     {
-      title: t("navActivityLog"),
-      icon: History,
-      to: "/class/$classId/activity",
-      permission: "activity:read",
+      title: t("navPermissions"),
+      icon: KeyRound,
+      to: "/class/$classId/permissions",
+      permission: "permissions:manage",
     },
     {
       title: t("navSettings"),

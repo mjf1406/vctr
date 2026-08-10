@@ -3,7 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { api, internal } from "./_generated/api.js";
 import type { Doc, Id } from "./_generated/dataModel.js";
 import { action } from "./_generated/server.js";
-import { entitledClassQuery, entitledMutation } from "./lib/customFunctions.js";
+import { authedMutation, classQuery } from "./lib/customFunctions.js";
 import { clearAvatarIfReferencesFile, clearBannerIfReferencesFile } from "./lib/filesCleanup.js";
 import { requireFileOwner } from "./lib/fileAccess.js";
 import { ORPHAN_AGE_MS } from "./filesInternal.js";
@@ -44,7 +44,7 @@ const CLASS_FILES_LIST_LIMIT = 200;
  * response like: `{ storageId: "..." }`, then call `watchPendingUpload` and
  * `finalizeUpload`.
  */
-export const generateUploadUrl = entitledMutation({
+export const generateUploadUrl = authedMutation({
   args: {},
   returns: v.string(),
   handler: async (ctx) => {
@@ -59,7 +59,7 @@ export const generateUploadUrl = entitledMutation({
  * Call after the client receives `storageId` and before `finalizeUpload`.
  * Safe if finalize succeeds first — `deleteStorageIfOrphan` no-ops when registered.
  */
-export const watchPendingUpload = entitledMutation({
+export const watchPendingUpload = authedMutation({
   args: {
     storageId: v.id("_storage"),
   },
@@ -211,7 +211,7 @@ export const getFileBytes = action({
  * List metadata for files in a class library (no bytes).
  * Requires `files:read`. Classroom-sized lists are intentionally bounded.
  */
-export const listClassFiles = entitledClassQuery({
+export const listClassFiles = classQuery({
   args: {},
   returns: v.array(classFilePublicValidator),
   handler: async (ctx) => {
@@ -238,7 +238,7 @@ export const listClassFiles = entitledClassQuery({
 /**
  * Rename a file the caller owns (metadata only).
  */
-export const renameFile = entitledMutation({
+export const renameFile = authedMutation({
   args: {
     fileId: v.id("files"),
     name: v.string(),
@@ -259,7 +259,7 @@ export const renameFile = entitledMutation({
 /**
  * Delete a file the caller owns (row + storage blob).
  */
-export const deleteFile = entitledMutation({
+export const deleteFile = authedMutation({
   args: {
     fileId: v.id("files"),
   },

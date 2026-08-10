@@ -57,18 +57,32 @@ Non-interactive: `bun scripts/post-clone.mjs --name MyApp --slug my-app --github
 
 ## Day-to-day commands
 
-| Command                      | Purpose                                                                                       |
-| ---------------------------- | --------------------------------------------------------------------------------------------- |
-| `bun run post-clone`         | First-time identity setup after cloning                                                       |
-| `vp install`                 | Install deps after pull                                                                       |
-| `vp dev`                     | Vite+ web dev server                                                                          |
-| `bunx convex dev`            | Convex codegen + push (keep running while developing)                                         |
-| `vp run ds`                  | Web + Convex together ([`vite.config.ts`](./vite.config.ts))                                  |
-| `vp check`                   | Format / Oxlint (this repo also runs ESLint via `bun run lint:fix` in `package.json` `check`) |
-| `vp test`                    | Tests                                                                                         |
-| `vp run check`               | Runs `vp check` and `bun run lint`                                                            |
-| `bun run typecheck`          | `tsc --noEmit`                                                                                |
-| `bunx --bun shadcn@latest …` | Theme / UI components                                                                         |
+| Command                       | Purpose                                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- |
+| `bun run post-clone`          | First-time identity setup after cloning                                                        |
+| `vp install`                  | Install deps after pull                                                                        |
+| `vp dev`                      | Vite+ web dev server                                                                           |
+| `bunx convex dev`             | Convex codegen + push (keep running while developing)                                          |
+| `vp run ds`                   | Web + Convex together ([`vite.config.ts`](./vite.config.ts); does **not** auto-run authz sync) |
+| `vp run perms` / `perms-prod` | Sync authz catalog roles after role/permission catalog changes                                 |
+| `vp run deploy`               | `convex deploy` then `perms-prod`                                                              |
+| `bun run tp`                  | Safe annotated release tag + push (clean tree; no `--force`)                                   |
+| `vp check`                    | Format / Oxlint (this repo also runs ESLint via `bun run lint:fix` in `package.json` `check`)  |
+| `vp test`                     | Tests                                                                                          |
+| `vp run check`                | Runs `vp check` and `bun run lint`                                                             |
+| `bun run typecheck`           | `tsc --noEmit`                                                                                 |
+| `bunx --bun shadcn@latest …`  | Theme / UI components                                                                          |
+
+---
+
+## Platform notes
+
+- **Billing:** entitlement is create-only — `entitledMutation` gates paying-to-create (e.g. `classes.create`); class membership ops use `class*` / `authed*` wrappers.
+- **Permissions page:** owners can manage fine-grained staff overrides (`permissions:manage`); after catalog edits run `vp run perms`.
+- **Presence:** removed from this template (no realtime presence component).
+- **Analytics:** keep `@convex-dev/aggregate` usage/github-clone tracking unless you intentionally drop it; document any env vars you retain.
+- **Brand:** sun sample assets live under `public/brand/` — replace via `bun run post-clone` (and swap `public/vctr/vctr-favicon.webp` when rebranding).
+- **Migrations:** `convex/migrations.ts` registers the Migrations runner; add definitions when you need data backfills.
 
 ---
 

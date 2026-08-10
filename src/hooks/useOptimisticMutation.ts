@@ -83,19 +83,17 @@ export function useOptimisticMutation<TVariables, TResult>(
     onMutate: async (variables) => {
       const queryKeys = resolveQueryKeys(queryKeysFactory, variables);
 
-      const previousByKey = await Promise.all(
-        queryKeys.map(async (queryKey) => {
-          await queryClient.cancelQueries({ queryKey });
-          return queryClient.getQueryData(queryKey);
-        }),
-      );
-
+      // Snapshot first, start cancellation without waiting, paint immediately,
+      // then await the already-started cancellations so stale responses cannot
+      // overwrite the optimistic data when they settle.
+      const previousByKey = queryKeys.map((queryKey) => queryClient.getQueryData(queryKey));
+      const cancelPromises = queryKeys.map((queryKey) => queryClient.cancelQueries({ queryKey }));
       const snapshot: OptimisticMutationContext = {
         queryKeys,
         previousByKey,
       };
-
       applyOptimisticUpdate?.(queryClient, variables, snapshot);
+      await Promise.all(cancelPromises);
 
       return snapshot;
     },

@@ -37,9 +37,25 @@ export default defineConfig({
         command: "bunx convex dev",
         cache: false,
       },
+      /** Start web + Convex only (does not auto-run authz sync). */
       ds: {
         command: "echo Both stopped.",
         dependsOn: ["dev:web", "dev:convex"],
+        cache: false,
+      },
+      /** Re-materialize authz role permissions on the configured Convex **dev** deployment. */
+      perms: {
+        command: "bunx convex run internal.authzBackfill.syncCatalogRoles",
+        cache: false,
+      },
+      /** Same as `perms`, against the Convex **prod** deployment (`--prod`). */
+      "perms-prod": {
+        command: "bunx convex run --prod internal.authzBackfill.syncCatalogRoles",
+        cache: false,
+      },
+      /** Deploy Convex functions to prod, then sync authz catalog roles. */
+      deploy: {
+        command: "bunx convex deploy && vp run perms-prod",
         cache: false,
       },
     },

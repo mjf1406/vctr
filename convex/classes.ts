@@ -12,14 +12,8 @@ import {
   pickHighestClassRole,
   type ClassRole,
 } from "./lib/authzModel.js";
-import {
-  authedQuery,
-  classMutation,
-  classQuery,
-  entitledClassMutation,
-  entitledMutation,
-  entitledQuery,
-} from "./lib/customFunctions.js";
+import { clearClassPermissionOverrides } from "./lib/classPermissionOverrides.js";
+import { authedQuery, classMutation, classQuery, entitledMutation } from "./lib/customFunctions.js";
 import { rateLimiter } from "./lib/rateLimiter.js";
 import { clearLinksForClass } from "./lib/guardianLinks.js";
 import { deleteFilesForClass } from "./lib/filesCleanup.js";
@@ -137,7 +131,7 @@ async function revokeAllClassMembership(ctx: MutationCtx, classId: Id<"classes">
   }
 }
 
-export const listMine = entitledQuery({
+export const listMine = authedQuery({
   args: {},
   returns: v.array(classWithRoleValidator),
   handler: async (ctx) => {
@@ -195,7 +189,7 @@ export const listOwned = authedQuery({
   },
 });
 
-export const get = entitledQuery({
+export const get = authedQuery({
   args: { classId: v.id("classes") },
   returns: v.union(classValidator, v.null()),
   handler: async (ctx, args) => {
@@ -240,7 +234,7 @@ export const create = entitledMutation({
   },
 });
 
-export const update = entitledClassMutation({
+export const update = classMutation({
   args: {
     name: v.string(),
     year: v.number(),
@@ -266,7 +260,7 @@ export const update = entitledClassMutation({
   },
 });
 
-export const setArchived = entitledClassMutation({
+export const setArchived = classMutation({
   args: {
     archived: v.boolean(),
   },
@@ -286,7 +280,7 @@ export const setArchived = entitledClassMutation({
   },
 });
 
-export const setBanner = entitledClassMutation({
+export const setBanner = classMutation({
   args: {
     fileId: v.id("files"),
   },
@@ -316,7 +310,7 @@ export const setBanner = entitledClassMutation({
   },
 });
 
-export const clearBanner = entitledClassMutation({
+export const clearBanner = classMutation({
   args: {},
   returns: classValidator,
   handler: async (ctx) => {
@@ -460,6 +454,9 @@ export const transferOwnership = classMutation({
     await authz.revokeRole(ctx, ctx.userId, "owner", ctx.scope);
     // Outgoing owner is demoted to teacher (not removed from the class).
     await authz.assignRole(ctx, ctx.userId, "teacher", ctx.scope);
+    // Role swaps should not leave stale grant/deny overrides from prior roles.
+    await clearClassPermissionOverrides(ctx, ctx.classDoc._id, args.toUserId);
+    await clearClassPermissionOverrides(ctx, ctx.classDoc._id, ctx.userId);
 
     await ctx.db.patch("classes", ctx.classDoc._id, {
       ownerId: args.toUserId,

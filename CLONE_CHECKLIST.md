@@ -46,7 +46,7 @@ Do **not** reuse the template’s Convex deployment or copy `.env` / `.env.local
 
 - [ ] `.env.example` present with Vite-side vars documented
 
-`bun run post-clone` marks the identity items it edits. Product brand: `public/brand/` (+ `Logo.tsx`). Template favicon: `public/vctr/vctr-favicon.webp` (`index.html`) — replace file or update the `href` when rebranding.
+`bun run post-clone` marks the identity items it edits. Product brand: `public/brand/` (sun sample assets — replaceable). Template favicon: `public/vctr/vctr-favicon.webp` (`index.html`) — replace file or update the `href` when rebranding.
 
 <!-- clone:brand-assets -->
 
@@ -155,6 +155,8 @@ Optional password UI (cloud/dev): set `VITE_AUTH_PASSWORD_ENABLED=true` in `.env
 
 Subscriptions use `@convex-dev/polar`. Trial length is app-managed via `APP_CONFIG.trial` (not a Polar-native trial). Empty Polar credentials throw — set sandbox env for local/dev.
 
+**Create-only entitlement:** paid gate is for creating classes (`entitledMutation`); membership and day-to-day class ops use `class*` / `authed*` wrappers (no entitlement lockout for existing members).
+
 1. Create a [Polar](https://polar.sh) org (**sandbox** while developing).
 2. Create two subscription products (example UI copy: **USD 3**/mo, **USD 30**/yr). If prices differ, update `billing.monthlyPrice` / `billing.yearlyPrice` in **every** locale under `src/i18n/resources/`.
 3. Org access token with products/subscriptions/customers/checkouts/portal scopes.
@@ -224,9 +226,21 @@ Do this **after** auth + branding smoke-test. ClassClarus-style clones can keep 
 
 See `convex/lib/authzModel.ts`, `convex/schema.ts`, routes under `src/routes/_authenticated/_class/`, and feature folders under `src/components/classes|members|invitations`.
 
+After changing the role/permission catalog, sync rematerialized roles:
+
+```bash
+vp run perms          # dev
+vp run perms-prod     # prod
+# or: bunx convex run internal.authzBackfill.syncCatalogRoles
+```
+
+Owners get a **Permissions** page for fine-grained staff overrides (`permissions:manage`). Presence is not included in this template. Keep analytics aggregates (`usageByKind`, download OS, github clones) unless you deliberately remove them — document retained env vars.
+
 <!-- clone:domain-authz -->
 
 - [ ] Redefined permissions/roles in `authzModel.ts` for the new domain (or kept ClassClarus)
+- [ ] Ran `vp run perms` after catalog changes
+- [ ] Confirmed Permissions page / overrides still match your roles (or removed that route)
 
 <!-- clone:domain-surface -->
 
@@ -277,7 +291,7 @@ vp run ds
 
 <!-- clone:prod-convex -->
 
-- [ ] Deploy Convex prod (`bunx convex deploy`) + `bunx @convex-dev/auth --prod`
+- [ ] Deploy Convex prod (`vp run deploy` or `bunx convex deploy` + `vp run perms-prod`) + `bunx @convex-dev/auth --prod`
 
 <!-- clone:prod-google -->
 

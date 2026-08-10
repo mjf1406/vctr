@@ -1,13 +1,14 @@
 /**
  * TEMPLATE: Single brand config — change these when cloning (`bun run post-clone`).
- * **vctr** = template package name; **classclarus** slug/URLs = sample product (ClassClarus).
- * Brand images: `public/brand/`. Template favicon: `public/vctr/vctr-favicon.webp`.
+ * Neutral slug/tenant id are `vctr`; sample URLs below still use ClassClarus placeholders
+ * until post-clone retargets them. Brand images: `public/brand/` (sun sample assets).
+ * Template favicon: `public/vctr/vctr-favicon.webp`.
  * `name` is never translated — i18n uses it via defaultVariables.appName.
  */
 export const APP_CONFIG = {
   name: "vctr",
   /** Storage keys (`${slug}-…` via src/lib/storageKeys.ts) and package-name check. */
-  slug: "classclarus",
+  slug: "vctr",
   /** Appended after name in the document title (`Name | suffix`). */
   titleSuffix: "App",
   /** Canonical app origin (printed join URLs, production deep links). */
@@ -27,7 +28,7 @@ export const APP_CONFIG = {
   kofiUrl: "https://ko-fi.com/YOUR_PAGE",
   patreonUrl: "https://www.patreon.com/YOUR_PAGE",
   /** Product-level authz namespace — set before first real deploy; rematerialize if changed later. */
-  authzTenantId: "classclarus",
+  authzTenantId: "vctr",
   /** Browser chrome — hex (meta theme-color is unreliable with oklch). */
   themeColors: {
     light: "#ffffff",

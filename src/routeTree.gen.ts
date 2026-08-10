@@ -29,10 +29,10 @@ import { Route as AuthenticatedAdminIndexRouteImport } from "./routes/_authentic
 import { Route as AuthenticatedAdminFeedbackRouteImport } from "./routes/_authenticated/admin/feedback";
 import { Route as AuthenticatedClassClassClassIdRouteRouteImport } from "./routes/_authenticated/_class/class/$classId/route";
 import { Route as AuthenticatedClassClassClassIdIndexRouteImport } from "./routes/_authenticated/_class/class/$classId/index";
-import { Route as AuthenticatedClassClassClassIdActivityRouteImport } from "./routes/_authenticated/_class/class/$classId/activity";
 import { Route as AuthenticatedClassClassClassIdAssistantTeachersRouteImport } from "./routes/_authenticated/_class/class/$classId/assistant-teachers";
 import { Route as AuthenticatedClassClassClassIdGuardiansRouteImport } from "./routes/_authenticated/_class/class/$classId/guardians";
 import { Route as AuthenticatedClassClassClassIdInvitationsRouteImport } from "./routes/_authenticated/_class/class/$classId/invitations";
+import { Route as AuthenticatedClassClassClassIdPermissionsRouteImport } from "./routes/_authenticated/_class/class/$classId/permissions";
 import { Route as AuthenticatedClassClassClassIdSettingsRouteImport } from "./routes/_authenticated/_class/class/$classId/settings";
 import { Route as AuthenticatedClassClassClassIdStudentsRouteImport } from "./routes/_authenticated/_class/class/$classId/students";
 import { Route as AuthenticatedClassClassClassIdTeachersRouteImport } from "./routes/_authenticated/_class/class/$classId/teachers";
@@ -135,12 +135,6 @@ const AuthenticatedClassClassClassIdIndexRoute =
     path: "/",
     getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
   } as any);
-const AuthenticatedClassClassClassIdActivityRoute =
-  AuthenticatedClassClassClassIdActivityRouteImport.update({
-    id: "/activity",
-    path: "/activity",
-    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
-  } as any);
 const AuthenticatedClassClassClassIdAssistantTeachersRoute =
   AuthenticatedClassClassClassIdAssistantTeachersRouteImport.update({
     id: "/assistant-teachers",
@@ -157,6 +151,12 @@ const AuthenticatedClassClassClassIdInvitationsRoute =
   AuthenticatedClassClassClassIdInvitationsRouteImport.update({
     id: "/invitations",
     path: "/invitations",
+    getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
+  } as any);
+const AuthenticatedClassClassClassIdPermissionsRoute =
+  AuthenticatedClassClassClassIdPermissionsRouteImport.update({
+    id: "/permissions",
+    path: "/permissions",
     getParentRoute: () => AuthenticatedClassClassClassIdRouteRoute,
   } as any);
 const AuthenticatedClassClassClassIdSettingsRoute =
@@ -194,10 +194,10 @@ export interface FileRoutesByFullPath {
   "/admin/feedback": typeof AuthenticatedAdminFeedbackRoute;
   "/admin/": typeof AuthenticatedAdminIndexRoute;
   "/class/$classId": typeof AuthenticatedClassClassClassIdRouteRouteWithChildren;
-  "/class/$classId/activity": typeof AuthenticatedClassClassClassIdActivityRoute;
   "/class/$classId/assistant-teachers": typeof AuthenticatedClassClassClassIdAssistantTeachersRoute;
   "/class/$classId/guardians": typeof AuthenticatedClassClassClassIdGuardiansRoute;
   "/class/$classId/invitations": typeof AuthenticatedClassClassClassIdInvitationsRoute;
+  "/class/$classId/permissions": typeof AuthenticatedClassClassClassIdPermissionsRoute;
   "/class/$classId/settings": typeof AuthenticatedClassClassClassIdSettingsRoute;
   "/class/$classId/students": typeof AuthenticatedClassClassClassIdStudentsRoute;
   "/class/$classId/teachers": typeof AuthenticatedClassClassClassIdTeachersRoute;
@@ -217,10 +217,10 @@ export interface FileRoutesByTo {
   "/ui": typeof AuthenticatedAppUiRoute;
   "/admin/feedback": typeof AuthenticatedAdminFeedbackRoute;
   "/admin": typeof AuthenticatedAdminIndexRoute;
-  "/class/$classId/activity": typeof AuthenticatedClassClassClassIdActivityRoute;
   "/class/$classId/assistant-teachers": typeof AuthenticatedClassClassClassIdAssistantTeachersRoute;
   "/class/$classId/guardians": typeof AuthenticatedClassClassClassIdGuardiansRoute;
   "/class/$classId/invitations": typeof AuthenticatedClassClassClassIdInvitationsRoute;
+  "/class/$classId/permissions": typeof AuthenticatedClassClassClassIdPermissionsRoute;
   "/class/$classId/settings": typeof AuthenticatedClassClassClassIdSettingsRoute;
   "/class/$classId/students": typeof AuthenticatedClassClassClassIdStudentsRoute;
   "/class/$classId/teachers": typeof AuthenticatedClassClassClassIdTeachersRoute;
@@ -247,10 +247,10 @@ export interface FileRoutesById {
   "/_authenticated/_app/": typeof AuthenticatedAppIndexRoute;
   "/_authenticated/admin/": typeof AuthenticatedAdminIndexRoute;
   "/_authenticated/_class/class/$classId": typeof AuthenticatedClassClassClassIdRouteRouteWithChildren;
-  "/_authenticated/_class/class/$classId/activity": typeof AuthenticatedClassClassClassIdActivityRoute;
   "/_authenticated/_class/class/$classId/assistant-teachers": typeof AuthenticatedClassClassClassIdAssistantTeachersRoute;
   "/_authenticated/_class/class/$classId/guardians": typeof AuthenticatedClassClassClassIdGuardiansRoute;
   "/_authenticated/_class/class/$classId/invitations": typeof AuthenticatedClassClassClassIdInvitationsRoute;
+  "/_authenticated/_class/class/$classId/permissions": typeof AuthenticatedClassClassClassIdPermissionsRoute;
   "/_authenticated/_class/class/$classId/settings": typeof AuthenticatedClassClassClassIdSettingsRoute;
   "/_authenticated/_class/class/$classId/students": typeof AuthenticatedClassClassClassIdStudentsRoute;
   "/_authenticated/_class/class/$classId/teachers": typeof AuthenticatedClassClassClassIdTeachersRoute;
@@ -274,10 +274,10 @@ export interface FileRouteTypes {
     | "/admin/feedback"
     | "/admin/"
     | "/class/$classId"
-    | "/class/$classId/activity"
     | "/class/$classId/assistant-teachers"
     | "/class/$classId/guardians"
     | "/class/$classId/invitations"
+    | "/class/$classId/permissions"
     | "/class/$classId/settings"
     | "/class/$classId/students"
     | "/class/$classId/teachers"
@@ -297,10 +297,10 @@ export interface FileRouteTypes {
     | "/ui"
     | "/admin/feedback"
     | "/admin"
-    | "/class/$classId/activity"
     | "/class/$classId/assistant-teachers"
     | "/class/$classId/guardians"
     | "/class/$classId/invitations"
+    | "/class/$classId/permissions"
     | "/class/$classId/settings"
     | "/class/$classId/students"
     | "/class/$classId/teachers"
@@ -326,10 +326,10 @@ export interface FileRouteTypes {
     | "/_authenticated/_app/"
     | "/_authenticated/admin/"
     | "/_authenticated/_class/class/$classId"
-    | "/_authenticated/_class/class/$classId/activity"
     | "/_authenticated/_class/class/$classId/assistant-teachers"
     | "/_authenticated/_class/class/$classId/guardians"
     | "/_authenticated/_class/class/$classId/invitations"
+    | "/_authenticated/_class/class/$classId/permissions"
     | "/_authenticated/_class/class/$classId/settings"
     | "/_authenticated/_class/class/$classId/students"
     | "/_authenticated/_class/class/$classId/teachers"
@@ -484,13 +484,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedClassClassClassIdIndexRouteImport;
       parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute;
     };
-    "/_authenticated/_class/class/$classId/activity": {
-      id: "/_authenticated/_class/class/$classId/activity";
-      path: "/activity";
-      fullPath: "/class/$classId/activity";
-      preLoaderRoute: typeof AuthenticatedClassClassClassIdActivityRouteImport;
-      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute;
-    };
     "/_authenticated/_class/class/$classId/assistant-teachers": {
       id: "/_authenticated/_class/class/$classId/assistant-teachers";
       path: "/assistant-teachers";
@@ -510,6 +503,13 @@ declare module "@tanstack/react-router" {
       path: "/invitations";
       fullPath: "/class/$classId/invitations";
       preLoaderRoute: typeof AuthenticatedClassClassClassIdInvitationsRouteImport;
+      parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute;
+    };
+    "/_authenticated/_class/class/$classId/permissions": {
+      id: "/_authenticated/_class/class/$classId/permissions";
+      path: "/permissions";
+      fullPath: "/class/$classId/permissions";
+      preLoaderRoute: typeof AuthenticatedClassClassClassIdPermissionsRouteImport;
       parentRoute: typeof AuthenticatedClassClassClassIdRouteRoute;
     };
     "/_authenticated/_class/class/$classId/settings": {
@@ -561,10 +561,10 @@ const AuthenticatedAppRouteRouteWithChildren = AuthenticatedAppRouteRoute._addFi
 );
 
 interface AuthenticatedClassClassClassIdRouteRouteChildren {
-  AuthenticatedClassClassClassIdActivityRoute: typeof AuthenticatedClassClassClassIdActivityRoute;
   AuthenticatedClassClassClassIdAssistantTeachersRoute: typeof AuthenticatedClassClassClassIdAssistantTeachersRoute;
   AuthenticatedClassClassClassIdGuardiansRoute: typeof AuthenticatedClassClassClassIdGuardiansRoute;
   AuthenticatedClassClassClassIdInvitationsRoute: typeof AuthenticatedClassClassClassIdInvitationsRoute;
+  AuthenticatedClassClassClassIdPermissionsRoute: typeof AuthenticatedClassClassClassIdPermissionsRoute;
   AuthenticatedClassClassClassIdSettingsRoute: typeof AuthenticatedClassClassClassIdSettingsRoute;
   AuthenticatedClassClassClassIdStudentsRoute: typeof AuthenticatedClassClassClassIdStudentsRoute;
   AuthenticatedClassClassClassIdTeachersRoute: typeof AuthenticatedClassClassClassIdTeachersRoute;
@@ -573,11 +573,11 @@ interface AuthenticatedClassClassClassIdRouteRouteChildren {
 
 const AuthenticatedClassClassClassIdRouteRouteChildren: AuthenticatedClassClassClassIdRouteRouteChildren =
   {
-    AuthenticatedClassClassClassIdActivityRoute: AuthenticatedClassClassClassIdActivityRoute,
     AuthenticatedClassClassClassIdAssistantTeachersRoute:
       AuthenticatedClassClassClassIdAssistantTeachersRoute,
     AuthenticatedClassClassClassIdGuardiansRoute: AuthenticatedClassClassClassIdGuardiansRoute,
     AuthenticatedClassClassClassIdInvitationsRoute: AuthenticatedClassClassClassIdInvitationsRoute,
+    AuthenticatedClassClassClassIdPermissionsRoute: AuthenticatedClassClassClassIdPermissionsRoute,
     AuthenticatedClassClassClassIdSettingsRoute: AuthenticatedClassClassClassIdSettingsRoute,
     AuthenticatedClassClassClassIdStudentsRoute: AuthenticatedClassClassClassIdStudentsRoute,
     AuthenticatedClassClassClassIdTeachersRoute: AuthenticatedClassClassClassIdTeachersRoute,

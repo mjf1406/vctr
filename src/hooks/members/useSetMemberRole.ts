@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/toast-manager";
 import { classesListQueryKey } from "@/hooks/classes/useClasses";
 import { classMemberCountsQueryKey } from "@/hooks/members/useClassMemberCounts";
 import { classMembersByRoleQueryKey } from "@/hooks/members/useClassMembersByRole";
+import { hasPermissionOverridesQueryKey } from "@/hooks/permissions/useHasPermissionOverrides";
 import { classPermissionsQueryKey } from "@/hooks/permissions/useClassPermissions";
 import { useOptimisticMutation } from "@/hooks/useOptimisticMutation";
 import {
@@ -77,6 +78,7 @@ export function useSetMemberRole() {
       classMemberCountsQueryKey(args.classId),
       classesListQueryKey(),
       classPermissionsQueryKey(args.classId),
+      hasPermissionOverridesQueryKey(args.classId, args.userId),
     ],
     applyOptimisticUpdate: (queryClient, args) => {
       const fromList = memberListRoleFor(args.fromRole);
