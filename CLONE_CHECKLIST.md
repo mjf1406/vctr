@@ -234,7 +234,7 @@ vp run perms-prod     # prod
 # or: bunx convex run internal.authzBackfill.syncCatalogRoles
 ```
 
-Owners get a **Permissions** page for fine-grained staff overrides (`permissions:manage`). Presence is not included in this template. Keep analytics aggregates (`usageByKind`, download OS, github clones) unless you deliberately remove them — document retained env vars.
+Owners get a **Permissions** page for fine-grained staff overrides (`permissions:manage`). Class online presence is on by default for Docker self-host and Electron (`CLASS_PRESENCE_ENABLED=false` to disable; hosted cloud stays off). Keep analytics aggregates (`usageByKind`, download OS, github clones) unless you deliberately remove them — document retained env vars.
 
 <!-- clone:domain-authz -->
 

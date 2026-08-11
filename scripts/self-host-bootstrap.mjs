@@ -219,6 +219,7 @@ export async function runSelfHostBootstrap(options) {
   const keys = JSON.parse(await readFile(authKeysFile, "utf8"));
   await setEnv("JWT_PRIVATE_KEY", keys.jwtPrivateKey);
   await setEnv("JWKS", keys.jwks);
+  await setEnv("CLASS_PRESENCE_ENABLED", process.env.CLASS_PRESENCE_ENABLED ?? "true");
 
   await writeFile(markerFile, deployKey, "utf8");
   log(`Self-host bootstrap complete. App: ${options.siteUrl}`);

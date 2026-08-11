@@ -79,7 +79,7 @@ Non-interactive: `bun scripts/post-clone.mjs --name MyApp --slug my-app --github
 
 - **Billing:** entitlement is create-only — `entitledMutation` gates paying-to-create (e.g. `classes.create`); class membership ops use `class*` / `authed*` wrappers.
 - **Permissions page:** owners can manage fine-grained staff overrides (`permissions:manage`); after catalog edits run `vp run perms` (cloud) — Docker/Electron bootstrap runs the same sync after deploy.
-- **Presence:** removed from this template (no realtime presence component).
+- **Presence:** class online presence (who is viewing a class) is on by default for Docker self-host and Electron; set `CLASS_PRESENCE_ENABLED=false` to disable. Hosted cloud stays off.
 - **Analytics:** keep `@convex-dev/aggregate` usage/github-clone tracking unless you intentionally drop it; document any env vars you retain.
 - **Brand:** sun sample assets live under `public/brand/` — replace via `bun run post-clone` (and swap `public/vctr/vctr-favicon.webp` when rebranding).
 - **Migrations:** `convex/migrations.ts` registers the Migrations runner; add definitions when you need data backfills.

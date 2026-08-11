@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { TrialBanner } from "@/components/billing/TrialBanner";
+import { ClassPresenceChip } from "@/components/classes/ClassPresenceChip";
 import { SelfHostUpdateBanner } from "@/components/classroom/SelfHostUpdateBanner";
 import { AppFooter } from "@/components/navigation/AppFooter";
 import { ClassContent } from "@/components/navigation/class-sidebar/ClassContent";
@@ -13,6 +14,7 @@ import { ClassAppSidebar } from "@/components/navigation/class-sidebar/ClassSide
 import { ClassBreadcrumb } from "@/components/navigation/class-sidebar/ClassBreadcrumb";
 import { FeedbackNavButton } from "@/components/navigation/FeedbackNavButton";
 import { ClassPermissionsProvider } from "@/components/permissions/ClassPermissionsProvider";
+import { ClassPresenceProvider } from "@/components/presence/ClassPresenceProvider";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -25,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useClass } from "@/hooks/classes/useClass";
 import { useRemoveFileBytesOnAccessLoss } from "@/hooks/files/useFileBytes";
+import { isClassPresenceEnabled } from "@/lib/presence/presenceEnabled";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
@@ -35,6 +38,7 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
     const { t } = useTranslation("classes");
     const { t: tCommon } = useTranslation("common");
     const classUnavailable = !isPending && (isError || !classDoc);
+    const presenceEnabled = isClassPresenceEnabled();
 
     useRemoveFileBytesOnAccessLoss(classUnavailable);
 
@@ -64,31 +68,40 @@ export const Route = createFileRoute("/_authenticated/_class/class/$classId")({
       );
     }
 
+    const classLayout = (
+      <SidebarProvider>
+        {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
+        <SidebarInset>
+          <div className="flex min-h-svh min-w-0 flex-col">
+            <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 border-b bg-background px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <div className="min-w-0 flex-1">
+                {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <FeedbackNavButton />
+                {presenceEnabled && classDoc ? <ClassPresenceChip /> : null}
+              </div>
+            </header>
+            <SelfHostUpdateBanner />
+            <TrialBanner />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <ClassContent classPending={isPending || !classDoc} />
+            </div>
+          </div>
+          <AppFooter />
+        </SidebarInset>
+      </SidebarProvider>
+    );
+
     return (
       <ClassPermissionsProvider classId={classId}>
-        <SidebarProvider>
-          {classDoc ? <ClassAppSidebar classDoc={classDoc} /> : <ClassSidebarSkeleton />}
-          <SidebarInset>
-            <div className="flex min-h-svh flex-col">
-              <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 border-b bg-background px-4">
-                <SidebarTrigger className="-ml-1" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                <div className="min-w-0 flex-1">
-                  {classDoc ? <ClassBreadcrumb classDoc={classDoc} /> : <ClassBreadcrumbSkeleton />}
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <FeedbackNavButton />
-                </div>
-              </header>
-              <SelfHostUpdateBanner />
-              <TrialBanner />
-              <div className="flex flex-1 flex-col">
-                <ClassContent classPending={isPending || !classDoc} />
-              </div>
-            </div>
-            <AppFooter />
-          </SidebarInset>
-        </SidebarProvider>
+        {presenceEnabled ? (
+          <ClassPresenceProvider classId={classId}>{classLayout}</ClassPresenceProvider>
+        ) : (
+          classLayout
+        )}
       </ClassPermissionsProvider>
     );
   },
